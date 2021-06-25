@@ -1,92 +1,48 @@
 //
-//  MyFriendsViewController.swift
+//  CreateGroupViewController.swift
 //  wtm?
 //
-//  Created by Matthew McDonnell on 5/30/21.
+//  Created by Matthew McDonnell on 6/24/21.
 //
 
 import UIKit
-import Contacts
 import Firebase
 
-class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CreateGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    private let db = Firestore.firestore()
-    private let alertManager = AlertManager.shared
-    private let databaseManager = DatabaseManager.shared
-    
-    private let activityIndicator = UIActivityIndicatorView(style: .large)
-    private let refreshControl = UIRefreshControl()
+    let db = Firestore.firestore()
+    let alertManager = AlertManager.shared
+    let databaseManager = DatabaseManager.shared
     
     var friends = [User]()
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var noFriendsLabel: UILabel!
     @IBOutlet weak var loadingLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var createButton: UIButton!
+    
+    let activityIndicator = UIActivityIndicatorView(style: .large)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
         
-        tableView.isHidden = true
+        createButton.layer.cornerRadius = 10
+        
+        tableView.allowsMultipleSelection = true
+        tableView.allowsMultipleSelectionDuringEditing = true
+        
         loadingLabel.isHidden = false
-        noFriendsLabel.isHidden = true
         
-        tableView.register(FriendsTableViewCell.self, forCellReuseIdentifier: FriendsTableViewCell.identifier)
+        tableView.register(CreateFriendGroupTableViewCell.self, forCellReuseIdentifier: CreateFriendGroupTableViewCell.identifier)
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.setEditing(true, animated: true)
+        tableView.isHidden = true
         
         createSpinnerView()
-        setupRefreshControl()
-        loadFriends()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        createSpinnerView()
-        setupRefreshControl()
-        loadFriends()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
-    @IBAction func requestsButton(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "requestsViewController") as RequestsViewController
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @IBAction func groupsButton(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "friendGroupsViewController") as FriendGroupsViewController
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    private func setupRefreshControl() {
-        let string = "loading friends..."
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont(name: "SuperBasic-Regular", size: 10)!,
-        ]
-        
-        refreshControl.attributedTitle = NSAttributedString(string: string, attributes: attributes)
-        refreshControl.backgroundColor = UIColor(named: "backgroundColors")
-        
-        if #available(iOS 10.0, *) {
-            tableView.refreshControl = refreshControl
-        } else {
-            tableView.addSubview(refreshControl)
-        }
-        
-        refreshControl.addTarget(self, action: #selector(refreshTableView(_:)), for: .valueChanged)
-    }
-    
-    @objc private func refreshTableView(_ sender: Any) {
         loadFriends()
     }
     
@@ -132,18 +88,19 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    @IBAction func backButton(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
     private func updateUI() {
         DispatchQueue.main.async {
-            self.refreshControl.endRefreshing()
             if self.friends.count > 0 {
                 self.tableView.isHidden = false
                 self.activityIndicator.isHidden = true
-                self.noFriendsLabel.isHidden = true
                 self.loadingLabel.isHidden = true
             } else {
                 self.tableView.isHidden = true
                 self.activityIndicator.isHidden = true
-                self.noFriendsLabel.isHidden = false
                 self.loadingLabel.isHidden = true
             }
         }
@@ -159,12 +116,8 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        //tableView.deselectRow(at: indexPath, animated: true)
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "friendViewController") as FriendViewController
-        vc.friendsUID = friends[indexPath.row].uid!
-        navigationController?.pushViewController(vc, animated: true)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -173,12 +126,29 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = friends[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: FriendsTableViewCell.identifier, for: indexPath) as! FriendsTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CreateFriendGroupTableViewCell.identifier, for: indexPath) as! CreateFriendGroupTableViewCell
         cell.backgroundColor = UIColor(named: "backgroundColors")
         cell.accessoryType = .disclosureIndicator
         cell.contentView.clipsToBounds = true
         cell.configure(with: model)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
+        true
+    }
+    
+    func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+        //tableView.setEditing(true, animated: true)
+    }
+    
+    func tableViewDidEndMultipleSelectionInteraction(_ tableView: UITableView) {
+        print("editing ended")
+    }
 }
 
+extension CreateGroupViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}

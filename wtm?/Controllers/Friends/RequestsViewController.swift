@@ -82,6 +82,11 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         
+        if requests.count == 0 {
+            tableView.reloadData()
+            updateUI()
+        }
+        
     }
     
     private func updateUI() {
