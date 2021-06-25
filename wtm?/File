@@ -1,0 +1,8 @@
+
+{
+  "aps": {
+    "alert": "Test Notification",
+    "sound": "default",
+    "link_url": "https://raywenderlich.com"
+  }
+}
