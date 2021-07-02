@@ -12,11 +12,14 @@ class LoadingViewController: UIViewController {
 
     @IBOutlet weak var loadingLabel: UILabel!
     let databaseManager = DatabaseManager.shared
+    let reportingManager = ReportingManager.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tabBarController?.hidesBottomBarWhenPushed = true
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -80,11 +83,45 @@ class LoadingViewController: UIViewController {
         } else {
             // Send to home screen
             self.updateFriendsList()
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                let onboarding = storyboard.instantiateViewController(withIdentifier: "tabBarController") as! TabBarController
-                self.navigationController?.pushViewController(onboarding, animated: true)
+            self.updateFCMToken()
+            
+            let group = DispatchGroup()
+            group.enter()
+            
+            let uid = UserDefaults.standard.string(forKey: "uid")
+            self.databaseManager.updateBlockedUsersList(uid: uid!, completion: { success in
+                print("result: \(success)")
+                group.leave()
             })
+            
+            group.notify(queue: .main) { [weak self] in
+                self?.goHome()
+            }
+        }
+    }
+    
+    private func goHome() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+            let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let onboarding = storyboard.instantiateViewController(withIdentifier: "tabBarController") as! TabBarController
+            self.navigationController?.pushViewController(onboarding, animated: true)
+        })
+    }
+    
+    private func updateFCMToken() {
+        let uid = UserDefaults.standard.string(forKey: "uid")
+        if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
+            Messaging.messaging().token { [weak self] token, error in
+                if let error = error {
+                    print("Error fetching FCM registration token: \(error)")
+                } else if let token = token {
+                    print("FCM registration token: \(token)")
+                    
+                    if token != fcmToken {
+                        self?.databaseManager.updateFCMToken(uid: uid!, newToken: token)
+                    }
+                }
+            }
         }
     }
     

@@ -28,9 +28,13 @@ class MyProfileViewController: UIViewController {
         
         profileImage.layer.cornerRadius = profileImage.frame.width / 2
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureButton(_:)))
-        profileImage.addGestureRecognizer(tapGesture)
+        let pictureTapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureButton(_:)))
+        profileImage.addGestureRecognizer(pictureTapGesture)
         profileImage.isUserInteractionEnabled = true
+        
+        let statusTapGesture = UITapGestureRecognizer(target: self, action: #selector(statusButton(_:)))
+        statusBackground.addGestureRecognizer(statusTapGesture)
+        statusBackground.isUserInteractionEnabled = true
         
         nameLabel.sizeToFit()
         
@@ -54,6 +58,7 @@ class MyProfileViewController: UIViewController {
         
     }
     
+    // MARK: - Updating Information
     private func updateInformation() {
         let name = UserDefaults.standard.string(forKey: "name") ?? "johnny appleseed"
         let joinedTime = UserDefaults.standard.string(forKey: "joinedTime") ?? Date().month
@@ -80,6 +85,13 @@ class MyProfileViewController: UIViewController {
             statusImage.image = UIImage(systemName: "nosign")
         }
     }
+    
+    @IBAction @objc func statusButton(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "editStatusViewController") as EditStatusViewController
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
     // MARK: - Profile Image
     private func updatePicture() {

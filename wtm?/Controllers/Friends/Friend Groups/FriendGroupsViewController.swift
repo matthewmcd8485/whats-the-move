@@ -42,8 +42,14 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
         tableView.isHidden = true
         
         createSpinnerView()
-        loadFriendGroups()
+        //loadFriendGroups()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadFriendGroups()
     }
     
     @IBAction func backButton(_ sender: Any) {
@@ -66,6 +72,8 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
             return
         }
         
+        groups.removeAll()
+        
         db.collection("friend groups").whereField("People", arrayContains: uid).getDocuments() { [weak self] querySnapshot, error in
             guard error == nil else {
                 return
@@ -76,8 +84,11 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
                 let groupID = document.get("Group Identifier") as! String
                 let people = document.get("People") as! [String]
                 
-                let user = FriendGroup(name: name.lowercased(), groupID: groupID, people: people)
-                self?.groups.append(user)
+                let group = FriendGroup(name: name.lowercased(), groupID: groupID, people: people)
+                self?.groups.append(group)
+                self?.groups = self!.groups.filterDuplicates { $0.groupID == $1.groupID }
+                self?.groups.sort { $0.name < $1.name }
+                
                 self?.tableView.reloadData()
                 self?.updateUI()
             }
@@ -120,13 +131,16 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return 65
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "groupDetailViewController") as GroupDetailViewController
+        vc.groupID = groups[indexPath.row].groupID
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

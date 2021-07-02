@@ -140,9 +140,9 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                             print("Error downloading user information from Firestore: \(error!)")
                             return
                         }
+                        UserDefaults.standard.set(strongSelf.uid, forKey: "uid")
                         
                         if querySnapshot?.documents.count == 0 {
-                            UserDefaults.standard.set(strongSelf.uid, forKey: "uid")
                             
                             let storyboard = UIStoryboard(name: "Main", bundle: nil)
                             let vc = storyboard.instantiateViewController(identifier: "nameViewController") as! NameViewController
@@ -162,6 +162,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                                 UserDefaults.standard.set(profileImageURL, forKey: "profileImageURL")
                                 UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
                                 UserDefaults.standard.set(joined, forKey: "joinedTime")
+                                UserDefaults.standard.set(true, forKey: "loggedIn")
                                 
                                 // Download profile image
                                 if profileImageURL != "No profile picture yet" {
@@ -177,24 +178,28 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                                         }
                                     }
                                 }
+                                // Update blocked users list
+                                strongSelf.databaseManager.updateBlockedUsersList(uid: strongSelf.uid, completion: { success in
+                                    print("blocked users list updated with result: \(success)")
+                                })
                                 
                                 // Download friends list
                                 self?.updateFriendsList()
                             }
-                            
-                            UserDefaults.standard.set(strongSelf.uid, forKey: "uid")
-                            UserDefaults.standard.set(true, forKey: "loggedIn")
-                            
-                            strongSelf.enableNotifications()
-                            
-                            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                            let vc = storyboard.instantiateViewController(identifier: "tabBarController") as! TabBarController
-                            strongSelf.navigationController?.pushViewController(vc, animated: true)
                         }
                     }
                 }
             }
         }
+    }
+    
+    private func finishUp() {
+        
+        enableNotifications()
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "tabBarController") as! TabBarController
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func updateFriendsList() {
@@ -203,15 +208,16 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
         }
         var uids = [String]()
         
-        databaseManager.downloadUsersInSubcollection(uid: uid, subcollection: "friends", completion: { result in
+        databaseManager.downloadAllFriends(uid: uid, completion: { [weak self] result in
             switch result {
             case .success(let users):
                 for x in users.count {
-                    uids.append(users[x].uid!)
+                    uids.append(users[x].uid)
                 }
                 UserDefaults.standard.set(uids, forKey: "friendsUID")
+                self?.finishUp()
             case .failure(let error):
-                print("\n *LOADING VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
+                print("\n *VERIFICATION VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
             }
         })
     }

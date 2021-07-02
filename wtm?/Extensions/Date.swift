@@ -19,4 +19,14 @@ extension Date {
         dateFormatter.dateFormat = "YYYY"
         return dateFormatter.string(from: self)
     }
+    
+    func isInSameDayOf(date: Date) -> Bool {
+        return Calendar.current.isDate(self, inSameDayAs:date)
+    }
+    
+    func toString( dateFormat format  : String ) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
 }

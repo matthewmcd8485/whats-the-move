@@ -14,11 +14,13 @@ import PMAlertController
 class FriendVerifyViewController: UIViewController {
     
     public var phoneNumber: String = ""
+    public var comingFromGroup: Bool = false
     var friendToAdd: User = User(name: "", phoneNumber: "", uid: "", fcmToken: "", status: "", substatus: "", profileImageURL: "", joinedTime: "")
     
     let db = Firestore.firestore()
     let alertManager = AlertManager.shared
     let databaseManager = DatabaseManager.shared
+    let reportingManager = ReportingManager.shared
     
     @IBOutlet weak var loadingLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
@@ -117,8 +119,20 @@ class FriendVerifyViewController: UIViewController {
             switch result {
             case .success(let user):
                 self?.friendToAdd = user
-                self?.updateUI()
-                self?.configureStatusView()
+                
+                // Check if someone blocked someone
+                if self!.reportingManager.userBlockedYou(theirUID: self!.friendToAdd.uid!) || self!.reportingManager.userIsBlocked(theirUID: self!.friendToAdd.uid!) {
+                    let alert = PMAlertController(title: "user is blocked", description: "either they blocked you or you blocked them.\n we don't know, though.\n it's not really our business.\n\nsorry for any drama this may cause...", image: nil, style: .alert)
+                    alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+                    let action = PMAlertAction(title: "rude, but okay", style: .default, action: {
+                        self?.navigationController?.popViewController(animated: true)
+                    })
+                    alert.addAction(action)
+                    self?.present(alert, animated: true, completion: nil)
+                } else {
+                    self?.updateUI()
+                    self?.configureStatusView()
+                }
             case .failure(let error):
                 self?.cancelOperation()
                 print(error)
@@ -165,23 +179,102 @@ class FriendVerifyViewController: UIViewController {
             return
         }
 
-        db.collection("users").document(friendToAdd.uid!).collection("friend requests").document(uid).setData([
-            "Name" : name,
-            "User Identifier" : uid,
-            "Profile Image URL" : profileImageURL
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil, let strongSelf = self else {
-                return
+        if checkIfAlreadyFriends() {
+            let alert = PMAlertController(title: "already friends", description: "you can't send a friend request to someone you're already friends with. \n \n maybe if you used the app how it was intended then you wouldn't be stuck here doing stupid stuff like trying to create duplicate friends.", image: nil, style: .alert)
+            alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+            alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+            alert.addAction(PMAlertAction(title: "ok, sorry", style: .default, action: { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
+            }))
+            present(alert, animated: true)
+        } else {
+            db.collection("users").document(friendToAdd.uid!).collection("friend requests").document(uid).setData([
+                "Name" : name,
+                "User Identifier" : uid,
+                "Profile Image URL" : profileImageURL
+            ], merge: true, completion: { [weak self] error in
+                guard error == nil, let strongSelf = self else {
+                    return
+                }
+                
+                let sender = PushNotificationSender()
+                sender.sendPushNotification(to: strongSelf.friendToAdd.fcmToken!, title: "new friend request", body: "\(name) wants to be your friend.")
+                
+                print("friend request sent!")
+                
+                if strongSelf.comingFromGroup {
+                    strongSelf.navigationController?.popViewController(animated: true)
+                } else {
+                    strongSelf.navigationController?.popToRootViewController(animated: true)
+                }
+            })
+        }
+    }
+    
+    private func checkIfAlreadyFriends() -> Bool {
+        if let friendsUID = UserDefaults.standard.stringArray(forKey: "friendsUID") {
+            for x in friendsUID.count {
+                if friendToAdd.uid == friendsUID[x] {
+                    return true
+                }
             }
-            
-            let sender = PushNotificationSender()
-            sender.sendPushNotification(to: strongSelf.friendToAdd.fcmToken!, title: "new friend request", body: "\(name) wants to be your friend.")
-            
-            print("friend request sent!")
-            strongSelf.navigationController?.popToRootViewController(animated: true)
-        })
-        
-        
+        }
+        return false
+    }
+    
+    // MARK: - Reporting
+    @IBAction func reportButton(_ sender: Any) {
+        let alert = PMAlertController(title: "user options", description: "you can report or block a user here.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+        alert.addAction(PMAlertAction(title: "report user", style: .default, action: { [weak self] in
+            self?.reportUser()
+        }))
+        alert.addAction(PMAlertAction(title: "block user", style: .default, action: { [weak self] in
+            self?.blockUser()
+        }))
+        present(alert, animated: true)
+    }
+    
+    private func blockUser() {
+        let alert = PMAlertController(title: "block user", description: "are you sure? \n \nany groups you are in with this person will NOT be deleted.\n\nthis action cannot be undone.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.alertTitle.textColor = .systemRed
+        alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
+        alert.addAction(PMAlertAction(title: "block user", style: .default, action: { [weak self] in
+            self?.databaseManager.blockUser(uidToBlock: self!.friendToAdd.uid!, completion: { success in
+                if success {
+                    let alert = PMAlertController(title: "user blocked", description: "you have successfully blocked this person.\n\nsorry they were mean to you or whatever.", image: nil, style: .alert)
+                    alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+                    alert.addAction(PMAlertAction(title: "yeah, me too", style: .default, action: {
+                        self?.navigationController?.popViewController(animated: true)
+                    }))
+                    self?.present(alert, animated: true, completion: nil)
+                } else {
+                    self?.alertManager.showAlert(title: "error blocking user", message: "there was an error when blocking the user. please try again.")
+                }
+            })
+        }))
+        present(alert, animated: true)
+    }
+    
+    private func reportUser() {
+        let alert = PMAlertController(title: "report user", description: "are you sure? \n this action cannot be undone.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.alertTitle.textColor = .systemRed
+        alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
+        alert.addAction(PMAlertAction(title: "report user", style: .default, action: { [weak self] in
+            self?.reportingManager.reportUser(uid: self!.friendToAdd.uid!, name: self!.friendToAdd.name!, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
+                if success {
+                    print("user reported!")
+                    self?.navigationController?.popViewController(animated: true)
+                } else {
+                    self?.alertManager.showAlert(title: "error reporting user", message: "something went wrong when reporting the user. please try again.")
+                }
+            })
+        }))
+        present(alert, animated: true)
     }
 }
 

@@ -37,9 +37,11 @@ class NameViewController: UIViewController, UITextFieldDelegate {
             alertManager.showAlert(title: "no name provided", message: "please enter your name in the field.")
         } else {
             if profanityManager.checkForProfanity(in: name) {
-                alertManager.showAlert(title: "bad language", message: "there are some less-than-ideal words used in your name. please make sure your name is accurate and appropriate.")
+                alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your name. please make sure your name is accurate and appropriate.")
             } else {
-                UserDefaults.standard.set(name, forKey: "name")
+                let lowercasedName = name.lowercased()
+                let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
+                UserDefaults.standard.set(whitespaceName, forKey: "name")
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(identifier: "finishingUpViewController") as! FinishingUpViewController
                 self.navigationController?.pushViewController(vc, animated: true)

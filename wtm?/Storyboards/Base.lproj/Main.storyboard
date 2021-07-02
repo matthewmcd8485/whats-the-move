@@ -7,6 +7,7 @@
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -173,7 +174,7 @@ that's embarrassing.</string>
                                 <rect key="frame" x="36" y="688" width="141" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o9s-Am-MiP">
@@ -198,7 +199,7 @@ that's embarrassing.</string>
                                 <rect key="frame" x="213" y="688" width="141" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DGw-jm-rhJ">
@@ -386,6 +387,9 @@ messages</string>
                                 <rect key="frame" x="45" y="320" width="300" height="300"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="boredButton"/>
+                                <connections>
+                                    <action selector="boredButton:" destination="sfA-O3-tAM" eventType="touchUpInside" id="YGh-U8-I0n"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="wtm?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NBd-2G-rlF">
                                 <rect key="frame" x="16" y="79" width="358" height="155"/>
@@ -407,6 +411,7 @@ messages</string>
         <!--Tab Bar Controller-->
         <scene sceneID="fAD-av-usN">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Gsv-3t-ZWM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tabBarController storyboardIdentifier="tabBarController" automaticallyAdjustsScrollViewInsets="NO" id="a9E-yq-ITe" customClass="TabBarController" customModule="wtm_" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="1xF-CM-hIf">
@@ -422,7 +427,6 @@ messages</string>
                         <segue destination="OLZ-kX-lqK" kind="relationship" relationship="viewControllers" id="UPW-wz-7Rb"/>
                     </connections>
                 </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Gsv-3t-ZWM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1957" y="802"/>
         </scene>
@@ -457,7 +461,7 @@ what is your name?</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="backgroundColors"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="25"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" textContentType="name"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" textContentType="name"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="continue" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wlh-v5-X0K">
                                 <rect key="frame" x="114" y="710" width="124" height="61"/>
@@ -632,7 +636,7 @@ touches</string>
                                     <color key="titleColor" name="darkBlueOnLight"/>
                                 </state>
                                 <connections>
-                                    <segue destination="8el-I7-Frj" kind="show" id="LU0-PH-AjE"/>
+                                    <action selector="statusButton:" destination="6zo-9a-ifm" eventType="touchUpInside" id="Ylt-jT-aQY"/>
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="checkmark.seal" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="EsZ-Kg-COi">
@@ -644,7 +648,7 @@ touches</string>
                                 <rect key="frame" x="32" y="656" width="141" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MTM-9a-plE">
@@ -667,7 +671,7 @@ touches</string>
                                 <rect key="frame" x="218" y="657" width="141" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nmE-QL-jln">
@@ -837,6 +841,13 @@ touches</string>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(silences notifications)" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H5I-EJ-ZA1">
+                                <rect key="frame" x="200" y="605" width="174" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="12"/>
+                                <color key="textColor" name="secondaryBlack"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="qfD-jX-tqk"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -957,7 +968,7 @@ your best is probably still pretty bad.</string>
                                     <action selector="backButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="zGN-80-hGo"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="app settings" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpU-fE-pNW">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="settings" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpU-fE-pNW">
                                 <rect key="frame" x="16" y="61" width="358" height="113"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
@@ -1004,12 +1015,19 @@ your best is probably still pretty bad.</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
                                 <state key="normal" title="log out">
-                                    <color key="titleColor" name="lightRedOnLight"/>
+                                    <color key="titleColor" systemColor="systemRedColor"/>
                                 </state>
                                 <connections>
                                     <action selector="logOutButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="Boa-E9-Lf8"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="make your changes to the space-time continuum here" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iQr-ee-B9e">
+                                <rect key="frame" x="16" y="141" width="332" height="69"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="A6j-I9-Be4"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -1023,6 +1041,7 @@ your best is probably still pretty bad.</string>
         <!--myself-->
         <scene sceneID="Lpw-4m-6ff">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="COl-fC-O6P" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="OLZ-kX-lqK" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="myself" image="person.fill" catalog="system" selectedImage="person.fill" id="gv5-kk-VfH"/>
                     <toolbarItems/>
@@ -1035,13 +1054,13 @@ your best is probably still pretty bad.</string>
                         <segue destination="6zo-9a-ifm" kind="relationship" relationship="rootViewController" id="XYg-LM-ZLf"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="COl-fC-O6P" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2869.2307692307691" y="1517.7725118483411"/>
         </scene>
         <!--home-->
         <scene sceneID="wMq-Es-c9m">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="anX-Ax-P4f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="Fmg-La-1p3" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="home" image="house.fill" catalog="system" selectedImage="house.fill" id="NAd-yO-YR1"/>
                     <toolbarItems/>
@@ -1054,13 +1073,13 @@ your best is probably still pretty bad.</string>
                         <segue destination="sfA-O3-tAM" kind="relationship" relationship="rootViewController" id="65x-Xu-yHg"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="anX-Ax-P4f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2870.7692307692305" y="801.89573459715632"/>
         </scene>
         <!--friends-->
         <scene sceneID="jn7-kc-z06">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fWO-m7-QMz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="PLD-DU-f4K" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="friends" image="person.3.fill" catalog="system" selectedImage="person.3.fill" id="OA3-If-vSe"/>
                     <toolbarItems/>
@@ -1073,7 +1092,6 @@ your best is probably still pretty bad.</string>
                         <segue destination="lao-sk-xh6" kind="relationship" relationship="rootViewController" id="kRh-5K-4ol"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fWO-m7-QMz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2869.2307692307691" y="89.5734597156398"/>
         </scene>
@@ -1152,7 +1170,7 @@ your best is probably still pretty bad.</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bgC-NI-aMx">
-                                <rect key="frame" x="87" y="665" width="217" height="61"/>
+                                <rect key="frame" x="87" y="678" width="217" height="61"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="darkBlueOnLight"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
@@ -1170,30 +1188,40 @@ your best is probably still pretty bad.</string>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lo2-24-a0V">
-                                <rect key="frame" x="29" y="434" width="332" height="69"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="app version 1.0 (3)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDa-Vg-Cd4">
+                                <rect key="frame" x="29" y="187" width="332" height="69"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <string key="text">© 2021 matthew mcdonnell.
-all rights reserved.</string>
                                 <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
                                 <color key="textColor" name="secondaryWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4j2-5F-PRO">
-                                <rect key="frame" x="29" y="596" width="332" height="69"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="tell us how good we are!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4j2-5F-PRO">
+                                <rect key="frame" x="34" y="642" width="323" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <string key="text">feedback is only appreciated
- if it makes us look good.</string>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
                                 <color key="textColor" name="secondaryWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zpw-On-2WA">
-                                <rect key="frame" x="0.0" y="302" width="390" height="69"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="created with haste in naperville developed by matt and jackson" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zpw-On-2WA">
+                                <rect key="frame" x="0.0" y="296" width="390" height="110"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <string key="text">app version 1.0 (1)
-created with haste in naperville</string>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="17"/>
+                                <color key="textColor" name="secondaryWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="special thanks to jace for this bomb idea" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SG8-D1-mbP">
+                                <rect key="frame" x="0.0" y="358" width="390" height="69"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="15"/>
+                                <color key="textColor" name="secondaryWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lo2-24-a0V">
+                                <rect key="frame" x="29" y="487" width="332" height="69"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <string key="text">© 2021 matthew mcdonnell.
+all rights reserved.</string>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
                                 <color key="textColor" name="secondaryWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -1208,7 +1236,7 @@ created with haste in naperville</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jfc-m0-hhS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5485" y="2259"/>
+            <point key="canvasLocation" x="5484.6153846153848" y="2258.5308056872036"/>
         </scene>
         <!--Add Friends View Controller-->
         <scene sceneID="GM3-ai-Ie3">
@@ -1402,6 +1430,19 @@ created with haste in naperville</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" name="darkGreenOnLight"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O72-6J-6fC">
+                                <rect key="frame" x="334" y="41" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <state key="normal" image="exclamationmark.triangle" catalog="system">
+                                    <color key="titleColor" systemColor="systemRedColor"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="reportButton:" destination="2Kr-oi-zJj" eventType="touchUpInside" id="yxM-Ib-kZM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="JXn-u7-vnA"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -1491,7 +1532,7 @@ created with haste in naperville</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SMW-ea-rRg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7323" y="90"/>
+            <point key="canvasLocation" x="7223" y="90"/>
         </scene>
         <!--Requests View Controller-->
         <scene sceneID="XrN-4n-iKy">
@@ -1640,6 +1681,19 @@ tragic.</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" name="darkBlueOnLight"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUb-yx-5xa">
+                                <rect key="frame" x="334" y="41" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <state key="normal" image="exclamationmark.triangle" catalog="system">
+                                    <color key="titleColor" systemColor="systemRedColor"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="reportButton:" destination="B1C-SW-Lcu" eventType="touchUpInside" id="Xe2-SH-TbG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="IjG-IR-CbJ"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -1698,7 +1752,7 @@ tragic.</string>
                                 <rect key="frame" x="106" y="352" width="178" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="25"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edo-xR-vze">
@@ -1712,7 +1766,6 @@ tragic.</string>
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
                                 </state>
                                 <connections>
-                                    <action selector="addFriend:" destination="2Kr-oi-zJj" eventType="touchUpInside" id="hv3-wd-2ZT"/>
                                     <action selector="newGroupButton:" destination="Ni0-3C-MpS" eventType="touchUpInside" id="Q14-Yw-xay"/>
                                 </connections>
                             </button>
@@ -1737,7 +1790,7 @@ tragic.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2g-tj-WcC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6357" y="802"/>
+            <point key="canvasLocation" x="8051" y="802"/>
         </scene>
         <!--Create Group View Controller-->
         <scene sceneID="uyz-Dn-jja">
@@ -1747,8 +1800,8 @@ tragic.</string>
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelection="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="INp-qk-SOJ">
-                                <rect key="frame" x="16" y="171" width="358" height="476"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="INp-qk-SOJ">
+                                <rect key="frame" x="16" y="273" width="358" height="374"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="backgroundColors"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1774,14 +1827,14 @@ tragic.</string>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2dz-dI-pPt">
-                                <rect key="frame" x="106" y="352" width="178" height="56"/>
+                                <rect key="frame" x="106" y="424" width="178" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="25"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5T5-II-cE5">
-                                <rect key="frame" x="53" y="663" width="285" height="53"/>
+                                <rect key="frame" x="53" y="670" width="285" height="53"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="darkBlueOnLight"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
@@ -1791,9 +1844,23 @@ tragic.</string>
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
                                 </state>
                                 <connections>
-                                    <action selector="addFriend:" destination="2Kr-oi-zJj" eventType="touchUpInside" id="P88-rf-nbG"/>
+                                    <action selector="createButton:" destination="NSO-8m-veG" eventType="touchUpInside" id="boa-1i-PwZ"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="give it a name..." minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NCN-v6-e0y">
+                                <rect key="frame" x="16" y="163" width="358" height="57"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="backgroundColors"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="35"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" textContentType="name"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="don't forget to add some friends" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2zy-Vy-reS">
+                                <rect key="frame" x="16" y="233" width="358" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="18"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="jLe-pq-pNk"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -1803,19 +1870,297 @@ tragic.</string>
                         <outlet property="createButton" destination="5T5-II-cE5" id="0Zm-E2-mKf"/>
                         <outlet property="loadingLabel" destination="2dz-dI-pPt" id="cTy-j6-tzr"/>
                         <outlet property="tableView" destination="INp-qk-SOJ" id="gBn-Qo-VAM"/>
+                        <outlet property="textField" destination="NCN-v6-e0y" id="8eK-Ol-wfz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fEJ-KS-IhJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7322" y="802"/>
+            <point key="canvasLocation" x="9791" y="802"/>
+        </scene>
+        <!--Group Detail View Controller-->
+        <scene sceneID="HZp-lM-cUN">
+            <objects>
+                <viewController storyboardIdentifier="groupDetailViewController" id="2cu-ut-GVi" customClass="GroupDetailViewController" customModule="wtm_" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="X0j-5y-fbA">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Oei-58-Xa3">
+                                <rect key="frame" x="16" y="261" width="358" height="394"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="backgroundColors"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="view group" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ubN-zs-wIt">
+                                <rect key="frame" x="16" y="61" width="358" height="113"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
+                                <color key="textColor" name="darkBlueOnLight"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NVD-za-RaE">
+                                <rect key="frame" x="16" y="41" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal" image="arrow.left" catalog="system">
+                                    <color key="titleColor" name="darkBlueOnLight"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButton:" destination="2cu-ut-GVi" eventType="touchUpInside" id="Qh4-Zq-u3X"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kXZ-F9-ZoL">
+                                <rect key="frame" x="106" y="369" width="178" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="25"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="people in this group" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eQM-SH-Zjo">
+                                <rect key="frame" x="16" y="209" width="358" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="18"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="group name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dok-2K-e0l">
+                                <rect key="frame" x="16" y="154" width="358" height="72"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="36"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Paw-aa-adU">
+                                <rect key="frame" x="53" y="680" width="285" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="backgroundColors"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
+                                <color key="tintColor" name="backgroundColors"/>
+                                <state key="normal" title="leave group">
+                                    <color key="titleColor" systemColor="systemRedColor"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="leaveGroupButton:" destination="2cu-ut-GVi" eventType="touchUpInside" id="8jJ-2e-7kF"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="pd4-Ey-8Kq"/>
+                        <color key="backgroundColor" name="backgroundColors"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="LAC-Gq-EAT"/>
+                    <connections>
+                        <outlet property="loadingLabel" destination="kXZ-F9-ZoL" id="sGi-86-ty7"/>
+                        <outlet property="nameLabel" destination="Dok-2K-e0l" id="796-NM-PI9"/>
+                        <outlet property="peopleLabel" destination="eQM-SH-Zjo" id="Wdg-ad-7xg"/>
+                        <outlet property="tableView" destination="Oei-58-Xa3" id="o6u-fV-Rm2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ynO-gG-BSO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="8914" y="802"/>
+        </scene>
+        <!--Activity View Controller-->
+        <scene sceneID="s6i-OM-IiC">
+            <objects>
+                <viewController storyboardIdentifier="activityViewController" id="Zai-WK-gG1" customClass="ActivityViewController" customModule="wtm_" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JQe-Gy-uCl">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="i'm bored" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gOg-as-zcS">
+                                <rect key="frame" x="16" y="61" width="358" height="113"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
+                                <color key="textColor" name="darkBlueOnLight"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mv2-Tb-nsg">
+                                <rect key="frame" x="16" y="41" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal" image="arrow.left" catalog="system">
+                                    <color key="titleColor" name="darkBlueOnLight"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButton:" destination="Zai-WK-gG1" eventType="touchUpInside" id="Kzy-A0-d6F"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="what are you in the mood for?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f4P-a4-wyr">
+                                <rect key="frame" x="16" y="141" width="358" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gFZ-C5-xTy">
+                                <rect key="frame" x="16" y="197" width="358" height="516"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="backgroundColors"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="eR8-6x-Ehk">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="lZf-Sj-MCP">
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="HRn-UU-H3n">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="wgc-R7-uxb"/>
+                        <color key="backgroundColor" name="backgroundColors"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="dCX-4c-Dto"/>
+                    <connections>
+                        <outlet property="collectionView" destination="gFZ-C5-xTy" id="rs2-ui-gXM"/>
+                        <outlet property="moodLabel" destination="f4P-a4-wyr" id="8vH-CY-3jg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fgc-pu-yEu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4621.538461538461" y="801.89573459715632"/>
+        </scene>
+        <!--Friend Selection View Controller-->
+        <scene sceneID="tf0-sR-vUW">
+            <objects>
+                <viewController storyboardIdentifier="friendSelectionViewController" id="bvE-bF-9u0" customClass="FriendSelectionViewController" customModule="wtm_" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9GV-qp-696">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="i'm bored" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LJH-lT-W0O">
+                                <rect key="frame" x="16" y="61" width="358" height="113"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
+                                <color key="textColor" name="darkBlueOnLight"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lKY-hs-hSl">
+                                <rect key="frame" x="16" y="41" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal" image="arrow.left" catalog="system">
+                                    <color key="titleColor" name="darkBlueOnLight"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButton:" destination="bvE-bF-9u0" eventType="touchUpInside" id="uCi-bY-CN9"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="who would you like to annoy?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Va5-fj-jLp">
+                                <rect key="frame" x="16" y="141" width="358" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="8Vg-u7-Gg4">
+                                <rect key="frame" x="16" y="197" width="358" height="476"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="backgroundColors"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yga-bh-o2c">
+                                <rect key="frame" x="106" y="378" width="178" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="25"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dXx-rR-9Bx">
+                                <rect key="frame" x="53" y="681" width="285" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="darkBlueOnLight"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal" title="swoosh">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendButton:" destination="bvE-bF-9u0" eventType="touchUpInside" id="ACn-7x-G1B"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2OD-4i-DE1"/>
+                        <color key="backgroundColor" name="backgroundColors"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="wVz-X4-jY9"/>
+                    <connections>
+                        <outlet property="loadingLabel" destination="Yga-bh-o2c" id="qqD-Ta-Kst"/>
+                        <outlet property="sendButton" destination="dXx-rR-9Bx" id="SkO-f1-iM4"/>
+                        <outlet property="tableView" destination="8Vg-u7-Gg4" id="kZA-26-Zxp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CLm-sA-YU5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5484.6153846153848" y="801.89573459715632"/>
+        </scene>
+        <!--Swoosh View Controller-->
+        <scene sceneID="THu-Ai-mQ6">
+            <objects>
+                <viewController storyboardIdentifier="swooshViewController" hidesBottomBarWhenPushed="YES" id="z1t-2C-DMi" customClass="SwooshViewController" customModule="wtm_" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KNN-2u-kWe">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="7Oh-pQ-hLu">
+                                <rect key="frame" x="126" y="361.66666666666652" width="139" height="124"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" name="tertiaryLabelColors"/>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="100" scale="large" weight="bold"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="sending..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9tc-UF-Oge">
+                                <rect key="frame" x="16" y="102" width="358" height="113"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
+                                <color key="textColor" name="darkBlueOnLight"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="entering the matrix..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5OD-pb-0vv">
+                                <rect key="frame" x="16" y="182" width="358" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="20"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Xe4-3B-xOH"/>
+                        <color key="backgroundColor" name="backgroundColors"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="cfX-4E-KOc"/>
+                    <connections>
+                        <outlet property="checkmarkView" destination="7Oh-pQ-hLu" id="MM2-TW-cKK"/>
+                        <outlet property="sendingLabel" destination="9tc-UF-Oge" id="Ylk-y7-gfr"/>
+                        <outlet property="subtitleLabel" destination="5OD-pb-0vv" id="qVL-3e-cxW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ozv-cU-S2V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6356.9230769230771" y="801.89573459715632"/>
         </scene>
     </scenes>
     <resources>
         <image name="arrow.left" catalog="system" width="128" height="98"/>
         <image name="arrow.right" catalog="system" width="128" height="98"/>
         <image name="boredButton" width="1000" height="1000"/>
+        <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="checkmark.seal" catalog="system" width="128" height="128"/>
         <image name="exclamationmark.bubble" catalog="system" width="128" height="110"/>
+        <image name="exclamationmark.triangle" catalog="system" width="128" height="112"/>
         <image name="gear" catalog="system" width="128" height="119"/>
         <image name="house.fill" catalog="system" width="128" height="106"/>
         <image name="nosign" catalog="system" width="128" height="121"/>
@@ -1865,8 +2210,14 @@ tragic.</string>
         <namedColor name="secondaryWhite">
             <color red="0.84313725490196079" green="0.84313725490196079" blue="0.85098039215686272" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="tertiaryLabelColors">
+            <color red="0.13725490196078433" green="0.24705882352941178" blue="0.3411764705882353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

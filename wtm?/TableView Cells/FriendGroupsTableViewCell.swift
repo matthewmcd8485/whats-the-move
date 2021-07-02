@@ -44,8 +44,8 @@ class FriendGroupsTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        nameLabel.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: 30)
-        peopleLabel.frame = CGRect(x: 0, y: nameLabel.frame.maxY, width: contentView.frame.width, height: 20)
+        nameLabel.frame = CGRect(x: 10, y: 0, width: contentView.frame.width, height: 36)
+        peopleLabel.frame = CGRect(x: 10, y: nameLabel.frame.maxY, width: contentView.frame.width, height: 20)
     }
     
     public func configure(with group: FriendGroup) {

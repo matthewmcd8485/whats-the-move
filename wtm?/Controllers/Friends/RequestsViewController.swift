@@ -76,9 +76,12 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
                 let profileImageURL = document.get("Profile Image URL") as! String
                 
                 let user = FriendRequest(name: name.lowercased(), uid: uid, profileImageURL: profileImageURL)
-                self?.requests.append(user)
-                self?.tableView.reloadData()
-                self?.updateUI()
+                
+                if !ReportingManager.shared.userIsBlocked(theirUID: uid) {
+                    self?.requests.append(user)
+                    self?.tableView.reloadData()
+                    self?.updateUI()
+                }
             }
         }
         

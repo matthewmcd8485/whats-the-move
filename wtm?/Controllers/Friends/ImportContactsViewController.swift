@@ -194,6 +194,8 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
         } else if phoneContacts[indexPath.row].phoneNumber[0].count == 10 {
             formatter = DefaultTextFormatter(textPattern: "+1 (###) ###-####")
             vc.phoneNumber = formatter.format(phoneContacts[indexPath.row].phoneNumber[0])!
+        } else {
+            vc.phoneNumber = formatter.format(phoneContacts[indexPath.row].phoneNumber[0])!
         }
         navigationController?.pushViewController(vc, animated: true)
     }

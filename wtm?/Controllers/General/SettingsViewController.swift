@@ -20,6 +20,7 @@ class SettingsViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         tabBarController?.hidesBottomBarWhenPushed = true
+        
     }
 
     @IBAction func backButton(_ sender: Any) {
@@ -28,6 +29,7 @@ class SettingsViewController: UIViewController {
     
     @IBAction func logOutButton(_ sender: Any) {
         let alert = PMAlertController(title: "log out", description: "are you sure you want to log out?", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
         alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
         alert.addAction(PMAlertAction(title: "log out", style: .default, action: {
             do {
@@ -36,7 +38,8 @@ class SettingsViewController: UIViewController {
                 print("Sign out process failed")
                 self.alertManager.showAlert(title: "sign out failed", message: "there was an error logging you out. please try again.")
             }
-            
+            self.navigationController?.viewControllers = [self]
+            self.tabBarController?.viewControllers = [self]
             UserDefaults.resetDefaults()
             UserDefaults.standard.set(true, forKey: "launchedBefore")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)

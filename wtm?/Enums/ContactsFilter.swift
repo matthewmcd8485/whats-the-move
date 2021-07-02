@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum ContactsFilter {
-        case none
-        case mail
-        case message
-    }
+public enum ContactsFilter {
+    case none
+    case mail
+    case message
+}

@@ -18,7 +18,6 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         UNUserNotificationCenter.current().delegate = self
     }
     
@@ -75,7 +74,7 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
         UserDefaults.standard.set(status, forKey: "status")
         
         db.collection("users").document(uid).setData([
-            "Name" : name,
+            "Name" : name.lowercased(),
             "Phone Number" : phoneNumber,
             "User Identifier" : uid,
             "FCM Token" : fcmToken,

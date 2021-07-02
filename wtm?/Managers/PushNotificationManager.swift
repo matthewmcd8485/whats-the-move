@@ -39,7 +39,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
         updateFirestorePushTokenIfNeeded()
     }
     
-    func updateFirestorePushTokenIfNeeded() {
+    public func updateFirestorePushTokenIfNeeded() {
         if let token = Messaging.messaging().fcmToken {
             firestore.collection("users").document(uid).setData([
                 "FCM Token": token

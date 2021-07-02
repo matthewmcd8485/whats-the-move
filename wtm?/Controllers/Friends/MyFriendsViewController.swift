@@ -49,6 +49,7 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         createSpinnerView()
         setupRefreshControl()
         loadFriends()
+        updateGlobalFriendsList()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -87,7 +88,7 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     @objc private func refreshTableView(_ sender: Any) {
-        loadFriends()
+        updateGlobalFriendsList()
     }
     
     private func createSpinnerView() {
@@ -98,6 +99,27 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         view.bringSubviewToFront(tableView)
         //spinner.hudView.frame = CGRect(x: view.center.x, y: view.center.y - 120, width: 50, height: 50)
         //spinner.show(in: view)
+    }
+    
+    // MARK: - Loading Friends
+    private func updateGlobalFriendsList() {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+            return
+        }
+        var uids = [String]()
+        
+        databaseManager.downloadAllFriends(uid: uid, completion: { result in
+            switch result {
+            case .success(let users):
+                for x in users.count {
+                    uids.append(users[x].uid)
+                }
+                UserDefaults.standard.set(uids, forKey: "friendsUID")
+                self.loadFriends()
+            case .failure(let error):
+                print("\n *FRIENDS VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
+            }
+        })
     }
     
     private func loadFriends() {
@@ -112,9 +134,11 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: friendsUIDs[x], completion: { [weak self] result in
                 switch result {
                 case .success(let user):
-                    self?.friends.append(user)
-                    self?.friends = self!.friends.filterDuplicates { $0.uid == $1.uid }
-                    self?.friends.sort { $0.name! < $1.name! }
+                    if !ReportingManager.shared.userIsBlocked(theirUID: user.uid!) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid!) {
+                        self?.friends.append(user)
+                        self?.friends = self!.friends.filterDuplicates { $0.uid == $1.uid }
+                        self?.friends.sort { $0.name! < $1.name! }
+                    }
                 case .failure(let error):
                     self?.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
                     print(error)
@@ -126,10 +150,12 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
             })
         }
         
-        if friends.count == 0 {
-            tableView.reloadData()
-            updateUI()
-        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { [weak self] in
+            if self?.friends.count == 0 {
+                self?.tableView.reloadData()
+                self?.updateUI()
+            }
+        })
     }
     
     private func updateUI() {
