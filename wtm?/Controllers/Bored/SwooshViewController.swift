@@ -12,6 +12,7 @@ class SwooshViewController: UIViewController {
     
     let db = Firestore.firestore()
     let databaseManager = DatabaseManager.shared
+    let storageManager = StorageManager.shared
     
     let shape = CAShapeLayer()
 
@@ -66,6 +67,7 @@ class SwooshViewController: UIViewController {
     // MARK: - Sorting Users
     private func sortUsers() {
         let uid = UserDefaults.standard.string(forKey: "uid")
+        let name = UserDefaults.standard.string(forKey: "name")
         for x in groups.count {
             for y in groups[x].friends.count {
                 
@@ -76,6 +78,26 @@ class SwooshViewController: UIViewController {
                     allFriends.append(groups[x].friends[y])
                 }
             }
+            
+            // Create a bored request in Firestore; one for each group
+            let uuidString = UUID().uuidString
+            let postedTime = NSDate(timeIntervalSinceNow: 0)
+            let expiresAt = NSDate(timeIntervalSinceNow: 7200)
+            db.collection("friend groups").document(groups[x].group.groupID).collection("bored requests").document(uuidString).setData([
+                "Request Identifier" : uuidString,
+                "Initiated By" : name!,
+                "Posted Time" : postedTime,
+                "Expires At" : expiresAt,
+                "Activity" : mood.rawValue,
+                "Group Identifier" : groups[x].group.groupID,
+                "\(uid!) Availability" : "available",
+                "\(uid!) Substatus" : "i'll be there!"
+            ], merge: false, completion: { [weak self] error in
+                guard error == nil else {
+                    print("error uploading Firestore bored request for group: \(self!.groups[x].group.groupID)")
+                    return
+                }
+            })
         }
         
         allFriends = allFriends.filterDuplicates { $0.uid == $1.uid }
@@ -120,18 +142,25 @@ class SwooshViewController: UIViewController {
         let group = DispatchGroup()
         let name = UserDefaults.standard.string(forKey: "name")
         
-        for x in allUsers.count {
-            group.enter()
-            
-            let sender = PushNotificationSender()
-            sender.sendPushNotification(to: allUsers[x].fcmToken!, title: "\(name!) \(mood.rawValue)", body: "do them a favor and fix their boredom")
-            
-            group.leave()
-        }
-        
-        group.notify(queue: .main) { [weak self] in
-            self?.finishUp()
-        }
+        storageManager.downloadImageURL(imageName: mood.rawValue, collection: "mood images", completion: { [weak self] result in
+            switch result {
+            case .success(let imageURL):
+                for x in self!.allUsers.count {
+                    group.enter()
+                    
+                    let sender = PushNotificationSender()
+                    sender.sendPushNotification(to: self!.allUsers[x].fcmToken!, title: "\(name!) \(self!.mood.rawValue)", body: "do them a favor and fix their boredom", urlToImage: imageURL)
+                    
+                    group.leave()
+                }
+                
+                group.notify(queue: .main) { 
+                    self?.finishUp()
+                }
+            case .failure(let error):
+                print("error retrieving image URL: \(error)")
+            }
+        })
     }
     
     private func finishUp() {

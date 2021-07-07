@@ -1,16 +1,16 @@
 //
-//  FriendsTableViewCell.swift
+//  BoredResponseTableViewCell.swift
 //  wtm?
 //
-//  Created by Matthew McDonnell on 6/2/21.
+//  Created by Matthew McDonnell on 7/3/21.
 //
 
 import UIKit
 import AnyFormatKit
 import SDWebImage
 
-class FriendsTableViewCell: UITableViewCell {
-    static let identifier = "FriendsTableViewCell"
+class BoredResponseTableViewCell: UITableViewCell {
+    static let identifier = "BoredResponseTableViewCell"
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -26,7 +26,7 @@ class FriendsTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont(name: "SuperBasic-Thin", size: 12)
         label.textColor = UIColor(named: "secondaryLabelColors")
-        label.numberOfLines = 1
+        label.numberOfLines = 2
         label.textAlignment = .left
         label.lineBreakMode = .byTruncatingTail
         return label
@@ -64,37 +64,40 @@ class FriendsTableViewCell: UITableViewCell {
         statusLabel.frame = CGRect(x: statusImageView.frame.maxX + 10, y: nameLabel.frame.maxY - 5, width: CGFloat(contentViewWidth - statusImageWidth - offset), height: 20)
     }
     
-    public func configure(with model: User) {
-        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: model.uid!)
-        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.uid!)
+    public func configure(with model: BoredRequestUser) {
+        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: model.user.uid!)
+        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.user.uid!)
         
         // Name label
-        if model.uid == UserDefaults.standard.string(forKey: "uid") {
-            nameLabel.text = "\(model.name!.lowercased()) (you)"
+        if model.user.uid == UserDefaults.standard.string(forKey: "uid") {
+            nameLabel.text = "\(model.user.name!.lowercased()) (you)"
         } else {
-            nameLabel.text = model.name!.lowercased()
+            nameLabel.text = model.user.name!.lowercased()
         }
         
         // Status label
         if blockedMe || blockedYou {
             statusLabel.text = "blocked"
         } else {
-            statusLabel.text = model.status!
+            statusLabel.text = model.responseSubstatus
         }
         
         // Image View
         if blockedMe || blockedYou {
             statusImageView.image = UIImage(systemName: "hand.raised.slash")
             statusImageView.tintColor = .systemRed
-        } else if model.status! == "available" {
-            statusImageView.image = UIImage(systemName: "checkmark.seal")
+        } else if model.responseStatus == "available" {
+            statusImageView.image = UIImage(systemName: "checkmark.circle")
             statusImageView.tintColor = UIColor.systemGreen
-        } else if model.status! == "busy" {
-            statusImageView.image = UIImage(systemName: "exclamationmark.bubble")
+        } else if model.responseStatus == "busy" {
+            statusImageView.image = UIImage(systemName: "exclamationmark.circle")
             statusImageView.tintColor = UIColor(named: "darkYellowOnLight")
-        } else {
+        } else if model.responseStatus == "not available" {
             statusImageView.image = UIImage(systemName: "nosign")
             statusImageView.tintColor = UIColor.systemRed
+        } else {
+            statusImageView.image = UIImage(systemName: "questionmark.circle")
+            statusImageView.tintColor = UIColor.systemGray
         }
     }
 }

@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         
+        registerNotificationCategories()
+        
         return true
     }
 
@@ -40,11 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     
     // MARK: - Notifications
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let tokenParts = deviceToken.map { data in
-            String(format: "%02.2hhx", data)
-        }
-        let token = tokenParts.joined()
-        print("Device Token: \(token)")
+        let token = deviceToken.hexString // Defined in the Data extension file
+        print("\n\nAPNS Device Token: \(token)\n\n")
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -100,6 +99,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
     }
+    
+    private func registerNotificationCategories() {
+        let availableAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "count me in!", options: UNNotificationActionOptions.foreground)
+        let busyAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "might be busy today", options: UNNotificationActionOptions.foreground)
+        let dndAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "stop talking to me", options: UNNotificationActionOptions.foreground)
+        let someoneIsBoredCategory = UNNotificationCategory(identifier: "CustomPush", actions: [availableAction, busyAction, dndAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
+        UNUserNotificationCenter.current().setNotificationCategories([someoneIsBoredCategory])
+    }
 }
 
 @available(iOS 10, *)
@@ -132,7 +139,23 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         // Print full message.
         print(userInfo)
         
-        completionHandler()
+        defer {
+            completionHandler()
+        }
+        
+        // Identify the action by matching its identifier.
+        guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else {
+            return
+        }
+        
+        if response.actionIdentifier == "i'm bored" {
+            
+        }
+        
+        // Perform the related action
+        print("Open board tapped from a notification!")
+        
+        // .. deeplink into the board
     }
 }
 

@@ -119,6 +119,7 @@ class LoadingViewController: UIViewController {
                     
                     if token != fcmToken {
                         self?.databaseManager.updateFCMToken(uid: uid!, newToken: token)
+                        UIApplication.shared.registerForRemoteNotifications()
                     }
                 }
             }

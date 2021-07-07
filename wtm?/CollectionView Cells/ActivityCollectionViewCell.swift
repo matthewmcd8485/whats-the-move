@@ -55,7 +55,7 @@ class ActivityCollectionViewCell: UICollectionViewCell {
         categoryLabel.text = category
         layer.backgroundColor = UIColor.black.cgColor
         imageView.image = image
-        imageView.alpha = 0.4
+        imageView.alpha = 0.5
     }
 }
 

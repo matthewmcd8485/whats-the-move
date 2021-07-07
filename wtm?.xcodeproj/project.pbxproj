@@ -91,6 +91,27 @@
 		C985B4262686E4B90033E08E /* ActivityCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C985B4252686E4B90033E08E /* ActivityCollectionViewCell.swift */; };
 		C985B4282686E6630033E08E /* PickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C985B4272686E6630033E08E /* PickerData.swift */; };
 		C985B42A2686E8960033E08E /* CategoryImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C985B4292686E8960033E08E /* CategoryImages.swift */; };
+		C988D501268F6F4000CAEA8E /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D500268F6F4000CAEA8E /* Data.swift */; };
+		C988D509268F728400CAEA8E /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D508268F728400CAEA8E /* NotificationService.swift */; };
+		C988D50D268F728400CAEA8E /* WTM Notification Service Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C988D506268F728400CAEA8E /* WTM Notification Service Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C988D513268F72B100CAEA8E /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D512268F72B100CAEA8E /* Notifications.swift */; };
+		C988D517268F782B00CAEA8E /* Notification.json in Resources */ = {isa = PBXBuildFile; fileRef = C988D516268F782B00CAEA8E /* Notification.json */; };
+		C988D51C268FCF4E00CAEA8E /* StorageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9574FA4266544C700405B8B /* StorageType.swift */; };
+		C988D51D268FCF5000CAEA8E /* StorageErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9574FA6266544D500405B8B /* StorageErrors.swift */; };
+		C988D51E268FCF5500CAEA8E /* DatabaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95A628E2669C0640000EE31 /* DatabaseError.swift */; };
+		C988D526268FD79A00CAEA8E /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C988D525268FD79A00CAEA8E /* UserNotifications.framework */; };
+		C988D528268FD79A00CAEA8E /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C988D527268FD79A00CAEA8E /* UserNotificationsUI.framework */; };
+		C988D52B268FD79A00CAEA8E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D52A268FD79A00CAEA8E /* NotificationViewController.swift */; };
+		C988D52E268FD79A00CAEA8E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C988D52C268FD79A00CAEA8E /* MainInterface.storyboard */; };
+		C988D532268FD79A00CAEA8E /* WTM Notification Content Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C988D524268FD79A00CAEA8E /* WTM Notification Content Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C988D537269018FB00CAEA8E /* BoredRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D536269018FB00CAEA8E /* BoredRequest.swift */; };
+		C988D5392690193600CAEA8E /* BoredRequestUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D5382690193600CAEA8E /* BoredRequestUser.swift */; };
+		C988D53B2690244D00CAEA8E /* BoredRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D53A2690244D00CAEA8E /* BoredRequestsViewController.swift */; };
+		C9A2CCDD2690AD56004E3796 /* BoredRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2CCDC2690AD56004E3796 /* BoredRequestTableViewCell.swift */; };
+		C9A2CCDF2690B92C004E3796 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2CCDE2690B92C004E3796 /* UIImageView.swift */; };
+		C9A2CCE126910A54004E3796 /* BoredRequestResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2CCE026910A54004E3796 /* BoredRequestResponseViewController.swift */; };
+		C9A2CCE326911BDB004E3796 /* BoredResponseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2CCE226911BDB004E3796 /* BoredResponseTableViewCell.swift */; };
+		C9A2CCE526914DF7004E3796 /* ChangeResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2CCE426914DF7004E3796 /* ChangeResponseViewController.swift */; };
 		C9B37F7A26857C0B00A712DD /* FriendGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B37F7926857C0B00A712DD /* FriendGroupsViewController.swift */; };
 		C9D50E872686ABCE00469E29 /* ReportingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D50E862686ABCE00469E29 /* ReportingManager.swift */; };
 		C9F238922671512200C2B080 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F238912671512200C2B080 /* UserDefaults.swift */; };
@@ -111,6 +132,20 @@
 			remoteGlobalIDString = C9760B172663F646009F66DA;
 			remoteInfo = "wtm?";
 		};
+		C988D50B268F728400CAEA8E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9760B102663F646009F66DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C988D505268F728400CAEA8E;
+			remoteInfo = "WTM Notification Service Extension";
+		};
+		C988D530268FD79A00CAEA8E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9760B102663F646009F66DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C988D523268FD79A00CAEA8E;
+			remoteInfo = "WTM Notification Content Extension";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -122,6 +157,18 @@
 			files = (
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C988D511268F728400CAEA8E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C988D50D268F728400CAEA8E /* WTM Notification Service Extension.appex in Embed App Extensions */,
+				C988D532268FD79A00CAEA8E /* WTM Notification Content Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -219,6 +266,26 @@
 		C985B4252686E4B90033E08E /* ActivityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCollectionViewCell.swift; sourceTree = "<group>"; };
 		C985B4272686E6630033E08E /* PickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerData.swift; sourceTree = "<group>"; };
 		C985B4292686E8960033E08E /* CategoryImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryImages.swift; sourceTree = "<group>"; };
+		C988D500268F6F4000CAEA8E /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		C988D506268F728400CAEA8E /* WTM Notification Service Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "WTM Notification Service Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C988D508268F728400CAEA8E /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		C988D50A268F728400CAEA8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C988D512268F72B100CAEA8E /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		C988D516268F782B00CAEA8E /* Notification.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Notification.json; sourceTree = "<group>"; };
+		C988D524268FD79A00CAEA8E /* WTM Notification Content Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "WTM Notification Content Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C988D525268FD79A00CAEA8E /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		C988D527268FD79A00CAEA8E /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		C988D52A268FD79A00CAEA8E /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		C988D52D268FD79A00CAEA8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		C988D52F268FD79A00CAEA8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C988D536269018FB00CAEA8E /* BoredRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequest.swift; sourceTree = "<group>"; };
+		C988D5382690193600CAEA8E /* BoredRequestUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequestUser.swift; sourceTree = "<group>"; };
+		C988D53A2690244D00CAEA8E /* BoredRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequestsViewController.swift; sourceTree = "<group>"; };
+		C9A2CCDC2690AD56004E3796 /* BoredRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequestTableViewCell.swift; sourceTree = "<group>"; };
+		C9A2CCDE2690B92C004E3796 /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
+		C9A2CCE026910A54004E3796 /* BoredRequestResponseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequestResponseViewController.swift; sourceTree = "<group>"; };
+		C9A2CCE226911BDB004E3796 /* BoredResponseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredResponseTableViewCell.swift; sourceTree = "<group>"; };
+		C9A2CCE426914DF7004E3796 /* ChangeResponseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeResponseViewController.swift; sourceTree = "<group>"; };
 		C9B37F7926857C0B00A712DD /* FriendGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendGroupsViewController.swift; sourceTree = "<group>"; };
 		C9D50E862686ABCE00469E29 /* ReportingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportingManager.swift; sourceTree = "<group>"; };
 		C9F238912671512200C2B080 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
@@ -254,6 +321,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C988D503268F728400CAEA8E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C988D521268FD79A00CAEA8E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C988D528268FD79A00CAEA8E /* UserNotificationsUI.framework in Frameworks */,
+				C988D526268FD79A00CAEA8E /* UserNotifications.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -263,6 +346,8 @@
 				8E902825EB88275A73F40848 /* Pods_wtm_.framework */,
 				F87EFD931C3965DF457FCF3D /* Pods_wtm__wtm_UITests.framework */,
 				EE15818DD1E9FD54DDD3D9DF /* Pods_wtm_Tests.framework */,
+				C988D525268FD79A00CAEA8E /* UserNotifications.framework */,
+				C988D527268FD79A00CAEA8E /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -285,6 +370,9 @@
 				C9574FCE266861BB00405B8B /* Array.swift */,
 				C9F238912671512200C2B080 /* UserDefaults.swift */,
 				C97E107826897C0F001470C2 /* String.swift */,
+				C988D500268F6F4000CAEA8E /* Data.swift */,
+				C988D512268F72B100CAEA8E /* Notifications.swift */,
+				C9A2CCDE2690B92C004E3796 /* UIImageView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -365,6 +453,8 @@
 				C9760B1A2663F646009F66DA /* wtm? */,
 				C9760B312663F647009F66DA /* wtm?Tests */,
 				C9760B3C2663F647009F66DA /* wtm?UITests */,
+				C988D507268F728400CAEA8E /* WTM Notification Service Extension */,
+				C988D529268FD79A00CAEA8E /* WTM Notification Content Extension */,
 				C9760B192663F646009F66DA /* Products */,
 				CBF9409AD17BC1C8E29398D7 /* Pods */,
 				712CE31C1D67EF547FE5B836 /* Frameworks */,
@@ -377,6 +467,8 @@
 				C9760B182663F646009F66DA /* wtm?.app */,
 				C9760B2E2663F647009F66DA /* wtm?Tests.xctest */,
 				C9760B392663F647009F66DA /* wtm?UITests.xctest */,
+				C988D506268F728400CAEA8E /* WTM Notification Service Extension.appex */,
+				C988D524268FD79A00CAEA8E /* WTM Notification Content Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -496,6 +588,9 @@
 				C96930AC2686E33700DA565B /* ActivityViewController.swift */,
 				C96EFEEC2687BE7100DB1194 /* FriendSelectionViewController.swift */,
 				C97E107626895CD6001470C2 /* SwooshViewController.swift */,
+				C988D53A2690244D00CAEA8E /* BoredRequestsViewController.swift */,
+				C9A2CCE026910A54004E3796 /* BoredRequestResponseViewController.swift */,
+				C9A2CCE426914DF7004E3796 /* ChangeResponseViewController.swift */,
 			);
 			path = Bored;
 			sourceTree = "<group>";
@@ -505,6 +600,7 @@
 			children = (
 				C9760B8126643EB3009F66DA /* KeychainItem.swift */,
 				C9760B8026643EB2009F66DA /* PushNotificationSender.swift */,
+				C988D516268F782B00CAEA8E /* Notification.json */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -520,6 +616,8 @@
 				C912CD70268584F60078D5C1 /* FriendGroupsTableViewCell.swift */,
 				C912CD75268593780078D5C1 /* CreateFriendGroupTableViewCell.swift */,
 				C97E10722688295A001470C2 /* SendToGroupTableViewCell.swift */,
+				C9A2CCDC2690AD56004E3796 /* BoredRequestTableViewCell.swift */,
+				C9A2CCE226911BDB004E3796 /* BoredResponseTableViewCell.swift */,
 			);
 			path = "TableView Cells";
 			sourceTree = "<group>";
@@ -536,6 +634,8 @@
 				C97E107426882AC5001470C2 /* SelectableGroup.swift */,
 				C985B4272686E6630033E08E /* PickerData.swift */,
 				C985B4292686E8960033E08E /* CategoryImages.swift */,
+				C988D536269018FB00CAEA8E /* BoredRequest.swift */,
+				C988D5382690193600CAEA8E /* BoredRequestUser.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -546,6 +646,25 @@
 				C985B4252686E4B90033E08E /* ActivityCollectionViewCell.swift */,
 			);
 			path = "CollectionView Cells";
+			sourceTree = "<group>";
+		};
+		C988D507268F728400CAEA8E /* WTM Notification Service Extension */ = {
+			isa = PBXGroup;
+			children = (
+				C988D508268F728400CAEA8E /* NotificationService.swift */,
+				C988D50A268F728400CAEA8E /* Info.plist */,
+			);
+			path = "WTM Notification Service Extension";
+			sourceTree = "<group>";
+		};
+		C988D529268FD79A00CAEA8E /* WTM Notification Content Extension */ = {
+			isa = PBXGroup;
+			children = (
+				C988D52A268FD79A00CAEA8E /* NotificationViewController.swift */,
+				C988D52C268FD79A00CAEA8E /* MainInterface.storyboard */,
+				C988D52F268FD79A00CAEA8E /* Info.plist */,
+			);
+			path = "WTM Notification Content Extension";
 			sourceTree = "<group>";
 		};
 		CBF9409AD17BC1C8E29398D7 /* Pods */ = {
@@ -576,10 +695,13 @@
 				E249084FDDC549F6DE9CCF16 /* [CP] Copy Pods Resources */,
 				C9760B4D2663F914009F66DA /* Run Script */,
 				C9760B5C26641179009F66DA /* Embed Frameworks */,
+				C988D511268F728400CAEA8E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C988D50C268F728400CAEA8E /* PBXTargetDependency */,
+				C988D531268FD79A00CAEA8E /* PBXTargetDependency */,
 			);
 			name = "wtm?";
 			packageProductDependencies = (
@@ -631,6 +753,40 @@
 			productReference = C9760B392663F647009F66DA /* wtm?UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		C988D505268F728400CAEA8E /* WTM Notification Service Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C988D50E268F728400CAEA8E /* Build configuration list for PBXNativeTarget "WTM Notification Service Extension" */;
+			buildPhases = (
+				C988D502268F728400CAEA8E /* Sources */,
+				C988D503268F728400CAEA8E /* Frameworks */,
+				C988D504268F728400CAEA8E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "WTM Notification Service Extension";
+			productName = "WTM Notification Service Extension";
+			productReference = C988D506268F728400CAEA8E /* WTM Notification Service Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		C988D523268FD79A00CAEA8E /* WTM Notification Content Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C988D533268FD79A00CAEA8E /* Build configuration list for PBXNativeTarget "WTM Notification Content Extension" */;
+			buildPhases = (
+				C988D520268FD79A00CAEA8E /* Sources */,
+				C988D521268FD79A00CAEA8E /* Frameworks */,
+				C988D522268FD79A00CAEA8E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "WTM Notification Content Extension";
+			productName = "WTM Notification Content Extension";
+			productReference = C988D524268FD79A00CAEA8E /* WTM Notification Content Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -650,6 +806,12 @@
 					C9760B382663F647009F66DA = {
 						CreatedOnToolsVersion = 12.5;
 						TestTargetID = C9760B172663F646009F66DA;
+					};
+					C988D505268F728400CAEA8E = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+					C988D523268FD79A00CAEA8E = {
+						CreatedOnToolsVersion = 12.5.1;
 					};
 				};
 			};
@@ -674,6 +836,8 @@
 				C9760B172663F646009F66DA /* wtm? */,
 				C9760B2D2663F647009F66DA /* wtm?Tests */,
 				C9760B382663F647009F66DA /* wtm?UITests */,
+				C988D505268F728400CAEA8E /* WTM Notification Service Extension */,
+				C988D523268FD79A00CAEA8E /* WTM Notification Content Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -685,6 +849,7 @@
 			files = (
 				C9760B282663F647009F66DA /* LaunchScreen.storyboard in Resources */,
 				C9760B6126641262009F66DA /* SuperBasic-Bold.otf in Resources */,
+				C988D517268F782B00CAEA8E /* Notification.json in Resources */,
 				C9760B6326641262009F66DA /* SuperBasic-Regular.otf in Resources */,
 				C9760B8526643EC2009F66DA /* Blocked Words List.txt in Resources */,
 				C9760B252663F647009F66DA /* Assets.xcassets in Resources */,
@@ -706,6 +871,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C988D504268F728400CAEA8E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C988D522268FD79A00CAEA8E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C988D52E268FD79A00CAEA8E /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -880,13 +1060,17 @@
 				C9574FA7266544D500405B8B /* StorageErrors.swift in Sources */,
 				C9B37F7A26857C0B00A712DD /* FriendGroupsViewController.swift in Sources */,
 				C9760B7A26643794009F66DA /* HomeScreenViewController.swift in Sources */,
+				C988D53B2690244D00CAEA8E /* BoredRequestsViewController.swift in Sources */,
+				C9A2CCE126910A54004E3796 /* BoredRequestResponseViewController.swift in Sources */,
 				C912CD78268686330078D5C1 /* GroupDetailViewController.swift in Sources */,
 				C9F238922671512200C2B080 /* UserDefaults.swift in Sources */,
 				C9574FC22665C4AA00405B8B /* ImportContactsViewController.swift in Sources */,
+				C988D501268F6F4000CAEA8E /* Data.swift in Sources */,
 				C9760B8226643EB3009F66DA /* PushNotificationSender.swift in Sources */,
 				C9760B6D266419DF009F66DA /* WelcomeViewController.swift in Sources */,
 				C9574FBC2665BF6600405B8B /* FriendVerifyViewController.swift in Sources */,
 				C912CD76268593780078D5C1 /* CreateFriendGroupTableViewCell.swift in Sources */,
+				C988D537269018FB00CAEA8E /* BoredRequest.swift in Sources */,
 				C9574FAC2665802100405B8B /* EditStatusViewController.swift in Sources */,
 				C985B4262686E4B90033E08E /* ActivityCollectionViewCell.swift in Sources */,
 				C9760B7C2664384B009F66DA /* TabBarController.swift in Sources */,
@@ -908,6 +1092,8 @@
 				C9760B1C2663F646009F66DA /* AppDelegate.swift in Sources */,
 				C9760B9526648F72009F66DA /* MyProfileCell.swift in Sources */,
 				C9760B8326643EB3009F66DA /* KeychainItem.swift in Sources */,
+				C9A2CCE326911BDB004E3796 /* BoredResponseTableViewCell.swift in Sources */,
+				C988D5392690193600CAEA8E /* BoredRequestUser.swift in Sources */,
 				C96EFEED2687BE7100DB1194 /* FriendSelectionViewController.swift in Sources */,
 				C97E10732688295A001470C2 /* SendToGroupTableViewCell.swift in Sources */,
 				C9574FDB26688C3B00405B8B /* FriendsTableViewCell.swift in Sources */,
@@ -920,6 +1106,7 @@
 				C9574FB42665AEC400405B8B /* AboutThisAppViewController.swift in Sources */,
 				C9574FC82665CBBA00405B8B /* User.swift in Sources */,
 				C95A628D2669BE8F0000EE31 /* DatabaseManager.swift in Sources */,
+				C988D513268F72B100CAEA8E /* Notifications.swift in Sources */,
 				C95A62912669D4C80000EE31 /* FriendViewController.swift in Sources */,
 				C97E107926897C0F001470C2 /* String.swift in Sources */,
 				C96930AB2686C7F700DA565B /* SelectableUser.swift in Sources */,
@@ -930,15 +1117,18 @@
 				C929028B268ADE1800CFAF3F /* NotificationTitle.swift in Sources */,
 				C9760B1E2663F646009F66DA /* SceneDelegate.swift in Sources */,
 				C9574FBE2665C3DE00405B8B /* PhoneContacts.swift in Sources */,
+				C9A2CCDD2690AD56004E3796 /* BoredRequestTableViewCell.swift in Sources */,
 				C9574FB22665AD2C00405B8B /* SettingsViewController.swift in Sources */,
 				C9574FAA266568DC00405B8B /* StorageManager.swift in Sources */,
 				C9760B7E26643C2C009F66DA /* NameViewController.swift in Sources */,
 				C985B4282686E6630033E08E /* PickerData.swift in Sources */,
+				C9A2CCE526914DF7004E3796 /* ChangeResponseViewController.swift in Sources */,
 				C9574FD32668773B00405B8B /* RequestsViewController.swift in Sources */,
 				C9760B8F26648BE7009F66DA /* MyProfileViewController.swift in Sources */,
 				C9574F962665398F00405B8B /* Date.swift in Sources */,
 				C9574FD726687B4400405B8B /* FriendRequest.swift in Sources */,
 				C9574FD5266878FE00405B8B /* RequestsTableViewCell.swift in Sources */,
+				C9A2CCDF2690B92C004E3796 /* UIImageView.swift in Sources */,
 				C96930AD2686E33700DA565B /* ActivityViewController.swift in Sources */,
 				C9760B9226648D9C009F66DA /* MyProfileTableViewCell.swift in Sources */,
 				C9760B8926644087009F66DA /* FinishingUpViewController.swift in Sources */,
@@ -962,6 +1152,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C988D502268F728400CAEA8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C988D51D268FCF5000CAEA8E /* StorageErrors.swift in Sources */,
+				C988D509268F728400CAEA8E /* NotificationService.swift in Sources */,
+				C988D51C268FCF4E00CAEA8E /* StorageType.swift in Sources */,
+				C988D51E268FCF5500CAEA8E /* DatabaseError.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C988D520268FD79A00CAEA8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C988D52B268FD79A00CAEA8E /* NotificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -974,6 +1183,16 @@
 			isa = PBXTargetDependency;
 			target = C9760B172663F646009F66DA /* wtm? */;
 			targetProxy = C9760B3A2663F647009F66DA /* PBXContainerItemProxy */;
+		};
+		C988D50C268F728400CAEA8E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C988D505268F728400CAEA8E /* WTM Notification Service Extension */;
+			targetProxy = C988D50B268F728400CAEA8E /* PBXContainerItemProxy */;
+		};
+		C988D531268FD79A00CAEA8E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C988D523268FD79A00CAEA8E /* WTM Notification Content Extension */;
+			targetProxy = C988D530268FD79A00CAEA8E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -992,6 +1211,14 @@
 				C9760B272663F647009F66DA /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		C988D52C268FD79A00CAEA8E /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C988D52D268FD79A00CAEA8E /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1117,11 +1344,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B77D09B9D6D80D9FB98BB09D /* Pods-wtm?.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "wtm?/wtm?.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "wtm?/Assets.xcassets";
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
@@ -1144,11 +1372,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21D83672182AC59E70937EB1 /* Pods-wtm?.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "wtm?/wtm?.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "wtm?/Assets.xcassets";
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "wtm?/Info.plist";
@@ -1253,6 +1482,82 @@
 			};
 			name = Release;
 		};
+		C988D50F268F728400CAEA8E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BE9AG9X7E;
+				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C988D510268F728400CAEA8E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BE9AG9X7E;
+				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C988D534268FD79A00CAEA8E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BE9AG9X7E;
+				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C988D535268FD79A00CAEA8E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BE9AG9X7E;
+				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1288,6 +1593,24 @@
 			buildConfigurations = (
 				C9760B492663F647009F66DA /* Debug */,
 				C9760B4A2663F647009F66DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C988D50E268F728400CAEA8E /* Build configuration list for PBXNativeTarget "WTM Notification Service Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C988D50F268F728400CAEA8E /* Debug */,
+				C988D510268F728400CAEA8E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C988D533268FD79A00CAEA8E /* Build configuration list for PBXNativeTarget "WTM Notification Content Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C988D534268FD79A00CAEA8E /* Debug */,
+				C988D535268FD79A00CAEA8E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

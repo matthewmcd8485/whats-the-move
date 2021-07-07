@@ -8,6 +8,8 @@
 import UIKit
 
 class AboutThisAppViewController: UIViewController {
+    
+    let alertManager = AlertManager.shared
 
     @IBOutlet weak var reviewButton: UIButton!
     
@@ -23,7 +25,7 @@ class AboutThisAppViewController: UIViewController {
     }
     
     @IBAction func reviewButton(_ sender: Any) {
-        
+        alertManager.showAlert(title: "slow your roll", message: "we appreciate how much you love us. but you can't write a review on the app until it's on the app store. \n\nmaybe try doing someting more productive while you wait?")
     }
 }
 

@@ -198,7 +198,8 @@ class FriendVerifyViewController: UIViewController {
                 }
                 
                 let sender = PushNotificationSender()
-                sender.sendPushNotification(to: strongSelf.friendToAdd.fcmToken!, title: "new friend request", body: "\(name) wants to be your friend.")
+                let profileImageURL = UserDefaults.standard.string(forKey: "profileImageURL") ?? ""
+                sender.sendPushNotification(to: strongSelf.friendToAdd.fcmToken!, title: "new friend request", body: "\(name) wants to be your friend.", urlToImage: profileImageURL)
                 
                 print("friend request sent!")
                 

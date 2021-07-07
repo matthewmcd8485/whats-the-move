@@ -13,10 +13,12 @@ import AnyFormatKit
 class ImportContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let db = Firestore.firestore()
+    let activityIndicator = UIActivityIndicatorView(style: .large)
     
     var phoneContacts = [PhoneContact]()
     var filter: ContactsFilter = .message
     
+    @IBOutlet weak var noContactsLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var loadingLabel: UILabel!
     
@@ -32,13 +34,13 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
         tableView.dataSource = self
         
         tableView.isHidden = true
+        noContactsLabel.alpha = 0
         createSpinnerView()
         
         loadContacts(filter: filter)
     }
     
     private func createSpinnerView() {
-        let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.color = .white
         activityIndicator.frame = CGRect(x: view.center.x - 10, y: loadingLabel.frame.maxY + 50, width: 20, height: 20)
         activityIndicator.startAnimating()
@@ -157,7 +159,15 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
             self!.phoneContacts = removed
             
             self?.tableView.reloadData()
-            self?.tableView.isHidden = false
+            
+            if self?.phoneContacts.count == 0 {
+                self?.tableView.isHidden = true
+                UIView.animate(withDuration: 0.5) {
+                    self?.noContactsLabel.alpha = 1
+                    self?.loadingLabel.alpha = 0
+                    self?.activityIndicator.alpha = 0
+                }
+            }
         }
     }
     

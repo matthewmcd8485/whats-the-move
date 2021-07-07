@@ -39,7 +39,6 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         createSpinnerView()
         setupRefreshControl()
-        loadFriends()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -48,7 +47,6 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         createSpinnerView()
         setupRefreshControl()
-        loadFriends()
         updateGlobalFriendsList()
     }
     

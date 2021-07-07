@@ -17,4 +17,10 @@ struct FriendGroup {
         self.groupID = groupID
         self.people = people
     }
+    
+    init() {
+        name = ""
+        groupID = ""
+        people = [String]()
+    }
 }

@@ -27,6 +27,20 @@ class SettingsViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func privacyButton(_ sender: Any) {
+        guard let url = URL(string: "https://matthewdevteam.weebly.com/privacy.html") else { return }
+        UIApplication.shared.open(url)
+    }
+    
+    @IBAction func termsButton(_ sender: Any) {
+        guard let url = URL(string: "https://matthewdevteam.weebly.com/terms-and-conditions.html") else { return }
+        UIApplication.shared.open(url)
+    }
+    
+    @IBAction func settingsButton(_ sender: Any) {
+        UIApplication.shared.open(URL.init(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+    }
+    
     @IBAction func logOutButton(_ sender: Any) {
         let alert = PMAlertController(title: "log out", description: "are you sure you want to log out?", image: nil, style: .alert)
         alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)

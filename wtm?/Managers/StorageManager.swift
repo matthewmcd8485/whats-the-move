@@ -85,4 +85,22 @@ final class StorageManager {
             })
         })
     }
+    
+    public func downloadImageURL(imageName: String, collection: String, completion: @escaping UploadPictureCompletion) {
+        let group = DispatchGroup()
+        group.enter()
+        storage.child("\(collection)/\(imageName).png").downloadURL { url, error in
+            guard let url = url else {
+                print("Failed to get download URL: \(error!)")
+                completion(.failure(StorageErrors.failedToGetDownloadURL))
+                group.leave()
+                return
+            }
+            
+            let urlString = url.absoluteString
+            print("Download URL returned: \(urlString)")
+            group.leave()
+            completion(.success(urlString))
+        }
+    }
 }
