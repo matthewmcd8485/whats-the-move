@@ -20,12 +20,15 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var friends = [User]()
     
+    @IBOutlet weak var addFriendsButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var noFriendsLabel: UILabel!
     @IBOutlet weak var loadingLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addFriendsButton.layer.cornerRadius = 10
         
         tableView.isHidden = true
         loadingLabel.isHidden = false
@@ -39,15 +42,16 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         createSpinnerView()
         setupRefreshControl()
+        loadFriends()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
         
-        createSpinnerView()
-        setupRefreshControl()
-        updateGlobalFriendsList()
+        //createSpinnerView()
+        //setupRefreshControl()
+        //loadFriends()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,12 +62,6 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBAction func requestsButton(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "requestsViewController") as RequestsViewController
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @IBAction func groupsButton(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "friendGroupsViewController") as FriendGroupsViewController
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -127,15 +125,16 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         friends.removeAll()
+        //tableView.reloadData()
         
         for x in friendsUIDs.count {
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: friendsUIDs[x], completion: { [weak self] result in
                 switch result {
                 case .success(let user):
-                    if !ReportingManager.shared.userIsBlocked(theirUID: user.uid!) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid!) {
+                    if !ReportingManager.shared.userIsBlocked(theirUID: user.uid) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid) {
                         self?.friends.append(user)
                         self?.friends = self!.friends.filterDuplicates { $0.uid == $1.uid }
-                        self?.friends.sort { $0.name! < $1.name! }
+                        self?.friends.sort { $0.name < $1.name }
                     }
                 case .failure(let error):
                     self?.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
@@ -187,7 +186,7 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "friendViewController") as FriendViewController
-        vc.friendsUID = friends[indexPath.row].uid!
+        vc.friendsUID = friends[indexPath.row].uid
         navigationController?.pushViewController(vc, animated: true)
     }
 

@@ -17,6 +17,8 @@ class CreateGroupViewController: UIViewController, UITableViewDelegate, UITableV
     
     var friends = [SelectableUser]()
     var friendsInGroup = [String]()
+    var selectedArray = [IndexPath]()
+    var currentIndexPath = IndexPath()
     
     @IBOutlet weak var loadingLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -71,10 +73,10 @@ class CreateGroupViewController: UIViewController, UITableViewDelegate, UITableV
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: friendsUIDs[x], completion: { [weak self] result in
                 switch result {
                 case .success(let user):
-                    if !ReportingManager.shared.userIsBlocked(theirUID: user.uid!) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid!) {
+                    if !ReportingManager.shared.userIsBlocked(theirUID: user.uid) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid) {
                         self?.friends.append(SelectableUser(user: user, isSelected: false))
                         self?.friends = self!.friends.filterDuplicates { $0.user.uid == $1.user.uid }
-                        self?.friends.sort { $0.user.name! < $1.user.name! }
+                        self?.friends.sort { $0.user.name < $1.user.name }
                     }
                 case .failure(let error):
                     self?.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
@@ -120,7 +122,7 @@ class CreateGroupViewController: UIViewController, UITableViewDelegate, UITableV
         friendsInGroup.append(uid!)
         for x in friends.count {
             if friends[x].isSelected {
-                friendsInGroup.append(friends[x].user.uid!)
+                friendsInGroup.append(friends[x].user.uid)
             }
         }
         if groupName == "" {
@@ -172,8 +174,15 @@ class CreateGroupViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.dequeueReusableCell(withIdentifier: CreateFriendGroupTableViewCell.identifier, for: indexPath) as! CreateFriendGroupTableViewCell
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        if selectedArray.contains(indexPath) {
+            if let index = selectedArray.firstIndex(of: indexPath) {
+                selectedArray.remove(at: index)
+            }
+        } else {
+            selectedArray.append(indexPath)
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -184,8 +193,9 @@ class CreateGroupViewController: UIViewController, UITableViewDelegate, UITableV
         let model = friends[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: CreateFriendGroupTableViewCell.identifier, for: indexPath) as! CreateFriendGroupTableViewCell
         cell.surfaceButton.addTarget(self, action: #selector(checkMarkButtonClicked(sender:)), for: .touchUpInside)
+        currentIndexPath = indexPath
         
-         if cell.surfaceButton.isSelected {
+        if selectedArray.contains(indexPath) {
             cell.checkmarkImageView.image = UIImage(named: "Checkmark")
             friends[indexPath.row].isSelected = true
         } else {
@@ -202,19 +212,32 @@ class CreateGroupViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
         */
+        
+        print("selected index paths: \(selectedArray)")
+        
         cell.backgroundColor = UIColor(named: "backgroundColors")
         cell.contentView.clipsToBounds = true
+        cell.selectionStyle = .default
         cell.configure(with: model)
         return cell
     }
     
     @objc private func checkMarkButtonClicked(sender: UIButton) {
-        if sender.isSelected {
-            sender.isSelected = false
-            
+        //tableView.deselectRow(at: indexPath, animated: true)
+        if selectedArray.contains(currentIndexPath) {
+            if let index = selectedArray.firstIndex(of: currentIndexPath) {
+                selectedArray.remove(at: index)
+            }
         } else {
-            sender.isSelected = true
+            selectedArray.append(currentIndexPath)
         }
+        
+       // if sender.isSelected {
+       //     sender.isSelected = false
+       //
+       // } else {
+       //     sender.isSelected = true
+       // }
         tableView.reloadData()
     }
     

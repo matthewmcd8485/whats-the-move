@@ -73,7 +73,7 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
             for document in querySnapshot!.documents {
                 let name = document.get("Name") as! String
                 let uid = document.get("User Identifier") as! String
-                let profileImageURL = document.get("Profile Image URL") as! String
+                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
                 
                 let user = FriendRequest(name: name.lowercased(), uid: uid, profileImageURL: profileImageURL)
                 
@@ -124,7 +124,13 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
         let profileImageURL = requests[indexPath.row].profileImageURL
         
         let alert = PMAlertController(title: "wow, you have friends!", description: "add \(nameToAdd) as a friend?", image: UIImage(systemName: "person.circle"), style: .alert)
-        alert.alertImage.sd_setImage(with: URL.init(string: profileImageURL), completed: nil)
+        
+        if profileImageURL == "no url" {
+            alert.alertImage.image = UIImage(systemName: "person.crop.circle")
+        } else {
+            alert.alertImage.sd_setImage(with: URL.init(string: profileImageURL), completed: nil)
+        }
+        
         alert.alertImage.contentMode = .scaleAspectFit
         //alert.alertImage.layer.cornerRadius = alert.alertImage.frame.width / 2
         

@@ -112,7 +112,7 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
                     print(user)
                     friends.append(user)
                     friends = friends.filterDuplicates { $0.uid == $1.uid }
-                    friends.sort { $0.name! < $1.name! }
+                    friends.sort { $0.name < $1.name }
                 case .failure(let error):
                     print("error loading friends in group \(group.groupID): \n \(error)")
                 }

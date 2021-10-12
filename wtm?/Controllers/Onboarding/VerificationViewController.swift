@@ -152,7 +152,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                                 let name = document.get("Name") as! String
                                 let status = document.get("Status") as! String
                                 let substatus = document.get("Substatus") as! String
-                                let profileImageURL = document.get("Profile Image URL") as! String
+                                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
                                 let fcmToken = document.get("FCM Token") as! String
                                 let joined = document.get("Joined") as! String
                                 
@@ -183,8 +183,9 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                                     print("blocked users list updated with result: \(success)")
                                 })
                                 
-                                // Download friends list
+                                // Download friends and groups list
                                 self?.updateFriendsList()
+                                self?.updateFriendGroups()
                             }
                         }
                     }
@@ -218,6 +219,25 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                 self?.finishUp()
             case .failure(let error):
                 print("\n *VERIFICATION VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
+            }
+        })
+    }
+    
+    private func updateFriendGroups() {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+            return
+        }
+        var groupIDs = [String]()
+        
+        databaseManager.downloadAllGroups(uid: uid, completion: { result in
+            switch result {
+            case .success(let downloadedGroups):
+                for x in downloadedGroups.count {
+                    groupIDs.append(downloadedGroups[x].groupID)
+                }
+                UserDefaults.standard.set(groupIDs, forKey: "groupsUID")
+            case .failure(let error):
+                print("\n *GROUPS VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
             }
         })
     }

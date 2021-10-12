@@ -60,36 +60,36 @@ class FriendsTableViewCell: UITableViewCell {
         let statusImageWidth = Int(statusImageView.frame.width)
         let offset = 10
         let contentViewWidth = Int(contentView.frame.width)
-        nameLabel.frame = CGRect(x: statusImageWidth + offset, y: 5, width: contentViewWidth - statusImageWidth - offset, height: 35)
-        statusLabel.frame = CGRect(x: statusImageView.frame.maxX + 10, y: nameLabel.frame.maxY - 5, width: CGFloat(contentViewWidth - statusImageWidth - offset), height: 20)
+        nameLabel.frame = CGRect(x: statusImageWidth + offset, y: 5, width: contentViewWidth - statusImageWidth - offset, height: 40)
+        statusLabel.frame = CGRect(x: statusImageView.frame.maxX + 10, y: nameLabel.frame.maxY - 8, width: CGFloat(contentViewWidth - statusImageWidth - offset), height: 20)
     }
     
     public func configure(with model: User) {
-        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: model.uid!)
-        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.uid!)
+        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: model.uid)
+        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.uid)
         
         // Name label
         if model.uid == UserDefaults.standard.string(forKey: "uid") {
-            nameLabel.text = "\(model.name!.lowercased()) (you)"
+            nameLabel.text = "\(model.name.lowercased()) (you)"
         } else {
-            nameLabel.text = model.name!.lowercased()
+            nameLabel.text = model.name.lowercased()
         }
         
         // Status label
         if blockedMe || blockedYou {
             statusLabel.text = "blocked"
         } else {
-            statusLabel.text = model.status!
+            statusLabel.text = model.status
         }
         
         // Image View
         if blockedMe || blockedYou {
             statusImageView.image = UIImage(systemName: "hand.raised.slash")
             statusImageView.tintColor = .systemRed
-        } else if model.status! == "available" {
+        } else if model.status == "available" {
             statusImageView.image = UIImage(systemName: "checkmark.seal")
             statusImageView.tintColor = UIColor.systemGreen
-        } else if model.status! == "busy" {
+        } else if model.status == "busy" {
             statusImageView.image = UIImage(systemName: "exclamationmark.bubble")
             statusImageView.tintColor = UIColor(named: "darkYellowOnLight")
         } else {

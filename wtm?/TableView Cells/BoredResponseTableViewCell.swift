@@ -65,14 +65,15 @@ class BoredResponseTableViewCell: UITableViewCell {
     }
     
     public func configure(with model: BoredRequestUser) {
-        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: model.user.uid!)
-        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.user.uid!)
+        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: model.user.uid)
+        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.user.uid)
         
+        print(model)
         // Name label
         if model.user.uid == UserDefaults.standard.string(forKey: "uid") {
-            nameLabel.text = "\(model.user.name!.lowercased()) (you)"
+            nameLabel.text = "you"
         } else {
-            nameLabel.text = model.user.name!.lowercased()
+            nameLabel.text = model.user.name.lowercased()
         }
         
         // Status label

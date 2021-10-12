@@ -18,6 +18,6 @@ class TabBarController: UITabBarController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        selectedIndex = 1
+        selectedIndex = 2
     }
 }

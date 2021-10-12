@@ -20,8 +20,8 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     public var request = BoredRequest()
     
     let activityIndicator = UIActivityIndicatorView(style: .large)
-    
   
+    @IBOutlet weak var replyButton: UIButton!
     @IBOutlet weak var bakgroundView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var groupNameLabel: UILabel!
@@ -37,6 +37,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
         
         tableView.alpha = 0
         loadingLabel.isHidden = false
+        replyButton.layer.cornerRadius = 10
         
         tableView.register(BoredResponseTableViewCell.self, forCellReuseIdentifier: BoredResponseTableViewCell.identifier)
         tableView.tableFooterView = UIView(frame: CGRect.zero)
@@ -141,27 +142,28 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
         
     }
     
+    @IBAction func replyButton(_ sender: Any) {
+        respondToRequest()
+    }
+    
+    // MARK: - Load Users
     private func loadUsers() {
-        let dispatchGroup = DispatchGroup()
-        
         // Download users in the group
         for x in group.people!.count {
-            dispatchGroup.enter()
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: group.people![x], completion: { [weak self] result in
                 switch result {
                 case .success(let user):
                     let boredUser = BoredRequestUser(user: user, responseStatus: "", responseSubstatus: "")
                     self?.request.people.append(boredUser)
-                    dispatchGroup.leave()
+                    
+                    if x == self!.group.people!.count - 1 {
+                        self?.downloadResponses()
+                    }
                 case .failure(let error):
                     self?.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
                     print(error)
                 }
             })
-        }
-        
-        dispatchGroup.notify(queue: .main) { [weak self] in
-            self?.downloadResponses()
         }
         
     }
@@ -170,6 +172,19 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
         db.collection("friend groups").document(group.groupID).collection("bored requests").whereField("Request Identifier", isEqualTo: request.requestID).getDocuments() { [weak self] querySnapshot, error in
             guard error == nil else {
                 print("error downloading request: \(error!)")
+                return
+            }
+            
+            guard querySnapshot?.documents.count != 0 else {
+                let alert = PMAlertController(title: "error loading request", description: "there was an error loading this request. please try again later.", image: nil, style: .alert)
+                alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+                alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+                alert.addAction(PMAlertAction(title: "okay", style: .default, action: {
+                    self?.navigationController?.popViewController(animated: true)
+                }))
+                self?.present(alert, animated: true)
+                
+                print("querySnapshot for responses is empty [downloadResponses()]")
                 return
             }
             
@@ -186,9 +201,12 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
             
             self?.tableView.reloadData()
             self?.tableView.alpha = 1
+            self?.loadingLabel.alpha = 0
+            self?.activityIndicator.alpha = 0
         }
     }
     
+    // MARK: - Edit Response
     private func showResponseEditScreen(status: String) {
         let uid = UserDefaults.standard.string(forKey: "uid")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -215,12 +233,34 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
                             return
                         }
                         
+                        self?.notifyFriends(status: status, substatus: result)
+                        
                         self?.tableView.reloadData()
                     })
                 }
             }
         }
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func notifyFriends(status: String, substatus: String) {
+        guard let name = UserDefaults.standard.string(forKey: "name") else {
+            return
+        }
+        
+        var notificationTitle = "\(name) is in!"
+        if status == "busy" {
+            notificationTitle = "\(name) might be busy"
+        } else if status == "not available" {
+            notificationTitle = "\(name) is not available"
+        }
+        
+        let sender = PushNotificationSender()
+        for x in request.people.count {
+            if request.people[x].user.status != "do not disturb" {
+                sender.sendPushNotification(to: request.people[x].user.fcmToken, title: notificationTitle, subtitle: "", body: "they said \"\(substatus)\"", urlToImage: "")
+            }
+        }
     }
     
     private func respondToRequest() {
@@ -271,7 +311,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
             }
             
             // Check if they are blocked
-            if reportingManager.userIsBlocked(theirUID: request.people[indexPath.row].user.uid!) || reportingManager.userBlockedYou(theirUID: request.people[indexPath.row].user.uid!) {
+            if reportingManager.userIsBlocked(theirUID: request.people[indexPath.row].user.uid) || reportingManager.userBlockedYou(theirUID: request.people[indexPath.row].user.uid) {
                 alertManager.showAlert(title: "user blocked", message: "either you blocked this person, or they blocked you.\n\n quit it wth these toxic friends!")
             } else {
                 // Check if they are your friend
@@ -279,13 +319,13 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
                     // Show the friend screen
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let vc = storyboard.instantiateViewController(identifier: "friendViewController") as FriendViewController
-                    vc.friendsUID = request.people[indexPath.row].user.uid!
+                    vc.friendsUID = request.people[indexPath.row].user.uid
                     navigationController?.pushViewController(vc, animated: true)
                 } else {
                     // Show the add friend screen
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let vc = storyboard.instantiateViewController(identifier: "friendVerifyViewController") as FriendVerifyViewController
-                    vc.phoneNumber = request.people[indexPath.row].user.phoneNumber!
+                    vc.phoneNumber = request.people[indexPath.row].user.phoneNumber
                     vc.comingFromGroup = true
                     navigationController?.pushViewController(vc, animated: true)
                 }

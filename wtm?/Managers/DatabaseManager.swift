@@ -25,7 +25,7 @@ final class DatabaseManager {
                 let name = document.get("Name") as! String
                 let status = document.get("Status") as! String
                 let substatus = document.get("Substatus") as! String
-                let profileImageURL = document.get("Profile Image URL") as! String
+                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
                 let fcmToken = document.get("FCM Token") as! String
                 let joined = document.get("Joined") as! String
                 let phoneNumber = document.get("Phone Number") as! String
@@ -64,7 +64,7 @@ final class DatabaseManager {
                 let name = document.get("Name") as! String
                 let status = document.get("Status") as! String
                 let substatus = document.get("Substatus") as! String
-                let profileImageURL = document.get("Profile Image URL") as! String
+                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
                 let fcmToken = document.get("FCM Token") as! String
                 let joined = document.get("Joined") as! String
                 let phoneNumber = document.get("Phone Number") as! String
@@ -95,6 +95,30 @@ final class DatabaseManager {
                 users.append(user)
             }
             completion(.success(users))
+        }
+    }
+    
+    // MARK: - Download All Groups
+    public func downloadAllGroups(uid: String, completion: @escaping (Result<[FriendGroup], Error>) -> Void) {
+        var groups = [FriendGroup]()
+        
+        db.collection("friend groups").whereField("People", arrayContains: uid).getDocuments() { querySnapshot, error in
+            guard error == nil else {
+                print("Error downloading groups from Firestore (global function): \(error!)")
+                completion(.failure(DatabaseError.failedToFetch))
+                return
+            }
+            
+            for document in querySnapshot!.documents {
+                let name = document.get("Name") as! String
+                let groupID = document.get("Group Identifier") as! String
+                let people = document.get("People") as! [String]
+                
+                let group = FriendGroup(name: name.lowercased(), groupID: groupID, people: people)
+                groups.append(group)
+                groups = groups.filterDuplicates { $0.groupID == $1.groupID }
+            }
+            completion(.success(groups))
         }
     }
     

@@ -53,6 +53,8 @@ class CreateFriendGroupTableViewCell: UITableViewCell {
         return button
     }()
     
+    var isChecked = false
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -65,6 +67,10 @@ class CreateFriendGroupTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
     }
     
     override func layoutSubviews() {
@@ -81,13 +87,13 @@ class CreateFriendGroupTableViewCell: UITableViewCell {
     }
     
     public func configure(with model: SelectableUser) {
-        nameLabel.text = model.user.name!.lowercased()
+        nameLabel.text = model.user.name.lowercased()
         
-        statusLabel.text = model.user.status!
-        if model.user.status! == "available" {
+        statusLabel.text = model.user.status
+        if model.user.status == "available" {
             statusImageView.image = UIImage(systemName: "checkmark.seal")
             statusImageView.tintColor = UIColor.systemGreen
-        } else if model.user.status! == "busy" {
+        } else if model.user.status == "busy" {
             statusImageView.image = UIImage(systemName: "exclamationmark.bubble")
             statusImageView.tintColor = UIColor(named: "darkYellowOnLight")
         } else {

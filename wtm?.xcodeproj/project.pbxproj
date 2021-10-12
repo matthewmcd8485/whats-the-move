@@ -113,6 +113,9 @@
 		C9A2CCE326911BDB004E3796 /* BoredResponseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2CCE226911BDB004E3796 /* BoredResponseTableViewCell.swift */; };
 		C9A2CCE526914DF7004E3796 /* ChangeResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A2CCE426914DF7004E3796 /* ChangeResponseViewController.swift */; };
 		C9B37F7A26857C0B00A712DD /* FriendGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B37F7926857C0B00A712DD /* FriendGroupsViewController.swift */; };
+		C9C3818426A7B91A00AAC66D /* GroupNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C3818326A7B91A00AAC66D /* GroupNotification.swift */; };
+		C9C3818626A7BEF600AAC66D /* notification.apn in Resources */ = {isa = PBXBuildFile; fileRef = C9C3818526A7BEF600AAC66D /* notification.apn */; };
+		C9C3818926A7C22300AAC66D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C9C3818826A7C22300AAC66D /* Alamofire */; };
 		C9D50E872686ABCE00469E29 /* ReportingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D50E862686ABCE00469E29 /* ReportingManager.swift */; };
 		C9F238922671512200C2B080 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F238912671512200C2B080 /* UserDefaults.swift */; };
 /* End PBXBuildFile section */
@@ -287,6 +290,8 @@
 		C9A2CCE226911BDB004E3796 /* BoredResponseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredResponseTableViewCell.swift; sourceTree = "<group>"; };
 		C9A2CCE426914DF7004E3796 /* ChangeResponseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeResponseViewController.swift; sourceTree = "<group>"; };
 		C9B37F7926857C0B00A712DD /* FriendGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendGroupsViewController.swift; sourceTree = "<group>"; };
+		C9C3818326A7B91A00AAC66D /* GroupNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNotification.swift; sourceTree = "<group>"; };
+		C9C3818526A7BEF600AAC66D /* notification.apn */ = {isa = PBXFileReference; lastKnownFileType = text; path = notification.apn; sourceTree = "<group>"; };
 		C9D50E862686ABCE00469E29 /* ReportingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportingManager.swift; sourceTree = "<group>"; };
 		C9F238912671512200C2B080 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		EE15818DD1E9FD54DDD3D9DF /* Pods_wtm_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_wtm_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -298,6 +303,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9C3818926A7C22300AAC66D /* Alamofire in Frameworks */,
 				C9760B68266416DC009F66DA /* PhoneNumberKit in Frameworks */,
 				C9574FCD2665E9B100405B8B /* AnyFormatKit in Frameworks */,
 				7A19EC9F4A6FEDA4CD3D2E96 /* Pods_wtm_.framework in Frameworks */,
@@ -417,7 +423,9 @@
 				C9760B6B266419C6009F66DA /* Top-Level Controllers */,
 				C9760B69266419A6009F66DA /* Onboarding */,
 				C9574FB52665B30500405B8B /* Friends */,
+				C912CD722685914F0078D5C1 /* Friend Groups */,
 				C9760B7826643785009F66DA /* Bored */,
+				C9C3818226A6612C00AAC66D /* Open Requests */,
 				C9574F99266540FE00405B8B /* Editing Profile */,
 				C9574FB82665B32B00405B8B /* General */,
 			);
@@ -433,7 +441,6 @@
 				C9574FC12665C4AA00405B8B /* ImportContactsViewController.swift */,
 				C9574FBB2665BF6600405B8B /* FriendVerifyViewController.swift */,
 				C9574FD22668773B00405B8B /* RequestsViewController.swift */,
-				C912CD722685914F0078D5C1 /* Friend Groups */,
 			);
 			path = Friends;
 			sourceTree = "<group>";
@@ -588,9 +595,6 @@
 				C96930AC2686E33700DA565B /* ActivityViewController.swift */,
 				C96EFEEC2687BE7100DB1194 /* FriendSelectionViewController.swift */,
 				C97E107626895CD6001470C2 /* SwooshViewController.swift */,
-				C988D53A2690244D00CAEA8E /* BoredRequestsViewController.swift */,
-				C9A2CCE026910A54004E3796 /* BoredRequestResponseViewController.swift */,
-				C9A2CCE426914DF7004E3796 /* ChangeResponseViewController.swift */,
 			);
 			path = Bored;
 			sourceTree = "<group>";
@@ -601,6 +605,7 @@
 				C9760B8126643EB3009F66DA /* KeychainItem.swift */,
 				C9760B8026643EB2009F66DA /* PushNotificationSender.swift */,
 				C988D516268F782B00CAEA8E /* Notification.json */,
+				C9C3818526A7BEF600AAC66D /* notification.apn */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -636,6 +641,7 @@
 				C985B4292686E8960033E08E /* CategoryImages.swift */,
 				C988D536269018FB00CAEA8E /* BoredRequest.swift */,
 				C988D5382690193600CAEA8E /* BoredRequestUser.swift */,
+				C9C3818326A7B91A00AAC66D /* GroupNotification.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -665,6 +671,16 @@
 				C988D52F268FD79A00CAEA8E /* Info.plist */,
 			);
 			path = "WTM Notification Content Extension";
+			sourceTree = "<group>";
+		};
+		C9C3818226A6612C00AAC66D /* Open Requests */ = {
+			isa = PBXGroup;
+			children = (
+				C988D53A2690244D00CAEA8E /* BoredRequestsViewController.swift */,
+				C9A2CCE026910A54004E3796 /* BoredRequestResponseViewController.swift */,
+				C9A2CCE426914DF7004E3796 /* ChangeResponseViewController.swift */,
+			);
+			path = "Open Requests";
 			sourceTree = "<group>";
 		};
 		CBF9409AD17BC1C8E29398D7 /* Pods */ = {
@@ -708,6 +724,7 @@
 				C9760B4F2663FDC6009F66DA /* MessageKit */,
 				C9760B67266416DC009F66DA /* PhoneNumberKit */,
 				C9574FCC2665E9B100405B8B /* AnyFormatKit */,
+				C9C3818826A7C22300AAC66D /* Alamofire */,
 			);
 			productName = "wtm?";
 			productReference = C9760B182663F646009F66DA /* wtm?.app */;
@@ -828,6 +845,7 @@
 				C9760B4E2663FDC6009F66DA /* XCRemoteSwiftPackageReference "MessageKit" */,
 				C9760B66266416DC009F66DA /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 				C9574FCB2665E9B100405B8B /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
+				C9C3818726A7C22300AAC66D /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = C9760B192663F646009F66DA /* Products */;
 			projectDirPath = "";
@@ -853,6 +871,7 @@
 				C9760B6326641262009F66DA /* SuperBasic-Regular.otf in Resources */,
 				C9760B8526643EC2009F66DA /* Blocked Words List.txt in Resources */,
 				C9760B252663F647009F66DA /* Assets.xcassets in Resources */,
+				C9C3818626A7BEF600AAC66D /* notification.apn in Resources */,
 				C9760B6226641262009F66DA /* SuperBasic-Thin.otf in Resources */,
 				C9760B4C2663F748009F66DA /* GoogleService-Info.plist in Resources */,
 				C9760B232663F646009F66DA /* Main.storyboard in Resources */,
@@ -1073,6 +1092,7 @@
 				C988D537269018FB00CAEA8E /* BoredRequest.swift in Sources */,
 				C9574FAC2665802100405B8B /* EditStatusViewController.swift in Sources */,
 				C985B4262686E4B90033E08E /* ActivityCollectionViewCell.swift in Sources */,
+				C9C3818426A7B91A00AAC66D /* GroupNotification.swift in Sources */,
 				C9760B7C2664384B009F66DA /* TabBarController.swift in Sources */,
 				C9574FA22665448900405B8B /* ImageStoreManager.swift in Sources */,
 				C9574FAE26658B2300405B8B /* SubstatusViewController.swift in Sources */,
@@ -1349,7 +1369,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "wtm?/wtm?.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "wtm?/Assets.xcassets";
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
@@ -1377,7 +1397,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "wtm?/wtm?.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "wtm?/Assets.xcassets";
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "wtm?/Info.plist";
@@ -1486,6 +1506,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1505,6 +1526,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1524,6 +1546,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1543,6 +1566,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1642,6 +1666,14 @@
 				minimumVersion = 3.3.3;
 			};
 		};
+		C9C3818726A7C22300AAC66D /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.4.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1659,6 +1691,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9760B66266416DC009F66DA /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
+		};
+		C9C3818826A7C22300AAC66D /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9C3818726A7C22300AAC66D /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

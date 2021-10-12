@@ -84,6 +84,7 @@ class LoadingViewController: UIViewController {
             // Send to home screen
             self.updateFriendsList()
             self.updateFCMToken()
+            self.updateGroupsList()
             
             let group = DispatchGroup()
             group.enter()
@@ -144,4 +145,24 @@ class LoadingViewController: UIViewController {
             }
         })
     }
+    
+    private func updateGroupsList() {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+            return
+        }
+        var groupIDs = [String]()
+        
+        databaseManager.downloadAllGroups(uid: uid, completion: { result in
+            switch result {
+            case .success(let downloadedGroups):
+                for x in downloadedGroups.count {
+                    groupIDs.append(downloadedGroups[x].groupID)
+                }
+                UserDefaults.standard.set(groupIDs, forKey: "groupsUID")
+            case .failure(let error):
+                print("\n *GROUPS VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
+            }
+        })
+    }
+    
 }

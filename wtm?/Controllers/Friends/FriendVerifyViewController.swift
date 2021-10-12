@@ -35,6 +35,7 @@ class FriendVerifyViewController: UIViewController {
     
     let activityIndicator = UIActivityIndicatorView(style: .large)
     
+    // MARK: - Override Functions
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -114,6 +115,7 @@ class FriendVerifyViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    // MARK: - Search
     private func search() {
         databaseManager.downloadUser(where: "Phone Number", isEqualTo: phoneNumber, completion: { [weak self] result in
             switch result {
@@ -121,7 +123,7 @@ class FriendVerifyViewController: UIViewController {
                 self?.friendToAdd = user
                 
                 // Check if someone blocked someone
-                if self!.reportingManager.userBlockedYou(theirUID: self!.friendToAdd.uid!) || self!.reportingManager.userIsBlocked(theirUID: self!.friendToAdd.uid!) {
+                if self!.reportingManager.userBlockedYou(theirUID: self!.friendToAdd.uid) || self!.reportingManager.userIsBlocked(theirUID: self!.friendToAdd.uid) {
                     let alert = PMAlertController(title: "user is blocked", description: "either they blocked you or you blocked them.\n we don't know, though.\n it's not really our business.\n\nsorry for any drama this may cause...", image: nil, style: .alert)
                     alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
                     let action = PMAlertAction(title: "rude, but okay", style: .default, action: {
@@ -147,7 +149,7 @@ class FriendVerifyViewController: UIViewController {
             nameLabel.text = friendToAdd.name
             phoneNumberLabel.text = friendToAdd.phoneNumber
             
-            let storageRef = Storage.storage().reference().child("profile images").child("\(friendToAdd.uid!) - profile image.png")
+            let storageRef = Storage.storage().reference().child("profile images").child("\(friendToAdd.uid) - profile image.png")
             storageRef.downloadURL(completion: { [weak self] (url, error) in
                 if error != nil {
                     self?.alertManager.showAlert(title: "Error downloading profile image", message: "There was a problem downloading your profile image. \n \n Error: \(error!)")
@@ -173,6 +175,7 @@ class FriendVerifyViewController: UIViewController {
         }
     }
     
+    // MARK: - Add Friend
     @IBAction func addFriend(_ sender: Any) {
         guard let uid = UserDefaults.standard.string(forKey: "uid"), let name = UserDefaults.standard.string(forKey: "name"), let profileImageURL = UserDefaults.standard.string(forKey: "profileImageURL"), friendToAdd.uid != "" else {
             alertManager.showAlert(title: "error adding friend", message: "dont worry. \n we don't know what happened either.")
@@ -188,7 +191,7 @@ class FriendVerifyViewController: UIViewController {
             }))
             present(alert, animated: true)
         } else {
-            db.collection("users").document(friendToAdd.uid!).collection("friend requests").document(uid).setData([
+            db.collection("users").document(friendToAdd.uid).collection("friend requests").document(uid).setData([
                 "Name" : name,
                 "User Identifier" : uid,
                 "Profile Image URL" : profileImageURL
@@ -199,7 +202,7 @@ class FriendVerifyViewController: UIViewController {
                 
                 let sender = PushNotificationSender()
                 let profileImageURL = UserDefaults.standard.string(forKey: "profileImageURL") ?? ""
-                sender.sendPushNotification(to: strongSelf.friendToAdd.fcmToken!, title: "new friend request", body: "\(name) wants to be your friend.", urlToImage: profileImageURL)
+                sender.sendPushNotification(to: strongSelf.friendToAdd.fcmToken, title: "new friend request", subtitle: "", body: "\(name) wants to be your friend.", urlToImage: profileImageURL)
                 
                 print("friend request sent!")
                 
@@ -244,7 +247,7 @@ class FriendVerifyViewController: UIViewController {
         alert.alertTitle.textColor = .systemRed
         alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
         alert.addAction(PMAlertAction(title: "block user", style: .default, action: { [weak self] in
-            self?.databaseManager.blockUser(uidToBlock: self!.friendToAdd.uid!, completion: { success in
+            self?.databaseManager.blockUser(uidToBlock: self!.friendToAdd.uid, completion: { success in
                 if success {
                     let alert = PMAlertController(title: "user blocked", description: "you have successfully blocked this person.\n\nsorry they were mean to you or whatever.", image: nil, style: .alert)
                     alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
@@ -266,7 +269,7 @@ class FriendVerifyViewController: UIViewController {
         alert.alertTitle.textColor = .systemRed
         alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
         alert.addAction(PMAlertAction(title: "report user", style: .default, action: { [weak self] in
-            self?.reportingManager.reportUser(uid: self!.friendToAdd.uid!, name: self!.friendToAdd.name!, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
+            self?.reportingManager.reportUser(uid: self!.friendToAdd.uid, name: self!.friendToAdd.name, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
                 if success {
                     print("user reported!")
                     self?.navigationController?.popViewController(animated: true)

@@ -15,6 +15,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     let alertManager = AlertManager.shared
     let databaseManager = DatabaseManager.shared
     let reportingManager = ReportingManager.shared
+    let profanityManager = ProfanityManager.shared
     
     let activityIndicator = UIActivityIndicatorView(style: .large)
     
@@ -97,7 +98,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
                             if user.uid != UserDefaults.standard.string(forKey: "uid") {
                                 self?.groupMembers.append(user)
                                 self?.groupMembers = self!.groupMembers.filterDuplicates { $0.uid == $1.uid }
-                                self?.groupMembers.sort { $0.name! < $1.name! }
+                                self?.groupMembers.sort { $0.name < $1.name }
                             }
                             
                             self?.tableView.reloadData()
@@ -150,9 +151,20 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func leaveGroupButton(_ sender: Any) {
         let uid = UserDefaults.standard.string(forKey: "uid")
         let alert = PMAlertController(title: "leave group", description: "are you sure you want to leave this group?", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
         alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
         alert.addAction(PMAlertAction(title: "leave", style: .default, action: { [weak self] in
+            // Remove from UserDefaults
+            var groupsUID = UserDefaults.standard.stringArray(forKey: "groupsUID")
+            for x in groupsUID!.count {
+                if groupsUID![x] == self?.group.groupID {
+                    groupsUID?.remove(at: x)
+                    UserDefaults.standard.set(groupsUID, forKey: "groupsUID")
+                }
+            }
             
+            // Remove from Firestore
             let document = self?.db.collection("friend groups").document(self!.group.groupID)
             document?.updateData([
                 "People": FieldValue.arrayRemove([uid!])
@@ -167,6 +179,52 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }))
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func changeName() {
+        let alert = PMAlertController(title: "change group name", description: "enter a new name for the group.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+        alert.addTextField { (textField) in
+            textField?.autocapitalizationType = .none
+            let placeholder = "ex. the dream team"
+            textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
+                                                                    [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+            textField?.placeholder = placeholder
+        }
+        alert.addAction(PMAlertAction(title: "save", style: .default, action: { [weak self] in
+            let textField = alert.textFields[0]
+            guard textField.text != nil && textField.text != "" else {
+                return
+            }
+            
+            if self!.profanityManager.checkForProfanity(in: textField.text!) {
+                self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
+            } else {
+                let lowercasedName = textField.text!.lowercased()
+                let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
+                self?.nameLabel.text = whitespaceName
+                self?.uploadNewName(name: whitespaceName)
+            }
+        }))
+        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+    
+    private func uploadNewName(name: String) {
+        db.collection("friend groups").document(group.groupID).setData([
+            "Name" : name
+        ], merge: true, completion: { [weak self] error in
+            guard error == nil else {
+                self?.alertManager.showAlert(title: "error saving name", message: "something went wrong when we tried to save your new grop name. please try again.")
+                return
+            }
+            print("name change saved! new name: \(name)")
+        })
+    }
+    
+    @IBAction func addPeople() {
+        alertManager.showAlert(title: "coming soon", message: "hold tight until we can figure out some other, more important stuff!")
     }
     
     // MARK: - TableView Delegates
@@ -202,19 +260,19 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
                 // This person is already your friend
                 
                 // Check if they are blocked
-                if reportingManager.userIsBlocked(theirUID: groupMembers[indexPath.row].uid!) || reportingManager.userBlockedYou(theirUID: groupMembers[indexPath.row].uid!) {
+                if reportingManager.userIsBlocked(theirUID: groupMembers[indexPath.row].uid) || reportingManager.userBlockedYou(theirUID: groupMembers[indexPath.row].uid) {
                     alertManager.showAlert(title: "user blocked", message: "either you blocked this person, or they blocked you.\n\n quit it wth these toxic friends!")
                 } else {
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let vc = storyboard.instantiateViewController(identifier: "friendViewController") as FriendViewController
-                    vc.friendsUID = groupMembers[indexPath.row].uid!
+                    vc.friendsUID = groupMembers[indexPath.row].uid
                     navigationController?.pushViewController(vc, animated: true)
                 }
             } else {
                 // This person is not your friend
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(identifier: "friendVerifyViewController") as FriendVerifyViewController
-                vc.phoneNumber = groupMembers[indexPath.row].phoneNumber!
+                vc.phoneNumber = groupMembers[indexPath.row].phoneNumber
                 vc.comingFromGroup = true
                 navigationController?.pushViewController(vc, animated: true)
             }

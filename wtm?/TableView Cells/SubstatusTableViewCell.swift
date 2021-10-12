@@ -14,7 +14,7 @@ class SubstatusTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont(name: "SuperBasic-Regular", size: 18)
         label.textColor = UIColor(named: "darkBlueOnLight")
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.textAlignment = .left
         label.lineBreakMode = .byWordWrapping
         return label
@@ -33,7 +33,7 @@ class SubstatusTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        label.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: 50)
+        label.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: 60)
     }
     
     public func configure(with substatus: String) {

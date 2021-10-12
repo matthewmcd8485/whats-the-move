@@ -25,8 +25,6 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         groupButton.layer.cornerRadius = 10
         
@@ -52,10 +50,6 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
         loadFriendGroups()
     }
     
-    @IBAction func backButton(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
     private func createSpinnerView() {
         activityIndicator.color = .white
         activityIndicator.frame = CGRect(x: view.center.x - 10, y: loadingLabel.frame.maxY + 50, width: 20, height: 20)
@@ -71,33 +65,22 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
         guard let uid = UserDefaults.standard.string(forKey: "uid") else {
             return
         }
+        var groupIDs = [String]()
         
-        groups.removeAll()
-        
-        db.collection("friend groups").whereField("People", arrayContains: uid).getDocuments() { [weak self] querySnapshot, error in
-            guard error == nil else {
-                return
-            }
-            
-            for document in querySnapshot!.documents {
-                let name = document.get("Name") as! String
-                let groupID = document.get("Group Identifier") as! String
-                let people = document.get("People") as! [String]
-                
-                let group = FriendGroup(name: name.lowercased(), groupID: groupID, people: people)
-                self?.groups.append(group)
-                self?.groups = self!.groups.filterDuplicates { $0.groupID == $1.groupID }
-                self?.groups.sort { $0.name < $1.name }
-                
+        databaseManager.downloadAllGroups(uid: uid, completion: { [weak self] result in
+            switch result {
+            case .success(let downloadedGroups):
+                for x in downloadedGroups.count {
+                    groupIDs.append(downloadedGroups[x].groupID)
+                }
+                UserDefaults.standard.set(groupIDs, forKey: "groupsUID")
+                self?.groups = downloadedGroups
                 self?.tableView.reloadData()
                 self?.updateUI()
+            case .failure(let error):
+                print("\n *GROUPS VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
             }
-        }
-        
-        if groups.count == 0 {
-            tableView.reloadData()
-            updateUI()
-        }
+        })
     }
     
     @IBAction func newGroupButton(_ sender: Any) {
@@ -157,10 +140,4 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
         return cell
     }
 
-}
-
-extension FriendGroupsViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
 }

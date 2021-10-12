@@ -140,7 +140,7 @@ class FriendViewController: UIViewController {
             nameLabel.text = friend.name
             numberLabel.text = friend.phoneNumber
             
-            let storageRef = Storage.storage().reference().child("profile images").child("\(friend.uid!) - profile image.png")
+            let storageRef = Storage.storage().reference().child("profile images").child("\(friend.uid) - profile image.png")
             storageRef.downloadURL(completion: { [weak self] (url, error) in
                 if error != nil {
                     self?.alertManager.showAlert(title: "Error downloading profile image", message: "There was a problem downloading the profile image. \n \n Error: \(error!)")
@@ -185,7 +185,7 @@ class FriendViewController: UIViewController {
         alert.alertTitle.textColor = .systemRed
         alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
         alert.addAction(PMAlertAction(title: "block user", style: .default, action: { [weak self] in
-            self?.databaseManager.blockUser(uidToBlock: self!.friend.uid!, completion: { success in
+            self?.databaseManager.blockUser(uidToBlock: self!.friend.uid, completion: { success in
                 if success {
                     let alert = PMAlertController(title: "user blocked", description: "you have successfully blocked this person.\n\nsorry they were mean to you or whatever.", image: nil, style: .alert)
                     alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
@@ -207,7 +207,7 @@ class FriendViewController: UIViewController {
         alert.alertTitle.textColor = .systemRed
         alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
         alert.addAction(PMAlertAction(title: "report user", style: .default, action: { [weak self] in
-            self?.reportingManager.reportUser(uid: self!.friend.uid!, name: self!.friend.name!, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
+            self?.reportingManager.reportUser(uid: self!.friend.uid, name: self!.friend.name, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
                 if success {
                     print("user reported!")
                     self?.navigationController?.popViewController(animated: true)

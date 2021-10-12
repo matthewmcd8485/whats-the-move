@@ -20,6 +20,7 @@ class SwooshViewController: UIViewController {
     public var groups : [SelectableGroup] = []
     var allFriends : [Friend] = []
     var allUsers : [User] = []
+    var groupNotification = [GroupNotification]()
     
     @IBOutlet weak var sendingLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -78,6 +79,8 @@ class SwooshViewController: UIViewController {
                     allFriends.append(groups[x].friends[y])
                 }
             }
+            
+            //groupNotification[x].group = groups[x].group
             
             // Create a bored request in Firestore; one for each group
             let uuidString = UUID().uuidString
@@ -149,7 +152,7 @@ class SwooshViewController: UIViewController {
                     group.enter()
                     
                     let sender = PushNotificationSender()
-                    sender.sendPushNotification(to: self!.allUsers[x].fcmToken!, title: "\(name!) \(self!.mood.rawValue)", body: "do them a favor and fix their boredom", urlToImage: imageURL)
+                    sender.sendPushNotification(to: self!.allUsers[x].fcmToken, title: "new bored request", subtitle: "", body: "\(name!) \(self!.mood.rawValue)", urlToImage: imageURL)
                     
                     group.leave()
                 }

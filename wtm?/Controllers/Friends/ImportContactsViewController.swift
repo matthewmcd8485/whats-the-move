@@ -114,7 +114,7 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
                 let name = document.get("Name") as! String
                 let status = document.get("Status") as! String
                 let substatus = document.get("Substatus") as! String
-                let profileImageURL = document.get("Profile Image URL") as! String
+                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
                 let fcmToken = document.get("FCM Token") as! String
                 let joined = document.get("Joined") as! String
                 let phoneNumber = document.get("Phone Number") as! String

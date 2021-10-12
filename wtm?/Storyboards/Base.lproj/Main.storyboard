@@ -79,7 +79,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IGj-Z2-lRh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1047.6923076923076" y="-653.3175355450237"/>
+            <point key="canvasLocation" x="1048" y="-1391"/>
         </scene>
         <!--Loading View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -134,7 +134,7 @@ that's embarrassing.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="miD-QA-Odo">
-                                <rect key="frame" x="16" y="171" width="358" height="424"/>
+                                <rect key="frame" x="16" y="171" width="358" height="466"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="backgroundColors"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -151,70 +151,35 @@ that's embarrassing.</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
                                 <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" image="plus" catalog="system">
+                                <state key="normal" image="paperplane" catalog="system">
                                     <color key="titleColor" name="darkBlueOnLight"/>
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" scale="default" weight="regular"/>
                                 </state>
                                 <connections>
-                                    <segue destination="LWR-4Z-SAf" kind="show" id="ZIb-qt-VBD"/>
+                                    <action selector="requestsButton:" destination="lao-sk-xh6" eventType="touchUpInside" id="len-hD-Yiz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x5l-oy-4pW">
-                                <rect key="frame" x="53" y="632" width="108" height="96"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bky-U9-9DP">
+                                <rect key="frame" x="53" y="665" width="285" height="53"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="darkBlueOnLight"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal" title="add friends">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
                                 </state>
                                 <connections>
-                                    <action selector="requestsButton:" destination="lao-sk-xh6" eventType="touchUpInside" id="WXP-AZ-c2m"/>
+                                    <segue destination="LWR-4Z-SAf" kind="show" id="sLl-fk-mbo"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="requests" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUx-PE-s0o">
-                                <rect key="frame" x="36" y="688" width="141" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="tertiaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o9s-Am-MiP">
-                                <rect key="frame" x="230" y="632" width="108" height="96"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                </state>
-                                <connections>
-                                    <action selector="groupsButton:" destination="lao-sk-xh6" eventType="touchUpInside" id="Htt-Eq-NIA"/>
-                                </connections>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sNZ-5R-mof">
-                                <rect key="frame" x="244" y="646" width="80" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" name="lightBlue"/>
-                                <imageReference key="image" image="person.3" catalog="system" symbolScale="large"/>
-                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="groups" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3xV-3C-6aZ">
-                                <rect key="frame" x="213" y="688" width="141" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="tertiaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DGw-jm-rhJ">
-                                <rect key="frame" x="80" y="644" width="53" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" name="lightBlue"/>
-                                <imageReference key="image" image="paperplane" catalog="system" symbolScale="large"/>
-                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="35"/>
-                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="cyW-PE-KTc"/>
                         <color key="backgroundColor" name="backgroundColors"/>
                     </view>
                     <navigationItem key="navigationItem" id="IN4-sd-bD5"/>
                     <connections>
+                        <outlet property="addFriendsButton" destination="bky-U9-9DP" id="ri7-2z-HTi"/>
                         <outlet property="loadingLabel" destination="mVg-IS-xqL" id="auM-Hn-h6s"/>
                         <outlet property="noFriendsLabel" destination="Due-XN-aKu" id="HOc-70-W2w"/>
                         <outlet property="tableView" destination="miD-QA-Odo" id="laV-7u-PkE"/>
@@ -222,7 +187,7 @@ that's embarrassing.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2BT-cK-EAd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3776.9230769230767" y="89.5734597156398"/>
+            <point key="canvasLocation" x="3776.9230769230767" y="-665.40284360189571"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="wYj-Hv-fEo">
@@ -307,7 +272,7 @@ standard SMS messaging rates may apply.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ock-FB-ZRO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1956.9230769230769" y="-653.3175355450237"/>
+            <point key="canvasLocation" x="1957" y="-1391"/>
         </scene>
         <!--Verification View Controller-->
         <scene sceneID="Zkx-3r-Ahv">
@@ -373,7 +338,7 @@ messages</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p2m-pJ-SKP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2872.3076923076924" y="-653.3175355450237"/>
+            <point key="canvasLocation" x="2871" y="-1391"/>
         </scene>
         <!--Home Screen View Controller-->
         <scene sceneID="Pt8-R1-UT3">
@@ -383,52 +348,41 @@ messages</string>
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tWl-pE-FMP">
+                                <rect key="frame" x="58" y="324" width="275" height="275"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="darkBlueOnLight"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="boredButton:" destination="sfA-O3-tAM" eventType="touchUpInside" id="gbZ-gb-dZL"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="i am bored" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hJ-ZA-4Y5">
+                                <rect key="frame" x="74" y="359" width="242" height="204"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="60"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="wtm?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NBd-2G-rlF">
-                                <rect key="frame" x="16" y="79" width="358" height="155"/>
+                                <rect key="frame" x="16" y="107" width="358" height="155"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="100"/>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="quick, someone is bored!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hJ-ZA-4Y5">
-                                <rect key="frame" x="16" y="228" width="358" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iif-i1-2Ll">
-                                <rect key="frame" x="104" y="267" width="183" height="53"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="darkBlueOnLight"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" title="save them">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="saveThemButton:" destination="sfA-O3-tAM" eventType="touchUpInside" id="W7z-8u-WMg"/>
-                                    <action selector="sendButton:" destination="bvE-bF-9u0" eventType="touchUpInside" id="ogA-kM-RhX"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBK-gX-Oac">
-                                <rect key="frame" x="45" y="339" width="300" height="300"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="boredButton"/>
-                                <connections>
-                                    <action selector="boredButton:" destination="sfA-O3-tAM" eventType="touchUpInside" id="YGh-U8-I0n"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pha-n4-4pG"/>
                         <color key="backgroundColor" name="lightBlueOnLight"/>
                     </view>
                     <navigationItem key="navigationItem" id="qy8-3Z-c7z"/>
                     <connections>
-                        <outlet property="boredButtonLayer" destination="xBK-gX-Oac" id="Rzt-6W-aVK"/>
-                        <outlet property="saveThemButton" destination="Iif-i1-2Ll" id="5Vz-CB-l8T"/>
-                        <outlet property="someoneIsBoredLabel" destination="2hJ-ZA-4Y5" id="5h6-Gf-HWA"/>
+                        <outlet property="boredButtonLayer" destination="tWl-pE-FMP" id="r5b-YW-uWn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q9e-AX-fRR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -448,9 +402,11 @@ messages</string>
                         <color key="selectedImageTintColor" name="darkBlueOnLight"/>
                     </tabBar>
                     <connections>
-                        <segue destination="PLD-DU-f4K" kind="relationship" relationship="viewControllers" id="NGj-cU-EbO"/>
-                        <segue destination="Fmg-La-1p3" kind="relationship" relationship="viewControllers" id="API-as-o5m"/>
-                        <segue destination="OLZ-kX-lqK" kind="relationship" relationship="viewControllers" id="UPW-wz-7Rb"/>
+                        <segue destination="PLD-DU-f4K" kind="relationship" relationship="viewControllers" id="Lwj-Yw-m2S"/>
+                        <segue destination="WKQ-Td-hkv" kind="relationship" relationship="viewControllers" id="0CN-rX-SB8"/>
+                        <segue destination="Fmg-La-1p3" kind="relationship" relationship="viewControllers" id="yfY-oh-gZq"/>
+                        <segue destination="QNN-NW-A2K" kind="relationship" relationship="viewControllers" id="tge-JK-cNg"/>
+                        <segue destination="OLZ-kX-lqK" kind="relationship" relationship="viewControllers" id="4Ip-Ol-K83"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gsv-3t-ZWM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -510,6 +466,13 @@ what is your name?</string>
                                     <action selector="continueButton:" destination="GEf-kg-QUJ" eventType="touchUpInside" id="fov-Wp-agg"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="NOTE: This name cannot be changed later, so please choose wisely." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fgt-Rf-uxC">
+                                <rect key="frame" x="16" y="350" width="358" height="76"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="12"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="cRP-dO-m0E"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -520,7 +483,7 @@ what is your name?</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="psz-3q-eve" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3777" y="-653"/>
+            <point key="canvasLocation" x="3777" y="-1391"/>
         </scene>
         <!--Finishing Up View Controller-->
         <scene sceneID="5ag-Zp-zMq">
@@ -600,7 +563,7 @@ touches</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OKb-Jn-yCv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4623" y="-653"/>
+            <point key="canvasLocation" x="4622" y="-1391"/>
         </scene>
         <!--My Profile View Controller-->
         <scene sceneID="Re9-Ym-5xC">
@@ -750,7 +713,7 @@ touches</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Art-ZW-MdB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3776.9230769230767" y="1517.7725118483411"/>
+            <point key="canvasLocation" x="3777" y="2318"/>
         </scene>
         <!--Edit Status View Controller-->
         <scene sceneID="UL7-vr-cEI">
@@ -888,7 +851,7 @@ touches</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EhO-XS-Mng" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4620" y="1517.7725118483411"/>
+            <point key="canvasLocation" x="4620" y="2318"/>
         </scene>
         <!--Picture Edit View Controller-->
         <scene sceneID="lED-dc-0yd">
@@ -972,7 +935,7 @@ your best is probably still pretty bad.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DNe-2a-VHZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3777" y="2259"/>
+            <point key="canvasLocation" x="3780" y="3059"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="pYh-NR-GqK">
@@ -1072,7 +1035,7 @@ your best is probably still pretty bad.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2fd-tV-uh9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4621.538461538461" y="2258.5308056872036"/>
+            <point key="canvasLocation" x="4623" y="3059"/>
         </scene>
         <!--myself-->
         <scene sceneID="Lpw-4m-6ff">
@@ -1091,7 +1054,7 @@ your best is probably still pretty bad.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="COl-fC-O6P" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2869.2307692307691" y="1517.7725118483411"/>
+            <point key="canvasLocation" x="2872" y="2318"/>
         </scene>
         <!--home-->
         <scene sceneID="wMq-Es-c9m">
@@ -1116,7 +1079,7 @@ your best is probably still pretty bad.</string>
         <scene sceneID="jn7-kc-z06">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="PLD-DU-f4K" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="friends" image="person.3.fill" catalog="system" selectedImage="person.3.fill" id="OA3-If-vSe"/>
+                    <tabBarItem key="tabBarItem" title="friends" image="person.crop.circle.fill.badge.checkmark" catalog="system" selectedImage="person.crop.circle.fill.badge.checkmark" id="OA3-If-vSe"/>
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ifC-7h-2rS">
@@ -1129,7 +1092,7 @@ your best is probably still pretty bad.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fWO-m7-QMz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2869.2307692307691" y="89.5734597156398"/>
+            <point key="canvasLocation" x="2868" y="-665"/>
         </scene>
         <!--Substatus View Controller-->
         <scene sceneID="wDB-RL-RLv">
@@ -1182,7 +1145,7 @@ your best is probably still pretty bad.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="50K-CO-WYw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5484.6153846153848" y="1517.7725118483411"/>
+            <point key="canvasLocation" x="5485" y="2318"/>
         </scene>
         <!--About This App View Controller-->
         <scene sceneID="hsF-zM-hEj">
@@ -1224,7 +1187,7 @@ your best is probably still pretty bad.</string>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="app version 1.0  beta 1 (build 4)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDa-Vg-Cd4">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="app version 1.0  beta 3 (build 6)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDa-Vg-Cd4">
                                 <rect key="frame" x="29" y="191" width="332" height="69"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
@@ -1272,7 +1235,7 @@ all rights reserved.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jfc-m0-hhS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5484.6153846153848" y="2258.5308056872036"/>
+            <point key="canvasLocation" x="5488" y="3059"/>
         </scene>
         <!--Add Friends View Controller-->
         <scene sceneID="GM3-ai-Ie3">
@@ -1364,7 +1327,7 @@ all rights reserved.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eaU-dZ-TjW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5485" y="90"/>
+            <point key="canvasLocation" x="5485" y="-665"/>
         </scene>
         <!--Friend Verify View Controller-->
         <scene sceneID="hmU-bg-TOI">
@@ -1499,7 +1462,7 @@ all rights reserved.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RoB-wT-a3N" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6357" y="90"/>
+            <point key="canvasLocation" x="6357" y="-665"/>
         </scene>
         <!--Import Contacts View Controller-->
         <scene sceneID="na8-Ar-wnh">
@@ -1577,7 +1540,7 @@ all rights reserved.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SMW-ea-rRg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7221.538461538461" y="89.5734597156398"/>
+            <point key="canvasLocation" x="7222" y="-665"/>
         </scene>
         <!--Requests View Controller-->
         <scene sceneID="XrN-4n-iKy">
@@ -1645,7 +1608,7 @@ tragic.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qld-oa-Ynh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6356.9230769230771" y="-653.3175355450237"/>
+            <point key="canvasLocation" x="6357" y="-1391"/>
         </scene>
         <!--Friend View Controller-->
         <scene sceneID="4Oc-iD-yqy">
@@ -1757,7 +1720,7 @@ tragic.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Iu-aL-8c7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4620" y="90"/>
+            <point key="canvasLocation" x="4620" y="-665"/>
         </scene>
         <!--Friend Groups View Controller-->
         <scene sceneID="xZ7-KN-HNB">
@@ -1774,25 +1737,12 @@ tragic.</string>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="groups" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VrA-bh-T7w">
-                                <rect key="frame" x="16" y="61" width="358" height="113"/>
+                                <rect key="frame" x="16" y="44" width="358" height="113"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rwD-cw-iI6">
-                                <rect key="frame" x="16" y="41" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" image="arrow.left" catalog="system">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButton:" destination="Ni0-3C-MpS" eventType="touchUpInside" id="XR8-Rr-DwN"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ugo-TR-I4U">
                                 <rect key="frame" x="106" y="352" width="178" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -1801,7 +1751,7 @@ tragic.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edo-xR-vze">
-                                <rect key="frame" x="53" y="663" width="285" height="53"/>
+                                <rect key="frame" x="53" y="665" width="285" height="53"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="darkBlueOnLight"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
@@ -1835,7 +1785,7 @@ tragic.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2g-tj-WcC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8051" y="802"/>
+            <point key="canvasLocation" x="3777" y="90"/>
         </scene>
         <!--Create Group View Controller-->
         <scene sceneID="uyz-Dn-jja">
@@ -1920,7 +1870,7 @@ tragic.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fEJ-KS-IhJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9791" y="802"/>
+            <point key="canvasLocation" x="5485" y="90"/>
         </scene>
         <!--Group Detail View Controller-->
         <scene sceneID="HZp-lM-cUN">
@@ -1931,7 +1881,7 @@ tragic.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Oei-58-Xa3">
-                                <rect key="frame" x="16" y="261" width="358" height="394"/>
+                                <rect key="frame" x="16" y="261" width="358" height="375"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="backgroundColors"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1943,6 +1893,19 @@ tragic.</string>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vze-gi-tFK">
+                                <rect key="frame" x="334" y="44" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <state key="normal" image="person.fill.xmark" catalog="system">
+                                    <color key="titleColor" name="darkBlueOnLight"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="leaveGroupButton:" destination="2cu-ut-GVi" eventType="touchUpInside" id="JSG-j2-zw0"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NVD-za-RaE">
                                 <rect key="frame" x="16" y="41" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -1970,27 +1933,63 @@ tragic.</string>
                                 <color key="textColor" name="tertiaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="group name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dok-2K-e0l">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="group name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="Dok-2K-e0l">
                                 <rect key="frame" x="16" y="154" width="358" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="36"/>
                                 <color key="textColor" name="secondaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Paw-aa-adU">
-                                <rect key="frame" x="53" y="680" width="285" height="53"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k1e-ES-hKU">
+                                <rect key="frame" x="56" y="644" width="108" height="96"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="backgroundColors"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <color key="tintColor" name="backgroundColors"/>
-                                <state key="normal" title="leave group">
-                                    <color key="titleColor" systemColor="systemRedColor"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
+                                <state key="normal">
+                                    <color key="titleColor" name="darkBlueOnLight"/>
                                 </state>
                                 <connections>
-                                    <action selector="leaveGroupButton:" destination="2cu-ut-GVi" eventType="touchUpInside" id="8jJ-2e-7kF"/>
+                                    <action selector="changeName" destination="2cu-ut-GVi" eventType="touchUpInside" id="GDZ-Dh-7gU"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="change name" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vI7-7v-wvP">
+                                <rect key="frame" x="39" y="700" width="141" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="63e-GG-EVH">
+                                <rect key="frame" x="83" y="656" width="53" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" name="lightBlue"/>
+                                <imageReference key="image" image="ellipsis.bubble" catalog="system" symbolScale="large"/>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="35"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CW2-b0-TeQ">
+                                <rect key="frame" x="223" y="644" width="108" height="96"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
+                                <state key="normal">
+                                    <color key="titleColor" name="darkBlueOnLight"/>
+                                </state>
+                                <connections>
+                                    <action selector="addPeople" destination="2cu-ut-GVi" eventType="touchUpInside" id="NKJ-yM-VSU"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="add people" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nMW-44-fxF">
+                                <rect key="frame" x="206" y="700" width="141" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
+                                <color key="textColor" name="tertiaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wyC-ha-ZJu">
+                                <rect key="frame" x="250" y="656" width="53" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" name="lightBlue"/>
+                                <imageReference key="image" image="person.crop.circle.badge.plus" catalog="system" symbolScale="large"/>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="35"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pd4-Ey-8Kq"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -2005,7 +2004,7 @@ tragic.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ynO-gG-BSO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8914" y="802"/>
+            <point key="canvasLocation" x="4621.538461538461" y="89.5734597156398"/>
         </scene>
         <!--Activity View Controller-->
         <scene sceneID="s6i-OM-IiC">
@@ -2206,27 +2205,14 @@ tragic.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="notifications" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hK9-aL-08h">
-                                <rect key="frame" x="16" y="61" width="358" height="113"/>
+                                <rect key="frame" x="16" y="44" width="358" height="113"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bpO-NX-cvQ">
-                                <rect key="frame" x="16" y="41" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" image="arrow.left" catalog="system">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButton:" destination="tWb-wf-0as" eventType="touchUpInside" id="k3g-nY-cBU"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="your friends are bored. fix that!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fNZ-4G-lpZ">
-                                <rect key="frame" x="16" y="141" width="358" height="42"/>
+                                <rect key="frame" x="16" y="124" width="358" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
                                 <color key="textColor" name="secondaryLabelColors"/>
@@ -2245,6 +2231,26 @@ tragic.</string>
                                 <color key="backgroundColor" name="backgroundColors"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="looks like no one wants to  hang out with you.  ouch!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yhe-D5-obU">
+                                <rect key="frame" x="-13" y="342" width="416" height="221"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="18"/>
+                                <color key="textColor" name="secondaryLabelColors"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M15-7B-SiW">
+                                <rect key="frame" x="334" y="44" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal" image="arrow.counterclockwise" catalog="system">
+                                    <color key="titleColor" name="darkBlueOnLight"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="reloadButton:" destination="tWb-wf-0as" eventType="touchUpInside" id="liO-4u-ZtB"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hzo-mQ-l9I"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -2252,12 +2258,13 @@ tragic.</string>
                     <navigationItem key="navigationItem" id="XDI-gL-JNu"/>
                     <connections>
                         <outlet property="loadingLabel" destination="bEP-1I-7Ot" id="w9U-ux-xEb"/>
+                        <outlet property="noOneLabel" destination="yhe-D5-obU" id="eSl-Ui-1sB"/>
                         <outlet property="tableView" destination="tVD-52-vbD" id="g2F-WT-zQc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zfN-hk-rJr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7221.538461538461" y="1517.7725118483411"/>
+            <point key="canvasLocation" x="3777" y="1528"/>
         </scene>
         <!--Bored Request Response View Controller-->
         <scene sceneID="bPB-9T-4kb">
@@ -2267,25 +2274,19 @@ tragic.</string>
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="MBa-8b-W9s">
-                                <rect key="frame" x="16" y="365" width="358" height="315"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="backgroundColors"/>
-                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </tableView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uPe-04-LZO">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="294"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="321"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eF8-4V-OJj">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="294"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="321"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="view request" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vCj-ZT-hSn">
-                                <rect key="frame" x="16" y="61" width="358" height="113"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="johnny appleseed wants to go shopping" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="SWs-TZ-UYN">
+                                <rect key="frame" x="16" y="152" width="358" height="122"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="25"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -2309,13 +2310,6 @@ tragic.</string>
                                 <color key="textColor" name="secondaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="johnny appleseed wants to go shopping" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SWs-TZ-UYN">
-                                <rect key="frame" x="16" y="134" width="358" height="137"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="this request expires at 12:00 PM" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tKU-9X-MvG">
                                 <rect key="frame" x="16" y="708" width="358" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -2323,20 +2317,33 @@ tragic.</string>
                                 <color key="textColor" name="tertiaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="tap on your name to reply" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kZs-OT-Pc3">
-                                <rect key="frame" x="16" y="688" width="358" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="18"/>
-                                <color key="textColor" name="tertiaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="group name" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y3j-Rw-JbX">
-                                <rect key="frame" x="16" y="272" width="358" height="103"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="group name" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="Y3j-Rw-JbX">
+                                <rect key="frame" x="16" y="78" width="358" height="88"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="36"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="MBa-8b-W9s">
+                                <rect key="frame" x="16" y="329" width="358" height="315"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="backgroundColors"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tnK-gq-THy">
+                                <rect key="frame" x="100" y="661" width="190" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" name="darkBlueOnLight"/>
+                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
+                                <color key="tintColor" name="darkBlueOnLight"/>
+                                <state key="normal" title="reply">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
+                                </state>
+                                <connections>
+                                    <action selector="replyButton:" destination="b8R-qn-tfr" eventType="touchUpInside" id="w4G-ug-t84"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="1gb-q2-uyw"/>
                         <color key="backgroundColor" name="backgroundColors"/>
@@ -2349,12 +2356,13 @@ tragic.</string>
                         <outlet property="expiresAtLabel" destination="tKU-9X-MvG" id="fsi-P8-OIO"/>
                         <outlet property="groupNameLabel" destination="Y3j-Rw-JbX" id="nOP-F0-4Fv"/>
                         <outlet property="loadingLabel" destination="yG5-HX-3gq" id="cpc-pU-wdT"/>
+                        <outlet property="replyButton" destination="tnK-gq-THy" id="qNG-cv-uA7"/>
                         <outlet property="tableView" destination="MBa-8b-W9s" id="j6G-MU-5Og"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SnM-Qx-xN8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8050.7692307692305" y="1517.7725118483411"/>
+            <point key="canvasLocation" x="4620" y="1527.7251184834122"/>
         </scene>
         <!--Change Response View Controller-->
         <scene sceneID="H2A-k7-hfC">
@@ -2421,28 +2429,69 @@ tragic.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LQK-79-nvS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8913.8461538461543" y="1517.7725118483411"/>
+            <point key="canvasLocation" x="5485" y="1528"/>
+        </scene>
+        <!--notifications-->
+        <scene sceneID="3Tl-Tq-ESE">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="QNN-NW-A2K" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="notifications" image="bell.fill" catalog="system" selectedImage="bell.fill" id="hqr-BZ-XHn"/>
+                    <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UGu-R7-Mzt">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="tWb-wf-0as" kind="relationship" relationship="rootViewController" id="Dze-ev-h29"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p4l-aE-87N" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2872" y="1528"/>
+        </scene>
+        <!--groups-->
+        <scene sceneID="mja-db-KRX">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="WKQ-Td-hkv" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="groups" image="person.3.fill" catalog="system" selectedImage="person.3.fill" id="rbA-xi-1Rl"/>
+                    <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VqP-Yn-yMa">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Ni0-3C-MpS" kind="relationship" relationship="rootViewController" id="elp-ef-KVw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cm5-9o-TrH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2868" y="90"/>
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.counterclockwise" catalog="system" width="115" height="128"/>
         <image name="arrow.left" catalog="system" width="128" height="98"/>
         <image name="arrow.right" catalog="system" width="128" height="98"/>
-        <image name="boredButton" width="1000" height="1000"/>
+        <image name="bell.fill" catalog="system" width="128" height="124"/>
         <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="checkmark.circle" catalog="system" width="128" height="121"/>
         <image name="checkmark.seal" catalog="system" width="128" height="128"/>
+        <image name="ellipsis.bubble" catalog="system" width="128" height="110"/>
         <image name="exclamationmark.bubble" catalog="system" width="128" height="110"/>
         <image name="exclamationmark.triangle" catalog="system" width="128" height="112"/>
         <image name="gear" catalog="system" width="128" height="119"/>
         <image name="house.fill" catalog="system" width="128" height="106"/>
         <image name="nosign" catalog="system" width="128" height="121"/>
         <image name="paperplane" catalog="system" width="128" height="118"/>
-        <image name="person.3" catalog="system" width="128" height="62"/>
         <image name="person.3.fill" catalog="system" width="128" height="61"/>
         <image name="person.circle" catalog="system" width="128" height="121"/>
         <image name="person.crop.circle" catalog="system" width="128" height="121"/>
+        <image name="person.crop.circle.badge.plus" catalog="system" width="128" height="113"/>
+        <image name="person.crop.circle.fill.badge.checkmark" catalog="system" width="128" height="113"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
-        <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="person.fill.xmark" catalog="system" width="128" height="88"/>
         <namedColor name="backgroundColors">
             <color red="0.84313725490196079" green="0.84313725490196079" blue="0.85098039215686272" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
