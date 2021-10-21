@@ -1,0 +1,11 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+Pods/
+
+## AccessKey File
+wtm?/Supporting Files/AccessKeys.swift

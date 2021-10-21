@@ -10,6 +10,7 @@
 		007B77EF3D22A883F865B80C /* Pods_wtm_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE15818DD1E9FD54DDD3D9DF /* Pods_wtm_Tests.framework */; };
 		7A19EC9F4A6FEDA4CD3D2E96 /* Pods_wtm_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E902825EB88275A73F40848 /* Pods_wtm_.framework */; };
 		9B3407E3194DD10414C107F1 /* Pods_wtm__wtm_UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F87EFD931C3965DF457FCF3D /* Pods_wtm__wtm_UITests.framework */; };
+		C90C16082721C2D7001FF136 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C16072721C2D7001FF136 /* AccessKeys.swift */; };
 		C912CD6F2685844C0078D5C1 /* FriendGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C912CD6E2685844C0078D5C1 /* FriendGroup.swift */; };
 		C912CD71268584F60078D5C1 /* FriendGroupsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C912CD70268584F60078D5C1 /* FriendGroupsTableViewCell.swift */; };
 		C912CD74268591680078D5C1 /* CreateGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C912CD73268591680078D5C1 /* CreateGroupViewController.swift */; };
@@ -184,6 +185,7 @@
 		5E3D69E4F1DF6B0727BF0BED /* Pods-wtm?-wtm?UITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wtm?-wtm?UITests.release.xcconfig"; path = "Target Support Files/Pods-wtm?-wtm?UITests/Pods-wtm?-wtm?UITests.release.xcconfig"; sourceTree = "<group>"; };
 		8E902825EB88275A73F40848 /* Pods_wtm_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_wtm_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B77D09B9D6D80D9FB98BB09D /* Pods-wtm?.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wtm?.debug.xcconfig"; path = "Target Support Files/Pods-wtm?/Pods-wtm?.debug.xcconfig"; sourceTree = "<group>"; };
+		C90C16072721C2D7001FF136 /* AccessKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessKeys.swift; sourceTree = "<group>"; };
 		C912CD6E2685844C0078D5C1 /* FriendGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendGroup.swift; sourceTree = "<group>"; };
 		C912CD70268584F60078D5C1 /* FriendGroupsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendGroupsTableViewCell.swift; sourceTree = "<group>"; };
 		C912CD73268591680078D5C1 /* CreateGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupViewController.swift; sourceTree = "<group>"; };
@@ -602,6 +604,7 @@
 		C9760B7F26643E9F009F66DA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C90C16072721C2D7001FF136 /* AccessKeys.swift */,
 				C9760B8126643EB3009F66DA /* KeychainItem.swift */,
 				C9760B8026643EB2009F66DA /* PushNotificationSender.swift */,
 				C988D516268F782B00CAEA8E /* Notification.json */,
@@ -1097,6 +1100,7 @@
 				C9574FA22665448900405B8B /* ImageStoreManager.swift in Sources */,
 				C9574FAE26658B2300405B8B /* SubstatusViewController.swift in Sources */,
 				C9760B8D26648BC4009F66DA /* MyFriendsViewController.swift in Sources */,
+				C90C16082721C2D7001FF136 /* AccessKeys.swift in Sources */,
 				C95A628F2669C0640000EE31 /* DatabaseError.swift in Sources */,
 				C9574FC62665C88A00405B8B /* ImportedContactsTableViewCell.swift in Sources */,
 				C9574FC02665C40900405B8B /* ContactsFilter.swift in Sources */,
