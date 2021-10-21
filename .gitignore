@@ -7,5 +7,7 @@ xcuserdata/
 
 Pods/
 
+.DS_Store
+
 ## AccessKey File
 wtm?/Supporting Files/AccessKeys.swift

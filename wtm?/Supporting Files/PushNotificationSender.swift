@@ -38,7 +38,7 @@ class PushNotificationSender {
             "url" : urlToImage
         ]
         
-        let headers: HTTPHeaders = ["Authorization" : "key=AAAAtUnIAG4:APA91bH3hg77hRp5YRQ-ErBP55tl97vRapD1xDojra6njZ9xmzZqC_EqaoV-PSeD58UQMnp5ZmYIrd7184N6LbIfkK2bHQuhnz1O4hDIZhw0H2rGyzE9Esa5gTXia4mu5Vz7X5q5AnEe", "content-type": "application/json"]
+        let headers: HTTPHeaders = ["Authorization" : AccessKeys.httpAuthorizationKey, "content-type": "application/json"]
         
         AF.request("https://fcm.googleapis.com/fcm/send", method:.post as HTTPMethod, parameters: parameters, encoding: JSONEncoding.default, headers: headers) .responseString { response in
             print(response)
