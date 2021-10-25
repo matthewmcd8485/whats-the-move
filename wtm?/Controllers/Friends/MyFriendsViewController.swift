@@ -124,7 +124,7 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
             return
         }
         
-        friends.removeAll()
+        //friends.removeAll()
         //tableView.reloadData()
         
         for x in friendsUIDs.count {
@@ -195,13 +195,16 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = friends[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: FriendsTableViewCell.identifier, for: indexPath) as! FriendsTableViewCell
-        cell.backgroundColor = UIColor(named: "backgroundColors")
-        cell.accessoryType = .disclosureIndicator
-        cell.contentView.clipsToBounds = true
-        cell.configure(with: model)
-        return cell
+        if friends.count != 0 {
+            let model = friends[indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: FriendsTableViewCell.identifier, for: indexPath) as! FriendsTableViewCell
+            cell.backgroundColor = UIColor(named: "backgroundColors")
+            cell.accessoryType = .disclosureIndicator
+            cell.contentView.clipsToBounds = true
+            cell.configure(with: model)
+            return cell
+        }
+        return UITableViewCell()
     }
 }
 

@@ -7,12 +7,14 @@
 
 import UIKit
 import Firebase
+import PMAlertController
 
 class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let db = Firestore.firestore()
     let alertManager = AlertManager.shared
     let databaseManager = DatabaseManager.shared
+    let profanityManager = ProfanityManager.shared
     
     var groups = [FriendGroup]()
     
@@ -88,10 +90,61 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
         if friendsCount < 2 {
             alertManager.showAlert(title: "slow your roll", message: "you need to have at least two friends to create a friend group. nice try, though.")
         } else {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(identifier: "createGroupViewController") as CreateGroupViewController
-            navigationController?.pushViewController(vc, animated: true)
+            let alert = PMAlertController(title: "name group", description: "enter a name for the new group.", image: nil, style: .alert)
+            alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+            alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+            alert.addTextField { (textField) in
+                textField?.autocapitalizationType = .none
+                let placeholder = "ex. the dream team"
+                textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
+                                                                        [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+                textField?.placeholder = placeholder
+            }
+            alert.addAction(PMAlertAction(title: "save", style: .default, action: { [weak self] in
+                let textField = alert.textFields[0]
+                guard textField.text != nil && textField.text != "" else {
+                    return
+                }
+                
+                if self!.profanityManager.checkForProfanity(in: textField.text!) {
+                    self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
+                } else {
+                    let lowercasedName = textField.text!.lowercased()
+                    let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
+                    
+                    self?.createGroup(name: whitespaceName)
+                }
+            }))
+            alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+            present(alert, animated: true)
+            
         }
+    }
+    
+    func createGroup(name: String) {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+            return
+        }
+        
+        let UUID = UUID().uuidString
+        db.collection("friend groups").document(UUID).setData([
+            "Group Identifier" : UUID,
+            "Name" : name,
+            "People" : [uid]
+        ], merge: true, completion: { [weak self] error in
+            guard error == nil else {
+                print("error: \(error!)")
+                return
+            }
+            
+            print("group created")
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "groupDetailViewController") as! GroupDetailViewController
+            vc.groupID = UUID
+            self?.navigationController?.pushViewController(vc, animated: true)
+            
+        })
     }
     
     private func updateUI() {

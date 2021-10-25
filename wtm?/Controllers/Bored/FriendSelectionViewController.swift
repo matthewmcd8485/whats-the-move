@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import PMAlertController
 
 class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -30,7 +31,7 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
         
         sendButton.layer.cornerRadius = 10
         
-        tableView.register(SendToGroupTableViewCell.self, forCellReuseIdentifier: SendToGroupTableViewCell.identifier)
+        tableView.register(FriendGroupsTableViewCell.self, forCellReuseIdentifier: FriendGroupsTableViewCell.identifier)
         
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         
@@ -83,6 +84,7 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
                     switch result {
                     case .success(let friends):
                         let selectableGroup = SelectableGroup(group: group, friends: friends, isSelected: false)
+                        
                         
                         for x in selectableGroup.friends.count {
                             print(selectableGroup.friends[x].name)
@@ -137,23 +139,44 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
     
     // MARK: - Send Notification
     @IBAction func sendButton(_ sender: Any) {
-        var groupsToSendTo : [SelectableGroup] = []
+        //var groupsToSendTo : [SelectableGroup] = []
+        //
+        //for x in groups.count {
+        //    if groups[x].isSelected {
+        //        groupsToSendTo.append(groups[x])
+        //    }
+        //}
+        //
+        //if groupsToSendTo.isEmpty {
+        //    alertManager.showAlert(title: "no group selected", message: "really have no friends huh?")
+        //} else {
+        //    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //    let vc = storyboard.instantiateViewController(identifier: "swooshViewController") as SwooshViewController
+        //    vc.mood = mood
+        //    vc.groups = groupsToSendTo
+        //    navigationController?.pushViewController(vc, animated: true)
+        //}
         
-        for x in groups.count {
-            if groups[x].isSelected {
-                groupsToSendTo.append(groups[x])
+        let alert = PMAlertController(title: "are you sure?", description: "don't be annoying if you don't have to. \n\ndoing this will disable your sending privileges for two hours.", image: nil, style: .walkthrough)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+        alert.addAction(PMAlertAction(title: "let's do this", style: .default, action: { [weak self] in
+            guard let strongSelf = self else {
+                return
             }
-        }
-        
-        if groupsToSendTo.isEmpty {
-            alertManager.showAlert(title: "no group selected", message: "really have no friends huh?")
-        } else {
+            
+            // Log the time that this was done
+            UserDefaults.standard.setValue(Date(), forKey: "sendToAllDate")
+            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(identifier: "swooshViewController") as SwooshViewController
-            vc.mood = mood
-            vc.groups = groupsToSendTo
-            navigationController?.pushViewController(vc, animated: true)
-        }
+            vc.mood = strongSelf.mood
+            vc.groups = strongSelf.groups
+            strongSelf.navigationController?.pushViewController(vc, animated: true)
+        }))
+        alert.addAction(PMAlertAction(title: "nevermind, cancel", style: .cancel, action: nil))
+        
+        present(alert, animated: true)
     }
     
     
@@ -164,6 +187,12 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "swooshViewController") as SwooshViewController
+        vc.mood = mood
+        vc.groups = [groups[indexPath.row]]
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -176,21 +205,21 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = groups[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: SendToGroupTableViewCell.identifier, for: indexPath) as! SendToGroupTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: FriendGroupsTableViewCell.identifier, for: indexPath) as! FriendGroupsTableViewCell
         
-        cell.surfaceButton.addTarget(self, action: #selector(checkMarkButtonClicked(sender:)), for: .touchUpInside)
+        //cell.surfaceButton.addTarget(self, action: #selector(checkMarkButtonClicked(sender:)), for: .touchUpInside)
         
-         if cell.surfaceButton.isSelected {
-            cell.checkmarkImageView.image = UIImage(named: "Checkmark")
-            groups[indexPath.row].isSelected = true
-        } else {
-            cell.checkmarkImageView.image = UIImage(named: "EmptyCircle")
-            groups[indexPath.row].isSelected = false
-        }
+        // if cell.surfaceButton.isSelected {
+        //    cell.checkmarkImageView.image = UIImage(named: "Checkmark")
+        //    groups[indexPath.row].isSelected = true
+        //} else {
+        //    cell.checkmarkImageView.image = UIImage(named: "EmptyCircle")
+        //    groups[indexPath.row].isSelected = false
+        //}
         
         cell.backgroundColor = UIColor(named: "backgroundColors")
         cell.contentView.clipsToBounds = true
-        cell.configure(with: model)
+        cell.configure(with: model.group)
         return cell
     }
     

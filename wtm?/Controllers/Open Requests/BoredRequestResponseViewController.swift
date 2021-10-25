@@ -258,7 +258,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
         let sender = PushNotificationSender()
         for x in request.people.count {
             if request.people[x].user.status != "do not disturb" {
-                sender.sendPushNotification(to: request.people[x].user.fcmToken, title: notificationTitle, subtitle: "", body: "they said \"\(substatus)\"", urlToImage: "")
+                sender.sendPushNotification(to: request.people[x].user.fcmToken, title: notificationTitle, subtitle: group.name, body: "they said \"\(substatus)\"", urlToImage: "")
             }
         }
     }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="e87-Jd-tkT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="e87-Jd-tkT">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -397,9 +398,14 @@ messages</string>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="1xF-CM-hIf">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" name="darkBlueOnLight"/>
                         <color key="selectedImageTintColor" name="darkBlueOnLight"/>
+                        <tabBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" name="backgroundColors"/>
+                        </tabBarAppearance>
+                        <tabBarAppearance key="scrollEdgeAppearance">
+                            <color key="backgroundColor" name="backgroundColors"/>
+                        </tabBarAppearance>
                     </tabBar>
                     <connections>
                         <segue destination="PLD-DU-f4K" kind="relationship" relationship="viewControllers" id="Lwj-Yw-m2S"/>
@@ -1787,21 +1793,22 @@ tragic.</string>
             </objects>
             <point key="canvasLocation" x="3777" y="90"/>
         </scene>
-        <!--Create Group View Controller-->
+        <!--Add People View Controller-->
         <scene sceneID="uyz-Dn-jja">
             <objects>
-                <viewController storyboardIdentifier="createGroupViewController" id="NSO-8m-veG" customClass="CreateGroupViewController" customModule="wtm_" customModuleProvider="target" sceneMemberID="viewController">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fEJ-KS-IhJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="addPeopleViewController" id="NSO-8m-veG" customClass="AddPeopleViewController" customModule="wtm_" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Pb6-F0-Yjs">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="INp-qk-SOJ">
-                                <rect key="frame" x="16" y="273" width="358" height="374"/>
+                                <rect key="frame" x="16" y="220" width="358" height="495"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="backgroundColors"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="new group" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gnv-b3-Mfq">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="add people" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gnv-b3-Mfq">
                                 <rect key="frame" x="16" y="61" width="358" height="113"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
@@ -1822,35 +1829,14 @@ tragic.</string>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2dz-dI-pPt">
-                                <rect key="frame" x="106" y="424" width="178" height="56"/>
+                                <rect key="frame" x="106" y="395" width="178" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="25"/>
                                 <color key="textColor" name="secondaryLabelColors"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5T5-II-cE5">
-                                <rect key="frame" x="53" y="670" width="285" height="53"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="darkBlueOnLight"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" title="create">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="createButton:" destination="NSO-8m-veG" eventType="touchUpInside" id="boa-1i-PwZ"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="give it a name..." minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NCN-v6-e0y">
-                                <rect key="frame" x="16" y="163" width="358" height="57"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="backgroundColors"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="35"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" textContentType="name"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="don't forget to add some friends" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2zy-Vy-reS">
-                                <rect key="frame" x="16" y="233" width="358" height="42"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="add a friend to the group!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2zy-Vy-reS">
+                                <rect key="frame" x="16" y="149" width="358" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="18"/>
                                 <color key="textColor" name="tertiaryLabelColors"/>
@@ -1862,15 +1848,12 @@ tragic.</string>
                     </view>
                     <navigationItem key="navigationItem" id="cnc-9v-La2"/>
                     <connections>
-                        <outlet property="createButton" destination="5T5-II-cE5" id="0Zm-E2-mKf"/>
                         <outlet property="loadingLabel" destination="2dz-dI-pPt" id="cTy-j6-tzr"/>
                         <outlet property="tableView" destination="INp-qk-SOJ" id="gBn-Qo-VAM"/>
-                        <outlet property="textField" destination="NCN-v6-e0y" id="8eK-Ol-wfz"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fEJ-KS-IhJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5485" y="90"/>
+            <point key="canvasLocation" x="5484.6153846153848" y="89.5734597156398"/>
         </scene>
         <!--Group Detail View Controller-->
         <scene sceneID="HZp-lM-cUN">
@@ -2130,7 +2113,7 @@ tragic.</string>
                                 <color key="backgroundColor" name="darkBlueOnLight"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
                                 <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" title="swoosh">
+                                <state key="normal" title="send to everyone">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="22" scale="default" weight="regular"/>
                                 </state>

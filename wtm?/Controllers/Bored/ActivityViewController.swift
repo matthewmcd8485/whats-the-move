@@ -19,7 +19,7 @@ class ActivityViewController: UIViewController, UICollectionViewDataSource, UICo
         super.viewDidLoad()
         
         navigationController?.interactivePopGestureRecognizer?.delegate = self
-
+        
         collectionViewPickerData = PickerData.collectionViewData
         
         let layout = UICollectionViewFlowLayout()

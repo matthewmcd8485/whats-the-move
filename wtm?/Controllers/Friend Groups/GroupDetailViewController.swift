@@ -95,11 +95,9 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
                         switch result {
                         case .success(let user):
                             
-                            if user.uid != UserDefaults.standard.string(forKey: "uid") {
-                                self?.groupMembers.append(user)
-                                self?.groupMembers = self!.groupMembers.filterDuplicates { $0.uid == $1.uid }
-                                self?.groupMembers.sort { $0.name < $1.name }
-                            }
+                            self?.groupMembers.append(user)
+                            self?.groupMembers = self!.groupMembers.filterDuplicates { $0.uid == $1.uid }
+                            self?.groupMembers.sort { $0.name < $1.name }
                             
                             self?.tableView.reloadData()
                             self?.updateUI()
@@ -129,9 +127,9 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
                     self?.nameLabel.alpha = 1
                     
                     if self?.groupMembers.count == 1 {
-                        self?.peopleLabel.text = "1 other person in this group"
+                        self?.peopleLabel.text = "you're the only one in this group!"
                     } else {
-                        self?.peopleLabel.text = "\(self!.groupMembers.count) other people in this group"
+                        self?.peopleLabel.text = "\(self!.groupMembers.count) people in this group"
                     }
                     self?.nameLabel.text = self?.group.name
                 })
@@ -223,8 +221,22 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
         })
     }
     
+    private func addNewPerson(newUID: String) {
+        let ref = db.collection("friend groups").document(group.groupID)
+        ref.updateData([
+            "People": FieldValue.arrayUnion([newUID])
+        ])
+        group.people?.append(newUID)
+        tableView.reloadData()
+    }
+    
     @IBAction func addPeople() {
-        alertManager.showAlert(title: "coming soon", message: "hold tight until we can figure out some other, more important stuff!")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "addPeopleViewController") as AddPeopleViewController
+        vc.completion = { [weak self] result in
+            self?.addNewPerson(newUID: result)
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     // MARK: - TableView Delegates

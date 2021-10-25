@@ -38,7 +38,7 @@ class FriendViewController: UIViewController {
         statusView.layer.cornerRadius = 10
         profileImage.layer.cornerRadius = profileImage.frame.width / 2
         
-        createSpinnerView()
+        //createSpinnerView()
         hideResultElements()
         loadUser()
     }

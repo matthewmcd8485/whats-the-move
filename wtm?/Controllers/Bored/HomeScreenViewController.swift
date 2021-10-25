@@ -66,8 +66,28 @@ class HomeScreenViewController: UIViewController {
             return
         }
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "activityViewController") as ActivityViewController
-        navigationController?.pushViewController(vc, animated: true)
+        if let sendAllDate = UserDefaults.standard.object(forKey: "sendToAllDate") as? Date {
+            // Calculate the difference in times between the last two times
+            if let diff = Calendar.current.dateComponents([.hour], from: sendAllDate, to: Date()).hour, diff < 2 {
+                let alert = PMAlertController(title: "nice try, dingbat", description: "you're still in timeout from when you sent a mass notification to all of your friends. \n\nwe understand how sad and lonely you must be. but if your friends actually cared about you, we wouldn't be in this predicament, would we?\n\nthink about that while you wait until your timeout is over.", image: nil, style: .alert)
+                alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+                alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+                alert.addAction(PMAlertAction(title: "yeah, i'm sad and lonely", style: .default, action: { [weak self] in
+                    self?.navigationController?.popViewController(animated: true)
+                }))
+                present(alert, animated: true)
+            } else {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(identifier: "activityViewController") as ActivityViewController
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(identifier: "activityViewController") as ActivityViewController
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        
     }
 }
+

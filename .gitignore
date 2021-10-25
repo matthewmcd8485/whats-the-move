@@ -7,7 +7,12 @@ xcuserdata/
 
 Pods/
 
+wtm?.GoogleService-Info.plist
+
 .DS_Store
 
 ## AccessKey File
 wtm?/Supporting Files/AccessKeys.swift
+.DS_Store
+wtm?/.DS_Store
+wtm?/Assets.xcassets/.DS_Store

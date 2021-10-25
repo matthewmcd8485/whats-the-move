@@ -14,7 +14,7 @@ class FriendsTableViewCell: UITableViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "SuperBasic-Bold", size: 24)
+        label.font = UIFont(name: "SuperBasic-Bold", size: 22)
         label.textColor = UIColor(named: "darkBlueOnLight")
         label.numberOfLines = 1
         label.textAlignment = .left
@@ -70,7 +70,7 @@ class FriendsTableViewCell: UITableViewCell {
         
         // Name label
         if model.uid == UserDefaults.standard.string(forKey: "uid") {
-            nameLabel.text = "\(model.name.lowercased()) (you)"
+            nameLabel.text = "you"
         } else {
             nameLabel.text = model.name.lowercased()
         }
