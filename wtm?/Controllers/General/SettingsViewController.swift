@@ -62,6 +62,18 @@ class SettingsViewController: UIViewController {
         }))
         present(alert, animated: true)
     }
+    
+    @IBAction func deleteAccountButton(_ sender: Any) {
+        let alert = PMAlertController(title: "delete account", description: "are you sure you want to delete your account?\n\nthis action cannot be undone.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+        alert.addAction(PMAlertAction(title: "delete account", style: .default, action: {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(identifier: "deleteAccountViewController") as DeleteAccountViewController
+            self.navigationController?.pushViewController(vc, animated: true)
+        }))
+        present(alert, animated: true)
+    }
 }
 
 extension SettingsViewController: UIGestureRecognizerDelegate {

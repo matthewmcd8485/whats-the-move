@@ -9,6 +9,7 @@ import UIKit
 import ContactsUI
 import Firebase
 import AnyFormatKit
+import PMAlertController
 
 class ImportContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -17,6 +18,7 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     var phoneContacts = [PhoneContact]()
     var filter: ContactsFilter = .message
+    var finished = true
     
     @IBOutlet weak var noContactsLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -104,6 +106,14 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
     private func sortContacts() {
         // Download list of all users
         var firestoreUsers = [User]()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+            if firestoreUsers.count == 0 && self?.finished == false {
+                self?.cancelOperation()
+                return
+            }
+        }
+        
         db.collection("users").getDocuments() { [weak self] querySnapshot, error in
             guard error == nil else {
                 print("Error downloading user information from Firestore: \(error!)")
@@ -160,6 +170,7 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
             
             self?.tableView.reloadData()
             
+            self?.finished = true
             if self?.phoneContacts.count == 0 {
                 self?.tableView.isHidden = true
                 UIView.animate(withDuration: 0.5) {
@@ -171,7 +182,15 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
-
+    private func cancelOperation() {
+        let alert = PMAlertController(title: "error loading contacts", description: "something went wrong when loading your contacts.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        let action = PMAlertAction(title: "okay", style: .default, action: {
+            self.navigationController?.popViewController(animated: true)
+        })
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
     
     // MARK: - Table View Delegates
     private func setupTableView() {

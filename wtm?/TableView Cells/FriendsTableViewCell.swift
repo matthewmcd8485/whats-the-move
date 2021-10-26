@@ -96,6 +96,12 @@ class FriendsTableViewCell: UITableViewCell {
             statusImageView.image = UIImage(systemName: "nosign")
             statusImageView.tintColor = UIColor.systemRed
         }
+        
+        if model.name == "user deleted" {
+            statusImageView.image = UIImage(systemName: "person.crop.circle.badge.questionmark")
+            statusImageView.tintColor = UIColor.systemGray
+            statusLabel.text = "no status available"
+        }
     }
 }
 

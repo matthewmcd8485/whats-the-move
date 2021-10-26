@@ -105,6 +105,10 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
             image = UIImage(named: "chill")
         } else if request.activity == "wants to drive around" {
             image = UIImage(named: "drive")
+        } else if request.activity == "wants to sleep with you" {
+            image = UIImage(named: "sleepover")
+        } else if request.activity == "wants a kiss" {
+            image = UIImage(named: "date night")
         }
         
         backgroundImageView.image = image
@@ -296,6 +300,9 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
             
             // Reply to your own request
             respondToRequest()
+        } else if request.people[indexPath.row].user.name == "user deleted" {
+            // This user doesn't exist anymore
+            alertManager.showAlert(title: "user deleted", message: "sorry, we don't specialize in communicating with ghosts.")
         } else {
             // Check if the selected user is in your friends list
             var isFriend = false

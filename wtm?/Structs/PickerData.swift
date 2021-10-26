@@ -8,7 +8,7 @@
 import Foundation
 
 struct PickerData {
-    static let collectionViewData = ["coffee date", "chill", "city trip", "drive around", "get food", "get ice cream", "go outdoors", "go to the mall", "go to the store", "go swimming", "idk", "play with dog", "sit and stare at each other", "sports", "watch a movie", "workout"]
+    static let collectionViewData = ["coffee date", "chill", "city trip", "date night", "drive around", "get food", "get ice cream", "go outdoors", "go to the mall", "go to the store", "go swimming", "idk", "play with dog", "sleepover", "sit and stare at each other", "sports", "watch a movie", "workout"]
     
 
 }

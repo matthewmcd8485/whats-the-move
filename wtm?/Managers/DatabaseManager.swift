@@ -87,6 +87,11 @@ final class DatabaseManager {
                 completion(.failure(DatabaseError.failedToFetch))
             }
             
+            guard querySnapshot != nil else {
+                completion(.failure(DatabaseError.failedToFetch))
+                return
+            }
+            
             for document in querySnapshot!.documents {
                 let name = document.get("Name") as! String
                 let uid = document.get("User Identifier") as! String

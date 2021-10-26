@@ -21,6 +21,7 @@ class SwooshViewController: UIViewController {
     var allFriends : [Friend] = []
     var allUsers : [User] = []
     var groupNotification = [GroupNotification]()
+    var sent = false
     
     @IBOutlet weak var sendingLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -67,6 +68,14 @@ class SwooshViewController: UIViewController {
     
     // MARK: - Sorting Users
     private func sortUsers() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 7) { [weak self] in
+            if !self!.sent {
+                AlertManager.shared.showAlert(title: "error sending notifications", message: "check your internet connection and try again.")
+                self?.navigationController?.popViewController(animated: true)
+                return
+            }
+        }
+        
         let uid = UserDefaults.standard.string(forKey: "uid")
         let name = UserDefaults.standard.string(forKey: "name")
         for x in groups.count {
@@ -143,7 +152,10 @@ class SwooshViewController: UIViewController {
         }
         
         let group = DispatchGroup()
-        let name = UserDefaults.standard.string(forKey: "name")
+        guard let name = UserDefaults.standard.string(forKey: "name"), let uid = UserDefaults.standard.string(forKey: "uid") else {
+            return
+        }
+
         
         storageManager.downloadImageURL(imageName: mood.rawValue, collection: "mood images", completion: { [weak self] result in
             switch result {
@@ -152,12 +164,15 @@ class SwooshViewController: UIViewController {
                     group.enter()
                     
                     let sender = PushNotificationSender()
-                    sender.sendPushNotification(to: self!.allUsers[x].fcmToken, title: "new bored request", subtitle: "", body: "\(name!) \(self!.mood.rawValue)", urlToImage: imageURL)
+                    if self?.allUsers[x].uid != uid {
+                        sender.sendPushNotification(to: self!.allUsers[x].fcmToken, title: "new bored request", subtitle: "", body: "\(name) \(self!.mood.rawValue)", urlToImage: imageURL)
+                    }
                     
                     group.leave()
                 }
                 
-                group.notify(queue: .main) { 
+                group.notify(queue: .main) {
+                    self?.sent = true
                     self?.finishUp()
                 }
             case .failure(let error):

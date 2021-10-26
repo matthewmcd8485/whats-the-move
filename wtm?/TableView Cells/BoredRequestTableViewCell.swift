@@ -117,6 +117,10 @@ class BoredRequestTableViewCell: UITableViewCell {
             image = UIImage(named: "chill")
         } else if model.activity == "wants to drive around" {
             image = UIImage(named: "drive")
+        } else if model.activity == "wants to sleep with you" {
+            image = UIImage(named: "sleepover")
+        } else if model.activity == "wants a kiss" {
+            image = UIImage(named: "date night")
         }
         
         backgroundImageView.image = image

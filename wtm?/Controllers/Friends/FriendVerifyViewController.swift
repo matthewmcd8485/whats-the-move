@@ -108,6 +108,7 @@ class FriendVerifyViewController: UIViewController {
     
     private func cancelOperation() {
         let alert = PMAlertController(title: "user not found", description: "there were no matches given the phone number provided.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
         let action = PMAlertAction(title: "okay", style: .default, action: {
             self.navigationController?.popViewController(animated: true)
         })
@@ -117,6 +118,13 @@ class FriendVerifyViewController: UIViewController {
     
     // MARK: - Search
     private func search() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            if self?.friendToAdd.uid == "" {
+                self?.cancelOperation()
+                return
+            }
+        }
+        
         databaseManager.downloadUser(where: "Phone Number", isEqualTo: phoneNumber, completion: { [weak self] result in
             switch result {
             case .success(let user):

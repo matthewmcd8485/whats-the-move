@@ -90,8 +90,12 @@ class LoadingViewController: UIViewController {
             group.enter()
             
             let uid = UserDefaults.standard.string(forKey: "uid")
-            self.databaseManager.updateBlockedUsersList(uid: uid!, completion: { success in
-                print("result: \(success)")
+            self.databaseManager.updateBlockedUsersList(uid: uid!, completion: { [weak self] success in
+                if !success {
+                    UserDefaults.standard.set(false, forKey: "loggedIn")
+                    self?.showLoginIfNecessary()
+                    return
+                }
                 group.leave()
             })
             

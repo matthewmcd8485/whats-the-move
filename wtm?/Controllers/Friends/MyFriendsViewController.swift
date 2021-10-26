@@ -131,7 +131,7 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: friendsUIDs[x], completion: { [weak self] result in
                 switch result {
                 case .success(let user):
-                    if !ReportingManager.shared.userIsBlocked(theirUID: user.uid) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid) {
+                    if !ReportingManager.shared.userIsBlocked(theirUID: user.uid) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid) && user.name != "user deleted" {
                         self?.friends.append(user)
                         self?.friends = self!.friends.filterDuplicates { $0.uid == $1.uid }
                         self?.friends.sort { $0.name < $1.name }
@@ -184,10 +184,14 @@ class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "friendViewController") as FriendViewController
-        vc.friendsUID = friends[indexPath.row].uid
-        navigationController?.pushViewController(vc, animated: true)
+        if friends[indexPath.row].name == "user deleted" {
+            alertManager.showAlert(title: "user deleted", message: "sorry, we don't specialize in communicating with ghosts.")
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(identifier: "friendViewController") as FriendViewController
+            vc.friendsUID = friends[indexPath.row].uid
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

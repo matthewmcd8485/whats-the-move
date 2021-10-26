@@ -155,10 +155,14 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
         alert.addAction(PMAlertAction(title: "leave", style: .default, action: { [weak self] in
             // Remove from UserDefaults
             var groupsUID = UserDefaults.standard.stringArray(forKey: "groupsUID")
+            var found = false
             for x in groupsUID!.count {
-                if groupsUID![x] == self?.group.groupID {
-                    groupsUID?.remove(at: x)
-                    UserDefaults.standard.set(groupsUID, forKey: "groupsUID")
+                if !found {
+                    if groupsUID![x] == self?.group.groupID {
+                        found = true
+                        groupsUID?.remove(at: x)
+                        UserDefaults.standard.set(groupsUID, forKey: "groupsUID")
+                    }
                 }
             }
             
@@ -185,6 +189,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
         alert.alertTitle.textColor = UIColor(named: "lightBrown")!
         alert.addTextField { (textField) in
             textField?.autocapitalizationType = .none
+            textField?.textColor = .black
             let placeholder = "ex. the dream team"
             textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
                                                                     [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
@@ -264,6 +269,11 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
             if groupMembers[indexPath.row].uid == friendsUID[x] {
                 isFriend = true
             }
+        }
+        
+        if groupMembers[indexPath.row].name == "user deleted" {
+            alertManager.showAlert(title: "user deleted", message: "sorry, we don't specialize in communicating with ghosts.")
+            return
         }
         
         // Check if the selected user is yourself

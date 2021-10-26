@@ -68,7 +68,6 @@ class BoredResponseTableViewCell: UITableViewCell {
         let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: model.user.uid)
         let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.user.uid)
         
-        print(model)
         // Name label
         if model.user.uid == UserDefaults.standard.string(forKey: "uid") {
             nameLabel.text = "you"
@@ -99,6 +98,13 @@ class BoredResponseTableViewCell: UITableViewCell {
         } else {
             statusImageView.image = UIImage(systemName: "questionmark.circle")
             statusImageView.tintColor = UIColor.systemGray
+        }
+
+        // Deleted User
+        if model.user.name == "user deleted" {
+            statusImageView.image = UIImage(systemName: "person.crop.circle.badge.questionmark")
+            statusImageView.tintColor = UIColor.systemGray
+            statusLabel.text = "no status available"
         }
     }
 }
