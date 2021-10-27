@@ -15,8 +15,10 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
     let db = Firestore.firestore()
     let storage = Storage.storage()
     let databaseManager = DatabaseManager.shared
-    
+ 
+    let activityIndicator = UIActivityIndicatorView(style: .large)
     var uid = ""
+    var continuing = false
     
     @IBOutlet weak var verificationCodeField: UITextField!
     @IBOutlet weak var nextLabel: UILabel!
@@ -25,6 +27,11 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        activityIndicator.color = .white
+        activityIndicator.frame = CGRect(x: view.center.x - 10, y: nextButtonView.frame.midY, width: 20, height: 20)
+        view.addSubview(activityIndicator)
+        activityIndicator.isHidden = true
 
         verificationCodeField.delegate = self
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -32,20 +39,21 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func createSpinnerView() {
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.color = .white
-        activityIndicator.frame = CGRect(x: view.center.x - 10, y: nextButtonView.frame.midY, width: 20, height: 20)
-        
         activityIndicator.startAnimating()
         
+        activityIndicator.isHidden = false
         nextButtonView.isHidden = true
         nextLabel.isHidden = true
         arrow.isHidden = true
+    }
+    
+    private func dismissSpinnerView() {
+        activityIndicator.stopAnimating()
         
-        view.addSubview(activityIndicator)
-        //spinner.hudView.frame = CGRect(x: view.center.x, y: view.center.y - 120, width: 50, height: 50)
-        //spinner.show(in: view)
-        
+        activityIndicator.isHidden = true
+        nextButtonView.isHidden = false
+        nextLabel.isHidden = false
+        arrow.isHidden = false
     }
     
     // MARK: - Text Field Delegates
@@ -98,6 +106,18 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if !strongSelf.continuing {
+                strongSelf.alertManager.showAlert(title: "loading error", message: "something went wrong here. check your internet connection and try again.")
+                strongSelf.dismissSpinnerView()
+                return
+            }
+        }
+        
         if verificationCode == "" {
             alertManager.showAlert(title: "no code entered", message: "please enter the verification code that was sent to your phone.")
         } else {
@@ -129,6 +149,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                     // Send them to complete the onboarding flow
                     UserDefaults.standard.set(strongSelf.uid, forKey: "uid")
                     
+                    self?.continuing = true
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let vc = storyboard.instantiateViewController(identifier: "nameViewController") as! NameViewController
                     strongSelf.navigationController?.pushViewController(vc, animated: true)
@@ -141,7 +162,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                             return
                         }
                         UserDefaults.standard.set(strongSelf.uid, forKey: "uid")
-                        
+                        self?.continuing = true
                         if querySnapshot?.documents.count == 0 {
                             
                             let storyboard = UIStoryboard(name: "Main", bundle: nil)

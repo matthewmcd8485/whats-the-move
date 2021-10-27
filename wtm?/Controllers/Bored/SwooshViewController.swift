@@ -69,7 +69,12 @@ class SwooshViewController: UIViewController {
     // MARK: - Sorting Users
     private func sortUsers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 7) { [weak self] in
-            if !self!.sent {
+            guard let strongSelf = self else {
+                // Entering this block means the notifications were send successfully and the view has been removed, hence itself not existing
+                print("Self doesn't exist")
+                return
+            }
+            if !strongSelf.sent {
                 AlertManager.shared.showAlert(title: "error sending notifications", message: "check your internet connection and try again.")
                 self?.navigationController?.popViewController(animated: true)
                 return

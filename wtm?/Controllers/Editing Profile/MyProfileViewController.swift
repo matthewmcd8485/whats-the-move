@@ -26,7 +26,7 @@ class MyProfileViewController: UIViewController {
         backgroundView.layer.cornerRadius = 25
         statusBackground.layer.cornerRadius = 25
         
-        profileImage.layer.cornerRadius = profileImage.frame.width / 2
+        profileImage.layer.cornerRadius = 15
         
         let pictureTapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureButton(_:)))
         profileImage.addGestureRecognizer(pictureTapGesture)

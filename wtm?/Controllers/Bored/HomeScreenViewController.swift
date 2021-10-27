@@ -20,7 +20,7 @@ class HomeScreenViewController: UIViewController {
         super.viewDidLoad()
 
         boredButtonLayer.layer.cornerRadius = boredButtonLayer.frame.width / 2
-        
+    
         UIApplication.shared.applicationIconBadgeNumber = 0
         
         navigationController?.viewControllers = [self]
@@ -63,6 +63,7 @@ class HomeScreenViewController: UIViewController {
          //   }))
             
             present(alert, animated: true)
+            
             return
         }
         

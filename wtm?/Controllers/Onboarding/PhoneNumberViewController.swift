@@ -12,7 +12,10 @@ import PhoneNumberKit
 class PhoneNumberViewController: UIViewController, UITextFieldDelegate {
 
     let phoneNumberKit = PhoneNumberKit()
-    let alertManger = AlertManager.shared
+    let alertManager = AlertManager.shared
+    
+    let activityIndicator = UIActivityIndicatorView(style: .large)
+    var continuing = false
     
     @IBOutlet weak var phoneNumberField: PhoneNumberTextField!
     @IBOutlet weak var nextLabel: UILabel!
@@ -21,6 +24,11 @@ class PhoneNumberViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        activityIndicator.color = .white
+        activityIndicator.frame = CGRect(x: view.center.x - 10, y: nextButtonView.frame.midY, width: 20, height: 20)
+        view.addSubview(activityIndicator)
+        activityIndicator.isHidden = true
         
         phoneNumberField.withPrefix = true
         phoneNumberField.withExamplePlaceholder = true
@@ -32,20 +40,21 @@ class PhoneNumberViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func createSpinnerView() {
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.color = .white
-        activityIndicator.frame = CGRect(x: view.center.x - 10, y: nextButtonView.frame.midY, width: 20, height: 20)
-        
         activityIndicator.startAnimating()
         
+        activityIndicator.isHidden = false
         nextButtonView.isHidden = true
         nextLabel.isHidden = true
         arrow.isHidden = true
+    }
+    
+    private func dismissSpinnerView() {
+        activityIndicator.stopAnimating()
         
-        view.addSubview(activityIndicator)
-        //spinner.hudView.frame = CGRect(x: view.center.x, y: view.center.y - 120, width: 50, height: 50)
-        //spinner.show(in: view)
-        
+        activityIndicator.isHidden = true
+        nextButtonView.isHidden = false
+        nextLabel.isHidden = false
+        arrow.isHidden = false
     }
     
     // MARK: - Text Field Delegates
@@ -63,26 +72,40 @@ class PhoneNumberViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if !strongSelf.continuing {
+                strongSelf.alertManager.showAlert(title: "loading error", message: "something went wrong here. check your internet connection and try again.")
+                strongSelf.dismissSpinnerView()
+                return
+            }
+        }
+        
         if phoneNumber == "" {
-            alertManger.showAlert(title: "no phone number", message: "please enter your phone number in the field.")
+            alertManager.showAlert(title: "no phone number", message: "please enter your phone number in the field.")
         } else {
             createSpinnerView()
             Auth.auth().languageCode = "en"
             
             UserDefaults.standard.set(phoneNumberField.text!, forKey: "phoneNumber")
             
-            PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
+            PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { [weak self] (verificationID, error) in
                 if let error = error {
                     print(error.localizedDescription)
+                    self?.alertManager.showAlert(title: "loading error", message: "something went wrong here. check your internet connection and try again.")
+                    self?.dismissSpinnerView()
                     return
                 }
                 
-                
+                self?.continuing = true
                 UserDefaults.standard.set(verificationID!, forKey: "verificationID")
                 
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(identifier: "verificationViewController") as! VerificationViewController
-                self.navigationController?.pushViewController(vc, animated: true)
+                self?.navigationController?.pushViewController(vc, animated: true)
             }
         }
         
