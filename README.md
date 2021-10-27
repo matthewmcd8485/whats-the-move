@@ -3,7 +3,9 @@
 
 An iOS app designed to help you annoy your friends.
 
-[Download the latest TestFlight build here!](https://testflight.apple.com/join/1UtIqgpg)
+[Download the latest App Store version here!](https://apps.apple.com/us/app/whats-the-move/id1574130925)
+
+[Check out TestFlight for new beta releases, too](https://testflight.apple.com/join/1UtIqgpg)
 
 Use wtm? to make plans with people without having to send individual text messages to everyone.
 
