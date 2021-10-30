@@ -88,7 +88,6 @@ class HomeScreenViewController: UIViewController {
             navigationController?.pushViewController(vc, animated: true)
         }
         
-        
     }
 }
 

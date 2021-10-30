@@ -1375,7 +1375,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "wtm?/wtm?.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "wtm?/Assets.xcassets";
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
@@ -1401,7 +1401,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "wtm?/wtm?.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "wtm?/Assets.xcassets";
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				GCC_NO_COMMON_BLOCKS = NO;
@@ -1504,7 +1504,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1525,7 +1525,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1546,7 +1546,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1567,7 +1567,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 5BE9AG9X7E;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
