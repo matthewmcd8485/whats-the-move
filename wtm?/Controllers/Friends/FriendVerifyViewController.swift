@@ -160,10 +160,15 @@ class FriendVerifyViewController: UIViewController {
             let storageRef = Storage.storage().reference().child("profile images").child("\(friendToAdd.uid) - profile image.png")
             storageRef.downloadURL(completion: { [weak self] (url, error) in
                 if error != nil {
-                    self?.alertManager.showAlert(title: "Error downloading profile image", message: "There was a problem downloading your profile image. \n \n Error: \(error!)")
+                    self?.alertManager.showAlert(title: "Error downloading profile image", message: "There was a problem downloading your profile image.")
                 }
                 DispatchQueue.main.async {
-                    self?.profileImage.sd_setImage(with: url, completed: nil)
+                    if url == nil || url?.absoluteString == "" {
+                        self?.profileImage.image = UIImage(systemName: "person.crop.circle.badge.questionmark")
+                        self?.profileImage.layer.cornerRadius = 0
+                    } else {
+                        self?.profileImage.sd_setImage(with: url, completed: nil)
+                    }
                     
                     UIView.animate(withDuration: 0.5) {
                         self?.profileImage.alpha = 1

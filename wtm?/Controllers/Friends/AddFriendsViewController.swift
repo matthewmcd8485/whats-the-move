@@ -61,6 +61,8 @@ class AddFriendsViewController: UIViewController, UITextFieldDelegate, CNContact
         
         if phoneNumberField.text! == "+1" {
             alertManager.showAlert(title: "no phone number entered", message: "please enter a number before continuing.")
+        } else if phoneNumberField.text!.prefix(1) != "+" {
+            alertManager.showAlert(title: "incorrect formatting", message: "please include the \"+\" at the beginning of the phone number.")
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(identifier: "friendVerifyViewController") as FriendVerifyViewController

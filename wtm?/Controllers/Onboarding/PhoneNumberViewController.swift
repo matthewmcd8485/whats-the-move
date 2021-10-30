@@ -86,6 +86,8 @@ class PhoneNumberViewController: UIViewController, UITextFieldDelegate {
         
         if phoneNumber == "" {
             alertManager.showAlert(title: "no phone number", message: "please enter your phone number in the field.")
+        } else if phoneNumber.prefix(1) != "+" {
+            alertManager.showAlert(title: "incorrect formatting", message: "please include the \"+\" at the beginning of the phone number.")
         } else {
             createSpinnerView()
             Auth.auth().languageCode = "en"
