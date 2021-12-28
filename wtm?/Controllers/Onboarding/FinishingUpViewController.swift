@@ -70,6 +70,14 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
         
         let status = "available"
         let substatus = "find me something to do"
+        
+        var profileImageURL = "No profile image yet"
+        if UserDefaults.standard.string(forKey: "profileImageURL") != nil {
+            profileImageURL = UserDefaults.standard.string(forKey: "profileImageURL")!
+        } else {
+            UserDefaults.standard.set("No profile image yet", forKey: "profileImageURL")
+        }
+        
         UserDefaults.standard.set(substatus, forKey: "substatus")
         UserDefaults.standard.set(status, forKey: "status")
         
@@ -80,7 +88,8 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
             "FCM Token" : fcmToken,
             "Status" : "available",
             "Substatus" : substatus,
-            "Joined" : joinedTime
+            "Joined" : joinedTime,
+            "Profile Image URL" : profileImageURL
         ], merge: true, completion: { [weak self] error in
             guard error == nil else {
                 print("Error creating user in Firestore: \(error!)")

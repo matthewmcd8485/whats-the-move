@@ -227,12 +227,23 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func addNewPerson(newUID: String) {
-        let ref = db.collection("friend groups").document(group.groupID)
-        ref.updateData([
-            "People": FieldValue.arrayUnion([newUID])
-        ])
-        group.people?.append(newUID)
-        tableView.reloadData()
+        var duplicate = false
+        for x in group.people!.count {
+            if group.people![x] == newUID {
+                duplicate = true
+            }
+        }
+        
+        if duplicate {
+            alertManager.showAlert(title: "duplicate person", message: "this person is already in this group, so we won't add them again. \n\ntry using your eyes next time. or get some more friends so you don't need to add duplicates?")
+        } else {
+            let ref = db.collection("friend groups").document(group.groupID)
+            ref.updateData([
+                "People": FieldValue.arrayUnion([newUID])
+            ])
+            group.people?.append(newUID)
+            tableView.reloadData()
+        }
     }
     
     @IBAction func addPeople() {

@@ -125,7 +125,7 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
         
         let alert = PMAlertController(title: "wow, you have friends!", description: "add \(nameToAdd) as a friend?", image: UIImage(systemName: "person.circle"), style: .alert)
         
-        if profileImageURL == "no url" {
+        if profileImageURL == "No profile image yet" || profileImageURL == "no url" {
             alert.alertImage.image = UIImage(systemName: "person.crop.circle")
         } else {
             alert.alertImage.sd_setImage(with: URL.init(string: profileImageURL), completed: nil)

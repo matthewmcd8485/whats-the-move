@@ -248,7 +248,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     }
     
     private func notifyFriends(status: String, substatus: String) {
-        guard let name = UserDefaults.standard.string(forKey: "name") else {
+        guard let name = UserDefaults.standard.string(forKey: "name"), let uid = UserDefaults.standard.string(forKey: "uid") else {
             return
         }
         
@@ -261,7 +261,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
         
         let sender = PushNotificationSender()
         for x in request.people.count {
-            if request.people[x].user.status != "do not disturb" {
+            if request.people[x].user.status != "do not disturb" && request.people[x].user.uid != uid {
                 sender.sendPushNotification(to: request.people[x].user.fcmToken, title: notificationTitle, subtitle: group.name, body: "they said \"\(substatus)\"", urlToImage: "")
             }
         }

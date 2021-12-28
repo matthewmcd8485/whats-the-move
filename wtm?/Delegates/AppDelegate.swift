@@ -23,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
         registerNotificationCategories()
         
+        if UserDefaults.standard.string(forKey: "profileImageURL") == nil {
+            UserDefaults.standard.set("No profile image yet", forKey: "profileImageURL")
+        }
+        
         return true
     }
 

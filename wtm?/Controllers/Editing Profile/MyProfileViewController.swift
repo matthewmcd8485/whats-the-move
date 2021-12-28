@@ -7,8 +7,15 @@
 
 import UIKit
 import Firebase
+import PMAlertController
 
 class MyProfileViewController: UIViewController {
+    
+    let profanityManager = ProfanityManager.shared
+    let imageStoreManager = ImageStoreManager.shared
+    let alertManager = AlertManager.shared
+    let databaseManager = DatabaseManager.shared
+    let db = Firestore.firestore()
     
     @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var statusBackground: UIView!
@@ -96,12 +103,12 @@ class MyProfileViewController: UIViewController {
     // MARK: - Profile Image
     private func updatePicture() {
         profileImage.alpha = 0
-        DispatchQueue.global(qos: .background).async {
-            if let savedImage = ImageStoreManager.shared.retrieveImage(forKey: "profileImage", inStorageType: .fileSystem) {
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            if let savedImage = self?.imageStoreManager.retrieveImage(forKey: "profileImage", inStorageType: .fileSystem) {
                 DispatchQueue.main.async {
-                    self.profileImage.image = savedImage
+                    self?.profileImage.image = savedImage
                     UIView.animate(withDuration: 0.5) {
-                        self.profileImage.alpha = 1
+                        self?.profileImage.alpha = 1
                     }
                 }
             }
@@ -116,5 +123,57 @@ class MyProfileViewController: UIViewController {
             self?.profileImage.image = result
         }
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: - Edit Name
+    @IBAction func editName(_ sender: Any) {
+        let alert = PMAlertController(title: "change your name", description: "16 characters max.\nremember to keep it PG, please.", image: nil, style: .alert)
+        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+        alert.addTextField { (textField) in
+            textField?.autocapitalizationType = .none
+            textField?.textColor = .black
+            let placeholder = "ex. joe schmoe"
+            textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
+                                                                    [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+            textField?.placeholder = placeholder
+        }
+        alert.addAction(PMAlertAction(title: "save", style: .default, action: { [weak self] in
+            let textField = alert.textFields[0]
+            guard textField.text != nil && textField.text != "" else {
+                return
+            }
+            
+            if textField.text!.count > 16 {
+                self?.alertManager.showAlert(title: "name is too long", message: "read the directions, dude.\nwe aren't trying to write a shakespeare play here.")
+            } else if self!.profanityManager.checkForProfanity(in: textField.text!) {
+                self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your name. please make sure it is appropriate.")
+            } else {
+                let lowercasedName = textField.text!.lowercased()
+                let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
+                self?.uploadNewName(name: whitespaceName)
+            }
+        }))
+        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+    
+    private func uploadNewName(name: String) {
+        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+            alertManager.showAlert(title: "error updating name", message: "there was an error loading your profile details. please try again.")
+            return
+        }
+        
+        db.collection("users").document(uid).setData([
+            "Name" : name
+        ], merge: true, completion: { [weak self] error in
+            guard error == nil else {
+                self?.alertManager.showAlert(title: "error saving name", message: "something went wrong when we tried to save your new name. please try again.")
+                return
+            }
+            self?.nameLabel.text = name
+            UserDefaults.standard.set(name, forKey: "name")
+            print("name change saved! new name: \(name)")
+        })
     }
 }

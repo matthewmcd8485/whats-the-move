@@ -35,6 +35,8 @@ class NameViewController: UIViewController, UITextFieldDelegate {
         let name = nameTextField.text ?? ""
         if name == "" {
             alertManager.showAlert(title: "no name provided", message: "please enter your name in the field.")
+        } else if name.count > 16 {
+            alertManager.showAlert(title: "name is too long", message: "come on, dude. read the directions!")
         } else if name == "user deleted" {
             alertManager.showAlert(title: "invalid name", message: "please enter a different name in the field.")
         } else {

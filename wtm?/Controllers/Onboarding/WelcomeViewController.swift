@@ -13,6 +13,8 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        UserDefaults.standard.set("No profile image yet", forKey: "profileImageURL")
+        
         //navigationController?.viewControllers = [self]
         
         //if let viewControllerCount = navigationController?.viewControllers.count {
