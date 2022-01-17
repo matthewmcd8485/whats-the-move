@@ -735,7 +735,7 @@ touches</string>
                                 <rect key="frame" x="16" y="564" width="358" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="label"/>
+                                <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -1241,7 +1241,7 @@ your best is probably still pretty bad.</string>
                                 <color key="textColor" name="darkBlueOnLight"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="app version 1.1 (1)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDa-Vg-Cd4">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="app version 1.2 (1)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDa-Vg-Cd4">
                                 <rect key="frame" x="29" y="191" width="332" height="69"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
@@ -1272,7 +1272,7 @@ your best is probably still pretty bad.</string>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lo2-24-a0V">
                                 <rect key="frame" x="29" y="424" width="332" height="69"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <string key="text">© 2021 matthew mcdonnell.
+                                <string key="text">© 2022 matthew mcdonnell.
 all rights reserved.</string>
                                 <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
                                 <color key="textColor" name="secondaryWhite"/>
@@ -2663,9 +2663,6 @@ tragic.</string>
         </namedColor>
         <namedColor name="darkYellowOnLight">
             <color red="0.76470588235294112" green="0.67843137254901964" blue="0.11372549019607843" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="label">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
         <namedColor name="lightBlue">
             <color red="0.36470588235294116" green="0.54117647058823526" blue="0.65098039215686276" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

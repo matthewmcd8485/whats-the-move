@@ -24,6 +24,8 @@ class HomeScreenViewController: UIViewController {
         UIApplication.shared.applicationIconBadgeNumber = 0
         
         navigationController?.viewControllers = [self]
+        
+        checkForNewRelease()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -44,6 +46,28 @@ class HomeScreenViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
 
+    }
+    
+    private func checkForNewRelease() {
+        let latestVersion = RemoteConfig.remoteConfig()
+          .configValue(forKey: "latestVersion")
+          .stringValue ?? "undefined"
+        print("The app's latest version is \(latestVersion).")
+        
+        if latestVersion != "undefined" && latestVersion != UIApplication.appVersion() {
+            let alert = PMAlertController(title: "new version available", description: "\"wtm?\" v\(latestVersion) is now available on the app store. please visit the app store to update it!", image: nil, style: .alert)
+            alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
+            alert.alertTitle.textColor = UIColor(named: "lightBrown")!
+            alert.addAction(PMAlertAction(title: "ok, bet", style: .default, action: {
+                let url = "https://apps.apple.com/us/app/whats-the-move/id1574130925"
+                if let path = URL(string: url) {
+                        UIApplication.shared.open(path, options: [:], completionHandler: nil)
+                }
+            }))
+            alert.addAction(PMAlertAction(title: "no, screw you", style: .cancel))
+            
+            present(alert, animated: true)
+        }
     }
     
     @IBAction func boredButton(_ sender: Any) {

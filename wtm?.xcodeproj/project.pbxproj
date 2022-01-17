@@ -18,6 +18,11 @@
 		C912CD78268686330078D5C1 /* GroupDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C912CD77268686330078D5C1 /* GroupDetailViewController.swift */; };
 		C912CD7A268686500078D5C1 /* BASEViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C912CD79268686500078D5C1 /* BASEViewController.swift */; };
 		C929028B268ADE1800CFAF3F /* NotificationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C929028A268ADE1800CFAF3F /* NotificationTitle.swift */; };
+		C92D010E279530B500084315 /* RemoteConfigValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D010D279530B500084315 /* RemoteConfigValues.swift */; };
+		C92D0110279531EE00084315 /* ValueKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D010F279531EE00084315 /* ValueKey.swift */; };
+		C92D0112279532E300084315 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D0111279532E300084315 /* UIColor.swift */; };
+		C92D01142795334D00084315 /* UIColorInputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D01132795334D00084315 /* UIColorInputError.swift */; };
+		C92D0116279556AB00084315 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92D0115279556AB00084315 /* UIApplication.swift */; };
 		C9574F962665398F00405B8B /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9574F952665398F00405B8B /* Date.swift */; };
 		C9574F9B2665411700405B8B /* PictureEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9574F9A2665411700405B8B /* PictureEditViewController.swift */; };
 		C9574F9D2665414200405B8B /* PictureEditHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9574F9C2665414200405B8B /* PictureEditHandlers.swift */; };
@@ -195,6 +200,11 @@
 		C912CD77268686330078D5C1 /* GroupDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailViewController.swift; sourceTree = "<group>"; };
 		C912CD79268686500078D5C1 /* BASEViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BASEViewController.swift; sourceTree = "<group>"; };
 		C929028A268ADE1800CFAF3F /* NotificationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTitle.swift; sourceTree = "<group>"; };
+		C92D010D279530B500084315 /* RemoteConfigValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigValues.swift; sourceTree = "<group>"; };
+		C92D010F279531EE00084315 /* ValueKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueKey.swift; sourceTree = "<group>"; };
+		C92D0111279532E300084315 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		C92D01132795334D00084315 /* UIColorInputError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorInputError.swift; sourceTree = "<group>"; };
+		C92D0115279556AB00084315 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		C9574F952665398F00405B8B /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C9574F9A2665411700405B8B /* PictureEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEditViewController.swift; sourceTree = "<group>"; };
 		C9574F9C2665414200405B8B /* PictureEditHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEditHandlers.swift; sourceTree = "<group>"; };
@@ -383,6 +393,8 @@
 				C988D500268F6F4000CAEA8E /* Data.swift */,
 				C988D512268F72B100CAEA8E /* Notifications.swift */,
 				C9A2CCDE2690B92C004E3796 /* UIImageView.swift */,
+				C92D0111279532E300084315 /* UIColor.swift */,
+				C92D0115279556AB00084315 /* UIApplication.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -405,6 +417,7 @@
 				C9574F9F2665418600405B8B /* BackBarButtonItem.swift */,
 				C9574FBD2665C3DE00405B8B /* PhoneContacts.swift */,
 				C9574FC32665C6D200405B8B /* PhoneContact.swift */,
+				C92D010D279530B500084315 /* RemoteConfigValues.swift */,
 			);
 			path = Miscellaneous;
 			sourceTree = "<group>";
@@ -417,6 +430,8 @@
 				C9574FBF2665C40900405B8B /* ContactsFilter.swift */,
 				C95A628E2669C0640000EE31 /* DatabaseError.swift */,
 				C929028A268ADE1800CFAF3F /* NotificationTitle.swift */,
+				C92D010F279531EE00084315 /* ValueKey.swift */,
+				C92D01132795334D00084315 /* UIColorInputError.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -1089,6 +1104,7 @@
 				C9F238922671512200C2B080 /* UserDefaults.swift in Sources */,
 				C9574FC22665C4AA00405B8B /* ImportContactsViewController.swift in Sources */,
 				C988D501268F6F4000CAEA8E /* Data.swift in Sources */,
+				C92D0110279531EE00084315 /* ValueKey.swift in Sources */,
 				C9760B8226643EB3009F66DA /* PushNotificationSender.swift in Sources */,
 				C9760B6D266419DF009F66DA /* WelcomeViewController.swift in Sources */,
 				C9574FBC2665BF6600405B8B /* FriendVerifyViewController.swift in Sources */,
@@ -1112,7 +1128,9 @@
 				C9574FD9266888B700405B8B /* Friend.swift in Sources */,
 				C9574FB72665B31700405B8B /* AddFriendsViewController.swift in Sources */,
 				C9760B6F26641D6E009F66DA /* PhoneNumberViewController.swift in Sources */,
+				C92D01142795334D00084315 /* UIColorInputError.swift in Sources */,
 				C9574FB026658DD200405B8B /* SubstatusTableViewCell.swift in Sources */,
+				C92D010E279530B500084315 /* RemoteConfigValues.swift in Sources */,
 				C97E107526882AC5001470C2 /* SelectableGroup.swift in Sources */,
 				C97E107726895CD6001470C2 /* SwooshViewController.swift in Sources */,
 				C9760B1C2663F646009F66DA /* AppDelegate.swift in Sources */,
@@ -1141,6 +1159,7 @@
 				C912CD7A268686500078D5C1 /* BASEViewController.swift in Sources */,
 				C9574F9D2665414200405B8B /* PictureEditHandlers.swift in Sources */,
 				C929028B268ADE1800CFAF3F /* NotificationTitle.swift in Sources */,
+				C92D0112279532E300084315 /* UIColor.swift in Sources */,
 				C9760B1E2663F646009F66DA /* SceneDelegate.swift in Sources */,
 				C9574FBE2665C3DE00405B8B /* PhoneContacts.swift in Sources */,
 				C9A2CCDD2690AD56004E3796 /* BoredRequestTableViewCell.swift in Sources */,
@@ -1152,6 +1171,7 @@
 				C9574FD32668773B00405B8B /* RequestsViewController.swift in Sources */,
 				C9760B8F26648BE7009F66DA /* MyProfileViewController.swift in Sources */,
 				C9574F962665398F00405B8B /* Date.swift in Sources */,
+				C92D0116279556AB00084315 /* UIApplication.swift in Sources */,
 				C9574FD726687B4400405B8B /* FriendRequest.swift in Sources */,
 				C9574FD5266878FE00405B8B /* RequestsTableViewCell.swift in Sources */,
 				C9A2CCDF2690B92C004E3796 /* UIImageView.swift in Sources */,
@@ -1384,7 +1404,7 @@
 				INFOPLIST_FILE = "wtm?/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1409,7 +1429,7 @@
 				INFOPLIST_FILE = "wtm?/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1515,7 +1535,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1537,7 +1557,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1559,7 +1579,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1581,7 +1601,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
