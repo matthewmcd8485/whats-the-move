@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Firebase
-import PMAlertController
+import FirebaseFirestore
 
 class BoredRequestResponseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -180,10 +179,8 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
             }
             
             guard querySnapshot?.documents.count != 0 else {
-                let alert = PMAlertController(title: "error loading request", description: "there was an error loading this request. please try again later.", image: nil, style: .alert)
-                alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-                alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-                alert.addAction(PMAlertAction(title: "okay", style: .default, action: {
+                let alert = UIAlertController(title: "error loading request", message: "there was an error loading this request. please try again later.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "okay", style: .default, handler: { _ in
                     self?.navigationController?.popViewController(animated: true)
                 }))
                 self?.present(alert, animated: true)
@@ -268,18 +265,17 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     }
     
     private func respondToRequest() {
-        let alert = PMAlertController(title: "change your response", description: "are you free today?", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.addAction(PMAlertAction(title: "yeah, i'm free", style: .default, action: { [weak self] in
+        let alert = UIAlertController(title: "change your response", message: "are you free today?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "yeah, i'm free", style: .default, handler: { [weak self] _ in
             self?.showResponseEditScreen(status: "available")
         }))
-        alert.addAction(PMAlertAction(title: "mmm, maybe?", style: .default, action: { [weak self] in
+        alert.addAction(UIAlertAction(title: "mmm, maybe?", style: .default, handler: { [weak self] _ in
             self?.showResponseEditScreen(status: "busy")
         }))
-        alert.addAction(PMAlertAction(title: "no, i'm not free", style: .default, action: { [weak self] in
+        alert.addAction(UIAlertAction(title: "no, i'm not free", style: .default, handler: { [weak self] _ in
             self?.showResponseEditScreen(status: "not available")
         }))
-        alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "oops, cancel", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
     

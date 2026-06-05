@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Firebase
-import PMAlertController
+import FirebaseFirestore
 
 class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -157,25 +156,23 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
         //    navigationController?.pushViewController(vc, animated: true)
         //}
         
-        let alert = PMAlertController(title: "are you sure?", description: "don't be annoying if you don't have to. \n\ndoing this will disable your sending privileges for two hours.", image: nil, style: .walkthrough)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-        alert.addAction(PMAlertAction(title: "let's do this", style: .default, action: { [weak self] in
+        let alert = UIAlertController(title: "are you sure?", message: "don't be annoying if you don't have to. \n\ndoing this will disable your sending privileges for two hours.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "let's do this", style: .default, handler: { [weak self] _ in
             guard let strongSelf = self else {
                 return
             }
-            
+
             // Log the time that this was done
             UserDefaults.standard.setValue(Date(), forKey: "sendToAllDate")
-            
+
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(identifier: "swooshViewController") as SwooshViewController
             vc.mood = strongSelf.mood
             vc.groups = strongSelf.groups
             strongSelf.navigationController?.pushViewController(vc, animated: true)
         }))
-        alert.addAction(PMAlertAction(title: "nevermind, cancel", style: .cancel, action: nil))
-        
+        alert.addAction(UIAlertAction(title: "nevermind, cancel", style: .cancel, handler: nil))
+
         present(alert, animated: true)
     }
     

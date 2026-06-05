@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Firebase
-import PMAlertController
+import FirebaseFirestore
 
 class ChangeResponseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     

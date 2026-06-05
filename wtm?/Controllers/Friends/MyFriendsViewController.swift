@@ -7,7 +7,7 @@
 
 import UIKit
 import Contacts
-import Firebase
+import FirebaseFirestore
 
 class MyFriendsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 

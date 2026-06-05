@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseFirestore
 
 class BoredRequestsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     

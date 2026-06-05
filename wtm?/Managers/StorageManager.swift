@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseStorage
 
 final class StorageManager {
     static let shared = StorageManager()

@@ -7,7 +7,8 @@
 
 import UIKit
 import UserNotifications
-import Firebase
+import FirebaseFirestore
+import FirebaseMessaging
 import ContactsUI
 
 class FinishingUpViewController: UIViewController, UNUserNotificationCenterDelegate, MessagingDelegate {

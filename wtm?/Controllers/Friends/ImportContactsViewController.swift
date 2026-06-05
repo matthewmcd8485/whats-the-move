@@ -7,9 +7,8 @@
 
 import UIKit
 import ContactsUI
-import Firebase
+import FirebaseFirestore
 import AnyFormatKit
-import PMAlertController
 
 class ImportContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -183,9 +182,8 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     private func cancelOperation() {
-        let alert = PMAlertController(title: "error loading contacts", description: "something went wrong when loading your contacts.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        let action = PMAlertAction(title: "okay", style: .default, action: {
+        let alert = UIAlertController(title: "error loading contacts", message: "something went wrong when loading your contacts.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "okay", style: .default, handler: { _ in
             self.navigationController?.popViewController(animated: true)
         })
         alert.addAction(action)

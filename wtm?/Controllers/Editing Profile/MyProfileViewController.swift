@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Firebase
-import PMAlertController
+import FirebaseFirestore
 
 class MyProfileViewController: UIViewController {
     
@@ -127,23 +126,21 @@ class MyProfileViewController: UIViewController {
     
     // MARK: - Edit Name
     @IBAction func editName(_ sender: Any) {
-        let alert = PMAlertController(title: "change your name", description: "16 characters max.\nremember to keep it PG, please.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-        alert.addTextField { (textField) in
-            textField?.autocapitalizationType = .none
-            textField?.textColor = .black
+        let alert = UIAlertController(title: "change your name", message: "16 characters max.\nremember to keep it PG, please.", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.autocapitalizationType = .none
+            textField.textColor = .black
             let placeholder = "ex. joe schmoe"
-            textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
+            textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
                                                                     [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-            textField?.placeholder = placeholder
+            textField.placeholder = placeholder
         }
-        alert.addAction(PMAlertAction(title: "save", style: .default, action: { [weak self] in
-            let textField = alert.textFields[0]
+        alert.addAction(UIAlertAction(title: "save", style: .default, handler: { [weak self] _ in
+            let textField = alert.textFields![0]
             guard textField.text != nil && textField.text != "" else {
                 return
             }
-            
+
             if textField.text!.count > 16 {
                 self?.alertManager.showAlert(title: "name is too long", message: "read the directions, dude.\nwe aren't trying to write a shakespeare play here.")
             } else if self!.profanityManager.checkForProfanity(in: textField.text!) {
@@ -154,7 +151,7 @@ class MyProfileViewController: UIViewController {
                 self?.uploadNewName(name: whitespaceName)
             }
         }))
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
     

@@ -6,7 +6,10 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
+import FirebaseFirestore
+import FirebaseMessaging
+import FirebaseStorage
 import UserNotifications
 
 class VerificationViewController: UIViewController, UITextFieldDelegate {

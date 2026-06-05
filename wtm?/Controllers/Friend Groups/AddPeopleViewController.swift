@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseFirestore
 
 class AddPeopleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 

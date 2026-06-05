@@ -18,7 +18,7 @@
 */
 
 import UIKit
-import Firebase
+import FirebaseFirestore
 
 class BASEViewController: UIViewController {
 

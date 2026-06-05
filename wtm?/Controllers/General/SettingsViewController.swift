@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Firebase
-import PMAlertController
+import FirebaseAuth
 
 class SettingsViewController: UIViewController {
 
@@ -42,10 +41,9 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func logOutButton(_ sender: Any) {
-        let alert = PMAlertController(title: "log out", description: "are you sure you want to log out?", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
-        alert.addAction(PMAlertAction(title: "log out", style: .default, action: {
+        let alert = UIAlertController(title: "log out", message: "are you sure you want to log out?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "log out", style: .default, handler: { _ in
             do {
                 try self.auth.signOut()
             } catch {
@@ -62,12 +60,11 @@ class SettingsViewController: UIViewController {
         }))
         present(alert, animated: true)
     }
-    
+
     @IBAction func deleteAccountButton(_ sender: Any) {
-        let alert = PMAlertController(title: "delete account", description: "are you sure you want to delete your account?\n\nthis action cannot be undone.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
-        alert.addAction(PMAlertAction(title: "delete account", style: .default, action: {
+        let alert = UIAlertController(title: "delete account", message: "are you sure you want to delete your account?\n\nthis action cannot be undone.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "delete account", style: .default, handler: { _ in
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(identifier: "deleteAccountViewController") as DeleteAccountViewController
             self.navigationController?.pushViewController(vc, animated: true)

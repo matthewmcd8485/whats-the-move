@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Firebase
-import PMAlertController
+import FirebaseFirestore
 
 class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -138,21 +137,19 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func cancelOperation() {
-        let alert = PMAlertController(title: "group members not found", description: "we appear to be stuck inside a white void where your group members don't exist. \n \n or maybe you just don't have any friends?", image: nil, style: .alert)
-        let action = PMAlertAction(title: "rude, but okay", style: .default, action: {
+        let alert = UIAlertController(title: "group members not found", message: "we appear to be stuck inside a white void where your group members don't exist. \n \n or maybe you just don't have any friends?", preferredStyle: .alert)
+        let action = UIAlertAction(title: "rude, but okay", style: .default, handler: { _ in
             self.navigationController?.popViewController(animated: true)
         })
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
-    
+
     @IBAction func leaveGroupButton(_ sender: Any) {
         let uid = UserDefaults.standard.string(forKey: "uid")
-        let alert = PMAlertController(title: "leave group", description: "are you sure you want to leave this group?", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
-        alert.addAction(PMAlertAction(title: "leave", style: .default, action: { [weak self] in
+        let alert = UIAlertController(title: "leave group", message: "are you sure you want to leave this group?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "leave", style: .destructive, handler: { [weak self] _ in
             // Remove from UserDefaults
             var groupsUID = UserDefaults.standard.stringArray(forKey: "groupsUID")
             var found = false
@@ -184,23 +181,21 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     @IBAction func changeName() {
-        let alert = PMAlertController(title: "change group name", description: "enter a new name for the group.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-        alert.addTextField { (textField) in
-            textField?.autocapitalizationType = .none
-            textField?.textColor = .black
+        let alert = UIAlertController(title: "change group name", message: "enter a new name for the group.", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.autocapitalizationType = .none
+            textField.textColor = .black
             let placeholder = "ex. the dream team"
-            textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
+            textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
                                                                     [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-            textField?.placeholder = placeholder
+            textField.placeholder = placeholder
         }
-        alert.addAction(PMAlertAction(title: "save", style: .default, action: { [weak self] in
-            let textField = alert.textFields[0]
+        alert.addAction(UIAlertAction(title: "save", style: .default, handler: { [weak self] _ in
+            let textField = alert.textFields![0]
             guard textField.text != nil && textField.text != "" else {
                 return
             }
-            
+
             if self!.profanityManager.checkForProfanity(in: textField.text!) {
                 self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
             } else {
@@ -210,7 +205,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
                 self?.uploadNewName(name: whitespaceName)
             }
         }))
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
     

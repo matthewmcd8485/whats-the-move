@@ -6,9 +6,8 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseAuthUI
-import PMAlertController
+import FirebaseAuth
+import FirebaseFirestore
 
 class DeleteAccountViewController: UIViewController {
 
@@ -79,26 +78,24 @@ class DeleteAccountViewController: UIViewController {
     
     private func reauthenticate(verificationID: String) {
         let user = auth.currentUser
-        
-        let alert = PMAlertController(title: "check your messages", description: "you need to verify your identity before we can delete your account.\n\n enter the verification code we sent to the phone number associated with your account.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-        alert.addTextField { (textField) in
-            textField?.autocapitalizationType = .none
-            textField?.keyboardType = .phonePad
+
+        let alert = UIAlertController(title: "check your messages", message: "you need to verify your identity before we can delete your account.\n\n enter the verification code we sent to the phone number associated with your account.", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.autocapitalizationType = .none
+            textField.keyboardType = .phonePad
             let placeholder = "ex. 123456"
-            textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
+            textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
                                                                     [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-            textField?.placeholder = placeholder
+            textField.placeholder = placeholder
         }
-        alert.addAction(PMAlertAction(title: "continue", style: .default, action: { [weak self] in
-            let textField = alert.textFields[0]
+        alert.addAction(UIAlertAction(title: "continue", style: .default, handler: { [weak self] _ in
+            let textField = alert.textFields![0]
             guard textField.text != nil && textField.text != "" else {
                 return
             }
-            
+
             let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: textField.text!)
-            
+
             user?.reauthenticate(with: credential) { result, error in
                 guard error == nil else {
                     print("Error reauthenticating user: \(error!)")
@@ -107,7 +104,7 @@ class DeleteAccountViewController: UIViewController {
                 self?.removeFirestoreData()
             }
         }))
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
     

@@ -7,24 +7,14 @@
 
 import Foundation
 import UIKit
-import PMAlertController
 
 final class AlertManager: UIViewController {
     static let shared = AlertManager()
-    
+
     public func showAlert(title: String, message: String) {
-        let alert2 = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        alert2.addAction(UIAlertAction(title: "okay", style: .default, handler: nil))
-        
-        
-        let alert = PMAlertController(title: title, description: message, image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-        
-        let action = PMAlertAction(title: "okay", style: .default)
-        action.tintColor = UIColor(named: "lightBlue")!
-        alert.addAction(action)
-        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "okay", style: .default, handler: nil))
+
         let keyWindow = UIApplication.shared.connectedScenes
             .filter({$0.activationState == .foregroundActive})
             .map({$0 as? UIWindowScene})

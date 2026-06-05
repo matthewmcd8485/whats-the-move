@@ -7,9 +7,9 @@
 
 import UIKit
 import Contacts
-import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 import SDWebImage
-import PMAlertController
 
 class FriendVerifyViewController: UIViewController {
     
@@ -107,9 +107,8 @@ class FriendVerifyViewController: UIViewController {
     }
     
     private func cancelOperation() {
-        let alert = PMAlertController(title: "user not found", description: "there were no matches given the phone number provided.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        let action = PMAlertAction(title: "okay", style: .default, action: {
+        let alert = UIAlertController(title: "user not found", message: "there were no matches given the phone number provided.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "okay", style: .default, handler: { _ in
             self.navigationController?.popViewController(animated: true)
         })
         alert.addAction(action)
@@ -132,9 +131,8 @@ class FriendVerifyViewController: UIViewController {
                 
                 // Check if someone blocked someone
                 if self!.reportingManager.userBlockedYou(theirUID: self!.friendToAdd.uid) || self!.reportingManager.userIsBlocked(theirUID: self!.friendToAdd.uid) {
-                    let alert = PMAlertController(title: "user is blocked", description: "either they blocked you or you blocked them.\n we don't know, though.\n it's not really our business.\n\nsorry for any drama this may cause...", image: nil, style: .alert)
-                    alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-                    let action = PMAlertAction(title: "rude, but okay", style: .default, action: {
+                    let alert = UIAlertController(title: "user is blocked", message: "either they blocked you or you blocked them.\n we don't know, though.\n it's not really our business.\n\nsorry for any drama this may cause...", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "rude, but okay", style: .default, handler: { _ in
                         self?.navigationController?.popViewController(animated: true)
                     })
                     alert.addAction(action)
@@ -196,10 +194,8 @@ class FriendVerifyViewController: UIViewController {
         }
 
         if checkIfAlreadyFriends() {
-            let alert = PMAlertController(title: "already friends", description: "you can't send a friend request to someone you're already friends with. \n \n maybe if you used the app how it was intended then you wouldn't be stuck here doing stupid stuff like trying to create duplicate friends.", image: nil, style: .alert)
-            alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-            alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-            alert.addAction(PMAlertAction(title: "ok, sorry", style: .default, action: { [weak self] in
+            let alert = UIAlertController(title: "already friends", message: "you can't send a friend request to someone you're already friends with. \n \n maybe if you used the app how it was intended then you wouldn't be stuck here doing stupid stuff like trying to create duplicate friends.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "ok, sorry", style: .default, handler: { [weak self] _ in
                 self?.navigationController?.popViewController(animated: true)
             }))
             present(alert, animated: true)
@@ -241,30 +237,25 @@ class FriendVerifyViewController: UIViewController {
     
     // MARK: - Reporting
     @IBAction func reportButton(_ sender: Any) {
-        let alert = PMAlertController(title: "user options", description: "you can report or block a user here.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
-        alert.addAction(PMAlertAction(title: "report user", style: .default, action: { [weak self] in
+        let alert = UIAlertController(title: "user options", message: "you can report or block a user here.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "report user", style: .default, handler: { [weak self] _ in
             self?.reportUser()
         }))
-        alert.addAction(PMAlertAction(title: "block user", style: .default, action: { [weak self] in
+        alert.addAction(UIAlertAction(title: "block user", style: .default, handler: { [weak self] _ in
             self?.blockUser()
         }))
         present(alert, animated: true)
     }
-    
+
     private func blockUser() {
-        let alert = PMAlertController(title: "block user", description: "are you sure? \n \nany groups you are in with this person will NOT be deleted.\n\nthis action cannot be undone.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = .systemRed
-        alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
-        alert.addAction(PMAlertAction(title: "block user", style: .default, action: { [weak self] in
+        let alert = UIAlertController(title: "block user", message: "are you sure? \n \nany groups you are in with this person will NOT be deleted.\n\nthis action cannot be undone.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "oops, cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "block user", style: .destructive, handler: { [weak self] _ in
             self?.databaseManager.blockUser(uidToBlock: self!.friendToAdd.uid, completion: { success in
                 if success {
-                    let alert = PMAlertController(title: "user blocked", description: "you have successfully blocked this person.\n\nsorry they were mean to you or whatever.", image: nil, style: .alert)
-                    alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-                    alert.addAction(PMAlertAction(title: "yeah, me too", style: .default, action: {
+                    let alert = UIAlertController(title: "user blocked", message: "you have successfully blocked this person.\n\nsorry they were mean to you or whatever.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "yeah, me too", style: .default, handler: { _ in
                         self?.navigationController?.popViewController(animated: true)
                     }))
                     self?.present(alert, animated: true, completion: nil)
@@ -275,13 +266,11 @@ class FriendVerifyViewController: UIViewController {
         }))
         present(alert, animated: true)
     }
-    
+
     private func reportUser() {
-        let alert = PMAlertController(title: "report user", description: "are you sure? \n this action cannot be undone.", image: nil, style: .alert)
-        alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-        alert.alertTitle.textColor = .systemRed
-        alert.addAction(PMAlertAction(title: "oops, cancel", style: .cancel))
-        alert.addAction(PMAlertAction(title: "report user", style: .default, action: { [weak self] in
+        let alert = UIAlertController(title: "report user", message: "are you sure? \n this action cannot be undone.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "oops, cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "report user", style: .destructive, handler: { [weak self] _ in
             self?.reportingManager.reportUser(uid: self!.friendToAdd.uid, name: self!.friendToAdd.name, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
                 if success {
                     print("user reported!")

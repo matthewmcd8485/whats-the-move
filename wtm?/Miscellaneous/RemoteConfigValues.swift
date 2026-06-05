@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import Firebase
+import UIKit
+import FirebaseRemoteConfig
 
 final class RemoteConfigValues {
     static let shared = RemoteConfigValues()

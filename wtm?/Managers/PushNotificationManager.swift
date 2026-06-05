@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseFirestore
+import FirebaseMessaging
 import UserNotifications
 
 class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCenterDelegate {

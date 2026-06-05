@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Firebase
-import PMAlertController
+import FirebaseFirestore
 
 class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -90,34 +89,32 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
         if friendsCount < 2 {
             alertManager.showAlert(title: "slow your roll", message: "you need to have at least two friends to create a friend group. nice try, though.")
         } else {
-            let alert = PMAlertController(title: "name group", description: "enter a name for the new group.", image: nil, style: .alert)
-            alert.alertTitle.font = UIFont(name: "SuperBasic-Bold", size: 25)
-            alert.alertTitle.textColor = UIColor(named: "lightBrown")!
-            alert.addTextField { (textField) in
-                textField?.autocapitalizationType = .none
+            let alert = UIAlertController(title: "name group", message: "enter a name for the new group.", preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.autocapitalizationType = .none
                 let placeholder = "ex. the dream team"
-                textField!.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
+                textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
                                                                         [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-                textField?.placeholder = placeholder
+                textField.placeholder = placeholder
             }
-            alert.addAction(PMAlertAction(title: "save", style: .default, action: { [weak self] in
-                let textField = alert.textFields[0]
+            alert.addAction(UIAlertAction(title: "save", style: .default, handler: { [weak self] _ in
+                let textField = alert.textFields![0]
                 guard textField.text != nil && textField.text != "" else {
                     return
                 }
-                
+
                 if self!.profanityManager.checkForProfanity(in: textField.text!) {
                     self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
                 } else {
                     let lowercasedName = textField.text!.lowercased()
                     let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
-                    
+
                     self?.createGroup(name: whitespaceName)
                 }
             }))
-            alert.addAction(PMAlertAction(title: "cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
             present(alert, animated: true)
-            
+
         }
     }
     

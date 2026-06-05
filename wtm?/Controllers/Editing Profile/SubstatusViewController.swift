@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseFirestore
 
 class SubstatusViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 

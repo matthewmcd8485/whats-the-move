@@ -6,9 +6,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseFirestore
 import AnyFormatKit
-import PMAlertController
 import SDWebImage
 
 class RequestsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -123,18 +122,9 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
         let uidToAdd = requests[indexPath.row].uid
         let profileImageURL = requests[indexPath.row].profileImageURL
         
-        let alert = PMAlertController(title: "wow, you have friends!", description: "add \(nameToAdd) as a friend?", image: UIImage(systemName: "person.circle"), style: .alert)
-        
-        if profileImageURL == "No profile image yet" || profileImageURL == "no url" {
-            alert.alertImage.image = UIImage(systemName: "person.crop.circle")
-        } else {
-            alert.alertImage.sd_setImage(with: URL.init(string: profileImageURL), completed: nil)
-        }
-        
-        alert.alertImage.contentMode = .scaleAspectFit
-        //alert.alertImage.layer.cornerRadius = alert.alertImage.frame.width / 2
-        
-        alert.addAction(PMAlertAction(title: "accept", style: .default, action: { [weak self] in
+        let alert = UIAlertController(title: "wow, you have friends!", message: "add \(nameToAdd) as a friend?", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "accept", style: .default, handler: { [weak self] _ in
             if let friendsUID = UserDefaults.standard.stringArray(forKey: "friendsUID"), let friendsName = UserDefaults.standard.stringArray(forKey: "friendsName") {
                 var friendsAddUID = friendsUID
                 var friendsAddName = friendsName
@@ -151,12 +141,12 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
                 //self?.navigationController?.popViewController(animated: true)
             }
         }))
-        alert.addAction(PMAlertAction(title: "delete", style: .cancel, action: { [weak self] in
+        alert.addAction(UIAlertAction(title: "delete", style: .destructive, handler: { [weak self] _ in
             self?.db.collection("users").document(uid!).collection("friend requests").document(uidToAdd).delete()
             self?.requests.removeAll()
             tableView.reloadData()
         }))
-        alert.addAction(PMAlertAction(title: "cancel", style: .cancel, action: nil))
+        alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
 
