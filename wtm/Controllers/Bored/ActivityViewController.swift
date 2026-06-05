@@ -55,7 +55,7 @@ class ActivityViewController: UIViewController, UICollectionViewDataSource, UICo
             return UICollectionViewCell()
         }
         cell.layer.cornerRadius = 10
-        cell.configure(with: collectionViewImages[indexPath.row]!, category: collectionViewPickerData[indexPath.row])
+        cell.configure(with: collectionViewImages[indexPath.row] ?? UIImage(), category: collectionViewPickerData[indexPath.row])
         cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapImage(_:))))
         return cell
     }

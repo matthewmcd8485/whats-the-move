@@ -30,11 +30,11 @@ class WelcomeViewController: UIViewController {
             let vc = storyboard.instantiateViewController(identifier: "phoneNumberViewController") as! PhoneNumberViewController
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
-        alert.addAction(UIAlertAction(title: "privacy policy", style: .cancel, handler: { _ in
+        alert.addAction(UIAlertAction(title: "privacy policy", style: .default, handler: { _ in
             guard let url = URL(string: "https://matthewdevteam.weebly.com/privacy.html") else { return }
             UIApplication.shared.open(url)
         }))
-        alert.addAction(UIAlertAction(title: "terms", style: .cancel, handler: { _ in
+        alert.addAction(UIAlertAction(title: "terms", style: .default, handler: { _ in
             guard let url = URL(string: "https://matthewdevteam.weebly.com/terms-and-conditions.html") else { return }
             UIApplication.shared.open(url)
         }))

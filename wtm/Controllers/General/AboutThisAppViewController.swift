@@ -18,12 +18,14 @@ class AboutThisAppViewController: UIViewController {
     @IBOutlet weak var reviewButton: UIButton!
     @IBOutlet weak var supportLabel: UILabel!
     @IBOutlet weak var tipButton: UIButton!
+    @IBOutlet weak var versionLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         reviewButton.layer.cornerRadius = 10
         tipButton.layer.cornerRadius = 10
+        versionLabel.text = "app version \(UIApplication.appVersion()) (\(UIApplication.appBuild()))"
         
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         
