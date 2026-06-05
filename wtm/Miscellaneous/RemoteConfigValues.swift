@@ -66,7 +66,7 @@ final class RemoteConfigValues {
     }
     
     func color(forKey key: ValueKey) -> UIColor {
-        let colorAsHexString = RemoteConfig.remoteConfig()[key.rawValue].stringValue ?? "#FFFFFFFF"
+        let colorAsHexString = RemoteConfig.remoteConfig()[key.rawValue].stringValue
         guard let convertedColor = UIColor(named: colorAsHexString) else {
             return UIColor.white
         }
@@ -78,7 +78,7 @@ final class RemoteConfigValues {
     }
     
     func string(forKey key: ValueKey) -> String {
-        RemoteConfig.remoteConfig()[key.rawValue].stringValue ?? ""
+        RemoteConfig.remoteConfig()[key.rawValue].stringValue
     }
     
     func double(forKey key: ValueKey) -> Double {

@@ -21,7 +21,7 @@ class HomeScreenViewController: UIViewController {
 
         boredButtonLayer.layer.cornerRadius = boredButtonLayer.frame.width / 2
     
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        UIApplication.resetBadgeCount()
         
         navigationController?.viewControllers = [self]
         
@@ -31,7 +31,7 @@ class HomeScreenViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        UIApplication.resetBadgeCount()
 
     }
 
@@ -51,10 +51,10 @@ class HomeScreenViewController: UIViewController {
     private func checkForNewRelease() {
         let latestVersion = RemoteConfig.remoteConfig()
           .configValue(forKey: "latestVersion")
-          .stringValue ?? "undefined"
+          .stringValue
         print("The app's latest version is \(latestVersion).")
         
-        if latestVersion != "undefined" && latestVersion != UIApplication.appVersion() {
+        if !latestVersion.isEmpty && latestVersion != UIApplication.appVersion() {
             let alert = UIAlertController(title: "new version available", message: "\"wtm?\" v\(latestVersion) is now available on the app store. please visit the app store to update it!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "ok, bet", style: .default, handler: { _ in
                 let url = "https://apps.apple.com/us/app/whats-the-move/id1574130925"

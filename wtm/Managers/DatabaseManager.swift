@@ -131,7 +131,7 @@ final class DatabaseManager {
     public func downloadFriends(fromGroupWith: [String], completion: @escaping (Result<[Friend], Error>) -> Void) {
         var friendsReturn = [Friend]()
         
-        for x in fromGroupWith.count {
+        for x in 0..<fromGroupWith.count {
             db.collection("users").whereField("User Identifier", isEqualTo: fromGroupWith[x]).getDocuments() { querySnapshot, error in
                 if let error = error  {
                     print("Error loading friends from Firebase: \(error)")

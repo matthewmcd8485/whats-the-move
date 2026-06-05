@@ -226,7 +226,7 @@ class FriendVerifyViewController: UIViewController {
     
     private func checkIfAlreadyFriends() -> Bool {
         if let friendsUID = UserDefaults.standard.stringArray(forKey: "friendsUID") {
-            for x in friendsUID.count {
+            for x in 0..<friendsUID.count {
                 if friendToAdd.uid == friendsUID[x] {
                     return true
                 }

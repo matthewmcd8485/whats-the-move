@@ -83,8 +83,8 @@ class SwooshViewController: UIViewController {
         
         let uid = UserDefaults.standard.string(forKey: "uid")
         let name = UserDefaults.standard.string(forKey: "name")
-        for x in groups.count {
-            for y in groups[x].friends.count {
+        for x in 0..<groups.count {
+            for y in 0..<groups[x].friends.count {
                 
                 // Make sure they aren't you
                 // Make sure you didn't block them
@@ -130,7 +130,7 @@ class SwooshViewController: UIViewController {
         
         let group = DispatchGroup()
         
-        for x in allFriends.count {
+        for x in 0..<allFriends.count {
             group.enter()
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: allFriends[x].uid, completion: { [weak self] result in
                 switch result {
@@ -165,7 +165,7 @@ class SwooshViewController: UIViewController {
         storageManager.downloadImageURL(imageName: mood.rawValue, collection: "mood images", completion: { [weak self] result in
             switch result {
             case .success(let imageURL):
-                for x in self!.allUsers.count {
+                for x in 0..<self!.allUsers.count {
                     group.enter()
                     
                     let sender = PushNotificationSender()

@@ -236,7 +236,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
         databaseManager.downloadAllFriends(uid: uid, completion: { [weak self] result in
             switch result {
             case .success(let users):
-                for x in users.count {
+                for x in 0..<users.count {
                     uids.append(users[x].uid)
                 }
                 UserDefaults.standard.set(uids, forKey: "friendsUID")
@@ -256,7 +256,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
         databaseManager.downloadAllGroups(uid: uid, completion: { result in
             switch result {
             case .success(let downloadedGroups):
-                for x in downloadedGroups.count {
+                for x in 0..<downloadedGroups.count {
                     groupIDs.append(downloadedGroups[x].groupID)
                 }
                 UserDefaults.standard.set(groupIDs, forKey: "groupsUID")

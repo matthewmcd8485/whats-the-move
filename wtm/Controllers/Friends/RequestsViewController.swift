@@ -120,7 +120,6 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
         let uid = UserDefaults.standard.string(forKey: "uid")
         let nameToAdd = requests[indexPath.row].name
         let uidToAdd = requests[indexPath.row].uid
-        let profileImageURL = requests[indexPath.row].profileImageURL
         
         let alert = UIAlertController(title: "wow, you have friends!", message: "add \(nameToAdd) as a friend?", preferredStyle: .alert)
 

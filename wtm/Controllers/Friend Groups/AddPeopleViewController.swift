@@ -64,7 +64,7 @@ class AddPeopleViewController: UIViewController, UITableViewDelegate, UITableVie
         
         friends.removeAll()
         
-        for x in friendsUIDs.count {
+        for x in 0..<friendsUIDs.count {
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: friendsUIDs[x], completion: { [weak self] result in
                 switch result {
                 case .success(let user):

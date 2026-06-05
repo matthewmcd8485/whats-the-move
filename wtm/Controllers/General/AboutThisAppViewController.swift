@@ -8,10 +8,12 @@
 import UIKit
 import StoreKit
 
-class AboutThisAppViewController: UIViewController, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+class AboutThisAppViewController: UIViewController {
+    
+    private static let tipProductID = "com.matthew.wtm.tipjar"
     
     let alertManager = AlertManager.shared
-    var myProduct: SKProduct?
+    private var tipProduct: Product?
 
     @IBOutlet weak var reviewButton: UIButton!
     @IBOutlet weak var supportLabel: UILabel!
@@ -25,7 +27,7 @@ class AboutThisAppViewController: UIViewController, SKProductsRequestDelegate, S
         
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         
-        fetchProducts()
+        Task { await loadTipProduct() }
     }
 
     @IBAction func backButton(_ sender: Any) {
@@ -33,15 +35,8 @@ class AboutThisAppViewController: UIViewController, SKProductsRequestDelegate, S
     }
     
     @IBAction func tipButton(_ sender: Any) {
-        guard let myProduct = myProduct else {
-            return
-        }
-        
-        if SKPaymentQueue.canMakePayments() {
-            let payment = SKPayment(product: myProduct)
-            SKPaymentQueue.default().add(self)
-            SKPaymentQueue.default().add(payment)
-        }
+        guard let tipProduct, AppStore.canMakePayments else { return }
+        Task { await purchase(tipProduct) }
     }
     
     @IBAction func reviewButton(_ sender: Any) {
@@ -52,40 +47,33 @@ class AboutThisAppViewController: UIViewController, SKProductsRequestDelegate, S
         }
     }
     
-    private func fetchProducts() {
-        let request = SKProductsRequest(productIdentifiers: ["com.matthew.wtm.tipjar"])
-        request.delegate = self
-        request.start()
-    }
-    
-    // MARK: - StoreKit Delegates
-    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        if let product = response.products.first {
-            myProduct = product
+    private func loadTipProduct() async {
+        do {
+            let products = try await Product.products(for: [Self.tipProductID])
+            tipProduct = products.first
+        } catch {
+            print("Failed to load tip product: \(error)")
         }
     }
     
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        for transaction in transactions {
-            switch transaction.transactionState {
-            case .purchasing:
-                // no op
+    @MainActor
+    private func purchase(_ product: Product) async {
+        do {
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                if case .verified(let transaction) = verification {
+                    await transaction.finish()
+                    supportLabel.text = "you're pretty cool, believe it or not"
+                    supportLabel.textColor = .green
+                }
+            case .userCancelled, .pending:
                 break
-            case .purchased, .restored:
-                supportLabel.text = "you're pretty cool, believe it or not"
-                supportLabel.textColor = .green
-                SKPaymentQueue.default().finishTransaction(transaction)
-                SKPaymentQueue.default().remove(self)
-                break
-            case .failed, .deferred:
-                SKPaymentQueue.default().finishTransaction(transaction)
-                SKPaymentQueue.default().remove(self)
-                break
-            default:
-                SKPaymentQueue.default().finishTransaction(transaction)
-                SKPaymentQueue.default().remove(self)
+            @unknown default:
                 break
             }
+        } catch {
+            print("Purchase failed: \(error)")
         }
     }
 }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 100;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -135,7 +135,6 @@
 		C9F44BBD2FD3245D004B1F1C /* FriendGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E752FD3245D004B1F1C /* FriendGroup.swift */; };
 		C9F44BDC2FD3245D004B1F1C /* ContactsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173C2FD3245D004B1F1C /* ContactsFilter.swift */; };
 		C9F44C252FD3245D004B1F1C /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417532FD3245D004B1F1C /* AlertManager.swift */; };
-		C9F44C502FD3245D004B1F1C /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417472FD3245D004B1F1C /* Int.swift */; };
 		C9F44C532FD3245D004B1F1C /* PictureEditHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171B2FD3245D004B1F1C /* PictureEditHandlers.swift */; };
 		C9F44C7F2FD3245D004B1F1C /* DeleteAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172B2FD3245D004B1F1C /* DeleteAccountViewController.swift */; };
 		C9F44CA22FD3245D004B1F1C /* ProfanityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417562FD3245D004B1F1C /* ProfanityManager.swift */; };
@@ -182,25 +181,21 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		C9760B5C26641179009F66DA /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstSubfolder = Frameworks;
 			files = (
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C988D511268F728400CAEA8E /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolder = PlugIns;
 			files = (
 				C988D50D268F728400CAEA8E /* WTM Notification Service Extension.appex in Embed Foundation Extensions */,
 				C988D532268FD79A00CAEA8E /* WTM Notification Content Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -259,7 +254,6 @@
 		C9F417442FD3245D004B1F1C /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		C9F417452FD3245D004B1F1C /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		C9F417462FD3245D004B1F1C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
-		C9F417472FD3245D004B1F1C /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		C9F417482FD3245D004B1F1C /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		C9F417492FD3245D004B1F1C /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		C9F4174A2FD3245D004B1F1C /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
@@ -283,44 +277,6 @@
 		C9F417602FD3245D004B1F1C /* BASEViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BASEViewController.swift; sourceTree = "<group>"; };
 		C9F417612FD3245D004B1F1C /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		C9F417622FD3245D004B1F1C /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		C9F427372FD3245D004B1F1C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427382FD3245D004B1F1C /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427392FD3245D004B1F1C /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4273A2FD3245D004B1F1C /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4273B2FD3245D004B1F1C /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4273C2FD3245D004B1F1C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4273D2FD3245D004B1F1C /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4273E2FD3245D004B1F1C /* en_GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_GB; path = en_GB.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4273F2FD3245D004B1F1C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427402FD3245D004B1F1C /* es_MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es_MX; path = es_MX.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427412FD3245D004B1F1C /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427422FD3245D004B1F1C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427432FD3245D004B1F1C /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = fr_CA.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427442FD3245D004B1F1C /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427452FD3245D004B1F1C /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427462FD3245D004B1F1C /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427472FD3245D004B1F1C /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427482FD3245D004B1F1C /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427492FD3245D004B1F1C /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4274A2FD3245D004B1F1C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4274B2FD3245D004B1F1C /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4274C2FD3245D004B1F1C /* ms */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ms; path = ms.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4274D2FD3245D004B1F1C /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4274E2FD3245D004B1F1C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4274F2FD3245D004B1F1C /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427502FD3245D004B1F1C /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427512FD3245D004B1F1C /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = pt_BR.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427522FD3245D004B1F1C /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_PT; path = pt_PT.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427532FD3245D004B1F1C /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427542FD3245D004B1F1C /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427552FD3245D004B1F1C /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427562FD3245D004B1F1C /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427572FD3245D004B1F1C /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427582FD3245D004B1F1C /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F427592FD3245D004B1F1C /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4275A2FD3245D004B1F1C /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4275B2FD3245D004B1F1C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
-		C9F4275C2FD3245D004B1F1C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/GoogleSignIn.strings; sourceTree = "<group>"; };
 		C9F43E6C2FD3245D004B1F1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C9F43E6E2FD3245D004B1F1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C9F43E712FD3245D004B1F1C /* BoredRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequest.swift; sourceTree = "<group>"; };
@@ -349,8 +305,6 @@
 		C9F43E8A2FD3245D004B1F1C /* RequestsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsTableViewCell.swift; sourceTree = "<group>"; };
 		C9F43E8B2FD3245D004B1F1C /* SendToGroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToGroupTableViewCell.swift; sourceTree = "<group>"; };
 		C9F43E8C2FD3245D004B1F1C /* SubstatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstatusTableViewCell.swift; sourceTree = "<group>"; };
-		C9F43EBC2FD3245D004B1F1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		C9F43EBE2FD3245D004B1F1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C9F43ECC2FD3245D004B1F1C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9F43ECD2FD3245D004B1F1C /* Blocked Words List.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Blocked Words List.txt"; sourceTree = "<group>"; };
 		C9F43ECE2FD3245D004B1F1C /* File */ = {isa = PBXFileReference; lastKnownFileType = text; path = File; sourceTree = "<group>"; };
@@ -366,7 +320,6 @@
 /* Begin PBXFrameworksBuildPhase section */
 		C9760B152663F646009F66DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C9119E2D2FD27B4C0089ACA1 /* FirebaseMessaging in Frameworks */,
 				C9119E0B2FD27B4C0089ACA1 /* FirebaseAnalytics in Frameworks */,
@@ -403,37 +356,28 @@
 				C9119E132FD27B4C0089ACA1 /* FirebaseAppDistribution-Beta in Frameworks */,
 				C9119E0D2FD27B4C0089ACA1 /* FirebaseAnalyticsCore in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C9760B2B2663F647009F66DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C9760B362663F647009F66DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C988D503268F728400CAEA8E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C988D521268FD79A00CAEA8E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C988D528268FD79A00CAEA8E /* UserNotificationsUI.framework in Frameworks */,
 				C988D526268FD79A00CAEA8E /* UserNotifications.framework in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -620,7 +564,6 @@
 				C9F417442FD3245D004B1F1C /* Array.swift */,
 				C9F417452FD3245D004B1F1C /* Data.swift */,
 				C9F417462FD3245D004B1F1C /* Date.swift */,
-				C9F417472FD3245D004B1F1C /* Int.swift */,
 				C9F417482FD3245D004B1F1C /* Notifications.swift */,
 				C9F417492FD3245D004B1F1C /* String.swift */,
 				C9F4174A2FD3245D004B1F1C /* UIApplication.swift */,
@@ -891,8 +834,6 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			name = "WTM Notification Service Extension";
 			productName = "WTM Notification Service Extension";
 			productReference = C988D506268F728400CAEA8E /* WTM Notification Service Extension.appex */;
@@ -907,8 +848,6 @@
 				C988D522268FD79A00CAEA8E /* Resources */,
 			);
 			buildRules = (
-			);
-			dependencies = (
 			);
 			name = "WTM Notification Content Extension";
 			productName = "WTM Notification Content Extension";
@@ -945,7 +884,6 @@
 				};
 			};
 			buildConfigurationList = C9760B132663F646009F66DA /* Build configuration list for PBXProject "wtm" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1001,6 +939,7 @@
 				C9119E3C2FD285050089ACA1 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				C9119E412FD286710089ACA1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
+			preferredProjectObjectVersion = 100;
 			productRefGroup = C9760B192663F646009F66DA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1017,7 +956,6 @@
 /* Begin PBXResourcesBuildPhase section */
 		C9760B162663F646009F66DA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C9F43EF82FD3245D004B1F1C /* GoogleService-Info.plist in Resources */,
 				C9F43FC22FD3245D004B1F1C /* SuperBasic-Thin.otf in Resources */,
@@ -1031,36 +969,27 @@
 				C9F441D62FD3245D004B1F1C /* Notification.json in Resources */,
 				C9F441E72FD3245D004B1F1C /* Assets.xcassets in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C9760B2C2663F647009F66DA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C9760B372663F647009F66DA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C988D504268F728400CAEA8E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C988D522268FD79A00CAEA8E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C988D52E268FD79A00CAEA8E /* MainInterface.storyboard in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
@@ -1068,31 +997,24 @@
 		C9760B4D2663F914009F66DA /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
 				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 				"$(SRCROOT)/wtm/GoogleService-Info.plist",
 			);
 			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\" -gsp \"${PROJECT_DIR}/wtm/GoogleService-Info.plist\" -p ios\n";
+			shellScript = (
+				"# Type a script or drag a script file from your workspace to insert its path.",
+				"\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\" -gsp \"${PROJECT_DIR}/wtm/GoogleService-Info.plist\" -p ios",
+				"",
+			);
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C9760B142663F646009F66DA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C9F4423F2FD3245D004B1F1C /* SwooshViewController.swift in Sources */,
 				C9F442442FD3245D004B1F1C /* MyProfileTableViewCell.swift in Sources */,
@@ -1170,7 +1092,6 @@
 				C9F44BBD2FD3245D004B1F1C /* FriendGroup.swift in Sources */,
 				C9F44BDC2FD3245D004B1F1C /* ContactsFilter.swift in Sources */,
 				C9F44C252FD3245D004B1F1C /* AlertManager.swift in Sources */,
-				C9F44C502FD3245D004B1F1C /* Int.swift in Sources */,
 				C9F44C532FD3245D004B1F1C /* PictureEditHandlers.swift in Sources */,
 				C9F44C7F2FD3245D004B1F1C /* DeleteAccountViewController.swift in Sources */,
 				C9F44CA22FD3245D004B1F1C /* ProfanityManager.swift in Sources */,
@@ -1182,37 +1103,28 @@
 				C9F44D4F2FD3245D004B1F1C /* UIColorInputError.swift in Sources */,
 				C9F44D832FD3245D004B1F1C /* SubstatusViewController.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C9760B2A2663F647009F66DA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C9760B352663F647009F66DA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C988D502268F728400CAEA8E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C988D509268F728400CAEA8E /* NotificationService.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C988D520268FD79A00CAEA8E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				C988D52B268FD79A00CAEA8E /* NotificationViewController.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -1267,7 +1179,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		C9760B402663F647009F66DA /* Debug */ = {
+		C9760B402663F647009F66DA /* Debug configuration for PBXProject "wtm" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1332,7 +1244,7 @@
 			};
 			name = Debug;
 		};
-		C9760B412663F647009F66DA /* Release */ = {
+		C9760B412663F647009F66DA /* Release configuration for PBXProject "wtm" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1391,7 +1303,7 @@
 			};
 			name = Release;
 		};
-		C9760B432663F647009F66DA /* Debug */ = {
+		C9760B432663F647009F66DA /* Debug configuration for PBXNativeTarget "wtm" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = "$(inherited)";
@@ -1423,7 +1335,7 @@
 			};
 			name = Debug;
 		};
-		C9760B442663F647009F66DA /* Release */ = {
+		C9760B442663F647009F66DA /* Release configuration for PBXNativeTarget "wtm" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = "$(inherited)";
@@ -1453,13 +1365,13 @@
 			};
 			name = Release;
 		};
-		C9760B462663F647009F66DA /* Debug */ = {
+		C9760B462663F647009F66DA /* Debug configuration for PBXNativeTarget "wtmTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1473,13 +1385,13 @@
 			};
 			name = Debug;
 		};
-		C9760B472663F647009F66DA /* Release */ = {
+		C9760B472663F647009F66DA /* Release configuration for PBXNativeTarget "wtmTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1493,11 +1405,12 @@
 			};
 			name = Release;
 		};
-		C9760B492663F647009F66DA /* Debug */ = {
+		C9760B492663F647009F66DA /* Debug configuration for PBXNativeTarget "wtmUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1511,11 +1424,12 @@
 			};
 			name = Debug;
 		};
-		C9760B4A2663F647009F66DA /* Release */ = {
+		C9760B4A2663F647009F66DA /* Release configuration for PBXNativeTarget "wtmUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1529,7 +1443,7 @@
 			};
 			name = Release;
 		};
-		C988D50F268F728400CAEA8E /* Debug */ = {
+		C988D50F268F728400CAEA8E /* Debug configuration for PBXNativeTarget "WTM Notification Service Extension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1541,7 +1455,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1550,7 +1464,7 @@
 			};
 			name = Debug;
 		};
-		C988D510268F728400CAEA8E /* Release */ = {
+		C988D510268F728400CAEA8E /* Release configuration for PBXNativeTarget "WTM Notification Service Extension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1562,7 +1476,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1571,7 +1485,7 @@
 			};
 			name = Release;
 		};
-		C988D534268FD79A00CAEA8E /* Debug */ = {
+		C988D534268FD79A00CAEA8E /* Debug configuration for PBXNativeTarget "WTM Notification Content Extension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1583,7 +1497,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1592,7 +1506,7 @@
 			};
 			name = Debug;
 		};
-		C988D535268FD79A00CAEA8E /* Release */ = {
+		C988D535268FD79A00CAEA8E /* Release configuration for PBXNativeTarget "WTM Notification Content Extension" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1604,7 +1518,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1619,55 +1533,49 @@
 		C9760B132663F646009F66DA /* Build configuration list for PBXProject "wtm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C9760B402663F647009F66DA /* Debug */,
-				C9760B412663F647009F66DA /* Release */,
+				C9760B402663F647009F66DA /* Debug configuration for PBXProject "wtm" */,
+				C9760B412663F647009F66DA /* Release configuration for PBXProject "wtm" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		C9760B422663F647009F66DA /* Build configuration list for PBXNativeTarget "wtm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C9760B432663F647009F66DA /* Debug */,
-				C9760B442663F647009F66DA /* Release */,
+				C9760B432663F647009F66DA /* Debug configuration for PBXNativeTarget "wtm" */,
+				C9760B442663F647009F66DA /* Release configuration for PBXNativeTarget "wtm" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		C9760B452663F647009F66DA /* Build configuration list for PBXNativeTarget "wtmTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C9760B462663F647009F66DA /* Debug */,
-				C9760B472663F647009F66DA /* Release */,
+				C9760B462663F647009F66DA /* Debug configuration for PBXNativeTarget "wtmTests" */,
+				C9760B472663F647009F66DA /* Release configuration for PBXNativeTarget "wtmTests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		C9760B482663F647009F66DA /* Build configuration list for PBXNativeTarget "wtmUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C9760B492663F647009F66DA /* Debug */,
-				C9760B4A2663F647009F66DA /* Release */,
+				C9760B492663F647009F66DA /* Debug configuration for PBXNativeTarget "wtmUITests" */,
+				C9760B4A2663F647009F66DA /* Release configuration for PBXNativeTarget "wtmUITests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		C988D50E268F728400CAEA8E /* Build configuration list for PBXNativeTarget "WTM Notification Service Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C988D50F268F728400CAEA8E /* Debug */,
-				C988D510268F728400CAEA8E /* Release */,
+				C988D50F268F728400CAEA8E /* Debug configuration for PBXNativeTarget "WTM Notification Service Extension" */,
+				C988D510268F728400CAEA8E /* Release configuration for PBXNativeTarget "WTM Notification Service Extension" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		C988D533268FD79A00CAEA8E /* Build configuration list for PBXNativeTarget "WTM Notification Content Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C988D534268FD79A00CAEA8E /* Debug */,
-				C988D535268FD79A00CAEA8E /* Release */,
+				C988D534268FD79A00CAEA8E /* Debug configuration for PBXNativeTarget "WTM Notification Content Extension" */,
+				C988D535268FD79A00CAEA8E /* Release configuration for PBXNativeTarget "WTM Notification Content Extension" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */

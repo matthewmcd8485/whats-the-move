@@ -79,7 +79,7 @@ class BoredRequestsViewController: UIViewController, UITableViewDelegate, UITabl
         databaseManager.downloadAllGroups(uid: uid, completion: { [weak self] result in
             switch result {
             case .success(let downloadedGroups):
-                for x in downloadedGroups.count {
+                for x in 0..<downloadedGroups.count {
                     groupIDs.append(downloadedGroups[x].groupID)
                 }
                 self?.groups = downloadedGroups
@@ -100,7 +100,7 @@ class BoredRequestsViewController: UIViewController, UITableViewDelegate, UITabl
         
         // 7200 seconds was two hours ago
         let expiredCutoff = Timestamp(date: Date(timeInterval: TimeInterval(-7200), since: Date()))
-        for x in groupIDs.count {
+        for x in 0..<groupIDs.count {
             db.collection("friend groups").document(groupIDs[x]).collection("bored requests").whereField("Posted Time", isGreaterThanOrEqualTo: expiredCutoff).getDocuments() { [weak self] querySnapshot, error in
                 guard error == nil else {
                     print(error!)
@@ -140,8 +140,8 @@ class BoredRequestsViewController: UIViewController, UITableViewDelegate, UITabl
         sortedGroups.removeAll()
         sortedGroupsWithRequests.removeAll()
         
-        for x in groupsWithRequests.count {
-            for y in groups.count {
+        for x in 0..<groupsWithRequests.count {
+            for y in 0..<groups.count {
                 if groupsWithRequests[x].groupID == groups[y].groupID {
                     sortedGroups.append(groups[y])
                     sortedGroupsWithRequests.append(groupsWithRequests[x])

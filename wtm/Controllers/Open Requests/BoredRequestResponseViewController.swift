@@ -152,7 +152,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     // MARK: - Load Users
     private func loadUsers() {
         // Download users in the group
-        for x in group.people!.count {
+        for x in 0..<group.people!.count {
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: group.people![x], completion: { [weak self] result in
                 switch result {
                 case .success(let user):
@@ -190,7 +190,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
             }
             
             for document in querySnapshot!.documents {
-                for x in self!.request.people.count {
+                for x in 0..<self!.request.people.count {
                     let id = self?.request.people[x].user.uid
                     let response = document.get("\(id!) Availability") as? String ?? "no response"
                     let substatus = document.get("\(id!) Substatus") as? String ?? "no response"
@@ -218,7 +218,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
                 return
             }
             
-            for x in self!.request.people.count {
+            for x in 0..<self!.request.people.count {
                 if self?.request.people[x].user.uid == uid {
                     // Change local UI immediately
                     self?.request.people[x].responseStatus = status
@@ -257,7 +257,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
         }
         
         let sender = PushNotificationSender()
-        for x in request.people.count {
+        for x in 0..<request.people.count {
             if request.people[x].user.status != "do not disturb" && request.people[x].user.uid != uid {
                 sender.sendPushNotification(to: request.people[x].user.fcmToken, title: notificationTitle, subtitle: group.name, body: "they said \"\(substatus)\"", urlToImage: "")
             }
@@ -307,7 +307,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
                 alertManager.showAlert(title: "error loading user", message: "there was a problem loading in the person you selected. maybe they're just a fake friend?")
                 return
             }
-            for x in friendsUID.count {
+            for x in 0..<friendsUID.count {
                 if request.people[indexPath.row].user.uid == friendsUID[x] {
                     isFriend = true
                 }

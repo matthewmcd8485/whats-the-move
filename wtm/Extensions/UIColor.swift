@@ -66,21 +66,23 @@ extension UIColor {
     }
 
     let hexString = String(rgba[String.Index(utf16Offset: 1, in: rgba)...])
-    var hexValue: UInt32 = 0
+    var hexValue: UInt64 = 0
 
-    guard Scanner(string: hexString).scanHexInt32(&hexValue) else {
+    guard Scanner(string: hexString).scanHexInt64(&hexValue) else {
       throw UIColorInputError.unableToScanHexValue
     }
 
+    let hex32 = UInt32(hexValue)
+
     switch hexString.count {
     case 3:
-      self.init(hex3: UInt16(hexValue))
+      self.init(hex3: UInt16(hex32))
     case 4:
-      self.init(hex4: UInt16(hexValue))
+      self.init(hex4: UInt16(hex32))
     case 6:
-      self.init(hex6: hexValue)
+      self.init(hex6: hex32)
     case 8:
-      self.init(hex8: hexValue)
+      self.init(hex8: hex32)
     default:
       throw UIColorInputError.mismatchedHexStringLength
     }
@@ -90,7 +92,7 @@ extension UIColor {
   ///
   /// - parameter rgba: String value.
   public convenience init(_ rgba: String, defaultColor: UIColor = UIColor.clear) {
-      guard let color = try? UIColor(named: rgba) else {
+      guard let color = UIColor(named: rgba) else {
       self.init(cgColor: defaultColor.cgColor)
       return
     }

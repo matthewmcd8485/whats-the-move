@@ -62,11 +62,10 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
         var arrPhoneNumbers = [String]()
         for contact in contacts {
             for ContctNumVar: CNLabeledValue in contact.phoneNumbers {
-                if let fulMobNumVar  = ContctNumVar.value as? CNPhoneNumber {
-                    //let countryCode = fulMobNumVar.value(forKey: "countryCode") get country code
-                    if let MccNamVar = fulMobNumVar.value(forKey: "digits") as? String {
-                        arrPhoneNumbers.append(MccNamVar)
-                    }
+                let fulMobNumVar = ContctNumVar.value
+                //let countryCode = fulMobNumVar.value(forKey: "countryCode") get country code
+                if let MccNamVar = fulMobNumVar.value(forKey: "digits") as? String {
+                    arrPhoneNumbers.append(MccNamVar)
                 }
             }
         }
@@ -141,8 +140,8 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
             // Sort through contacts list for phone numbers that appear in Firestore
             let formatter = DefaultTextInputFormatter(textPattern: "+# (###) ###-####")
             var sortedUsers = [PhoneContact]()
-            for contact in self!.phoneContacts.count {
-                for user in firestoreUsers.count {
+            for contact in 0..<self!.phoneContacts.count {
+                for user in 0..<firestoreUsers.count {
                     var contactsPhoneNumber = (self!.phoneContacts[contact] as PhoneContact).phoneNumber[0]
                     if contactsPhoneNumber.count == 10 {
                         contactsPhoneNumber = "+1" + contactsPhoneNumber

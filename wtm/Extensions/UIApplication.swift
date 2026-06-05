@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import UserNotifications
 
 extension UIApplication {
     struct Constants {
         static let CFBundleShortVersionString = "CFBundleShortVersionString"
+        static let badgeCountKey = "wtmBadgeCount"
     }
     
     class func appVersion() -> String {
@@ -24,5 +26,16 @@ extension UIApplication {
         let version = appVersion(), build = appBuild()
         
         return version == build ? "v\(version)" : "v\(version)(\(build))"
+    }
+    
+    class func resetBadgeCount() {
+        UserDefaults.standard.set(0, forKey: Constants.badgeCountKey)
+        UNUserNotificationCenter.current().setBadgeCount(0)
+    }
+    
+    class func incrementBadgeCount() {
+        let newCount = UserDefaults.standard.integer(forKey: Constants.badgeCountKey) + 1
+        UserDefaults.standard.set(newCount, forKey: Constants.badgeCountKey)
+        UNUserNotificationCenter.current().setBadgeCount(newCount)
     }
 }

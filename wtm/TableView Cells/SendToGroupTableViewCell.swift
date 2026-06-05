@@ -85,7 +85,7 @@ class SendToGroupTableViewCell: UITableViewCell {
         if model.friends.count > 0 {
             let uid = UserDefaults.standard.string(forKey: "uid")
             var names = [String]()
-            for x in model.friends.count {
+            for x in 0..<model.friends.count {
                 if model.friends[x].uid != uid {
                     names.append(model.friends[x].name.lowercased())
                 }

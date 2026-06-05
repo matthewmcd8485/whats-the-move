@@ -71,7 +71,7 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
         databaseManager.downloadAllGroups(uid: uid, completion: { [weak self] result in
             switch result {
             case .success(let downloadedGroups):
-                for x in downloadedGroups.count {
+                for x in 0..<downloadedGroups.count {
                     groupIDs.append(downloadedGroups[x].groupID)
                 }
                 UserDefaults.standard.set(groupIDs, forKey: "groupsUID")

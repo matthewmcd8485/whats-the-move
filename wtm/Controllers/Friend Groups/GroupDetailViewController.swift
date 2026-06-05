@@ -89,7 +89,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     private func loadUsers() {
         DispatchQueue.global().async(execute: {
             DispatchQueue.main.sync { [weak self] in
-                for x in self!.group.people!.count {
+                for x in 0..<self!.group.people!.count {
                     self?.databaseManager.downloadUser(where: "User Identifier", isEqualTo: self!.group.people![x], completion: { result in
                         switch result {
                         case .success(let user):
@@ -153,7 +153,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
             // Remove from UserDefaults
             var groupsUID = UserDefaults.standard.stringArray(forKey: "groupsUID")
             var found = false
-            for x in groupsUID!.count {
+            for x in 0..<groupsUID!.count {
                 if !found {
                     if groupsUID![x] == self?.group.groupID {
                         found = true
@@ -223,7 +223,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     private func addNewPerson(newUID: String) {
         var duplicate = false
-        for x in group.people!.count {
+        for x in 0..<group.people!.count {
             if group.people![x] == newUID {
                 duplicate = true
             }
@@ -271,7 +271,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
             alertManager.showAlert(title: "error loading user", message: "there was a problem loading in the person you selected. maybe they're just a fake friend?")
             return
         }
-        for x in friendsUID.count {
+        for x in 0..<friendsUID.count {
             if groupMembers[indexPath.row].uid == friendsUID[x] {
                 isFriend = true
             }

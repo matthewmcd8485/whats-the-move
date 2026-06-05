@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             print("Message ID: \(messageID)")
         }
         
-        application.applicationIconBadgeNumber += 1
+        UIApplication.incrementBadgeCount()
         
         // Print full message.
         print(userInfo)
@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             print("Message ID: \(messageID)")
         }
         
-        application.applicationIconBadgeNumber += 1
+        UIApplication.incrementBadgeCount()
         
         // Print full message.
         print(userInfo)

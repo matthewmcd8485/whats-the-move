@@ -85,7 +85,7 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
                         let selectableGroup = SelectableGroup(group: group, friends: friends, isSelected: false)
                         
                         
-                        for x in selectableGroup.friends.count {
+                        for x in 0..<selectableGroup.friends.count {
                             print(selectableGroup.friends[x].name)
                         }
                         
@@ -106,7 +106,7 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
     
     private func loadFriends(in group: FriendGroup) -> [User] {
         var friends = [User]()
-        for x in group.people!.count {
+        for x in 0..<group.people!.count {
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: group.people![x], completion: { result in
                 switch result {
                 case .success(let user):

@@ -19,7 +19,7 @@ class LoadingViewController: UIViewController {
         
         tabBarController?.hidesBottomBarWhenPushed = true
         
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        UIApplication.resetBadgeCount()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -140,7 +140,7 @@ class LoadingViewController: UIViewController {
         databaseManager.downloadAllFriends(uid: uid, completion: { result in
             switch result {
             case .success(let users):
-                for x in users.count {
+                for x in 0..<users.count {
                     uids.append(users[x].uid)
                 }
                 UserDefaults.standard.set(uids, forKey: "friendsUID")
@@ -159,7 +159,7 @@ class LoadingViewController: UIViewController {
         databaseManager.downloadAllGroups(uid: uid, completion: { result in
             switch result {
             case .success(let downloadedGroups):
-                for x in downloadedGroups.count {
+                for x in 0..<downloadedGroups.count {
                     groupIDs.append(downloadedGroups[x].groupID)
                 }
                 UserDefaults.standard.set(groupIDs, forKey: "groupsUID")
