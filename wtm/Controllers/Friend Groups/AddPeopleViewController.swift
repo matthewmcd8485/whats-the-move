@@ -66,21 +66,22 @@ class AddPeopleViewController: UIViewController, UITableViewDelegate, UITableVie
         
         for x in 0..<friendsUIDs.count {
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: friendsUIDs[x], completion: { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success(let user):
                     if !ReportingManager.shared.userIsBlocked(theirUID: user.uid) && !ReportingManager.shared.userBlockedYou(theirUID: user.uid) {
-                        self?.friends.append(user)
-                        self?.friends = self!.friends.filterDuplicates { $0.uid == $1.uid }
-                        self?.friends.sort { $0.name < $1.name }
+                        self.friends.append(user)
+                        self.friends = self.friends.filterDuplicates { $0.uid == $1.uid }
+                        self.friends.sort { $0.name < $1.name }
                     }
                 case .failure(let error):
-                    self?.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
+                    self.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
                     print(error)
                 }
                 
-                UserDefaults.standard.set(self?.friends.count, forKey: "friendsCount")
-                self?.tableView.reloadData()
-                self?.updateUI()
+                UserDefaults.standard.set(self.friends.count, forKey: "friendsCount")
+                self.tableView.reloadData()
+                self.updateUI()
             })
         }
         

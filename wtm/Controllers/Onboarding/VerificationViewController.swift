@@ -82,15 +82,16 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
                 Messaging.messaging().token { [weak self] token, error in
+                    guard let self = self else { return }
                     if let error = error {
                         print("Error fetching FCM registration token: \(error)")
                     } else if let token = token {
                         print("FCM registration token: \(token)")
-                        UserDefaults.standard.set(token, forKey: "fcmToken")
+                        SecureStorage.fcmToken = token
                         
                         
-                        self?.db.collection("users").document(self!.uid).setData([
-                            "FCM Token" : token
+                        self.db.collection(FirestoreKeys.Collection.users).document(self.uid).setData([
+                            FirestoreKeys.User.fcmToken : token
                         ], merge: true, completion: { error in
                             guard error == nil else {
                                 print("Error updating FCM Token in Firestore: \(error!)")
@@ -150,7 +151,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                 if authResult!.additionalUserInfo!.isNewUser {
                     // This is a new user!
                     // Send them to complete the onboarding flow
-                    UserDefaults.standard.set(strongSelf.uid, forKey: "uid")
+                    SecureStorage.uid = strongSelf.uid
                     
                     self?.continuing = true
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -159,12 +160,12 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     // This is a returning user!
                     // Download their information, cache it, and send them to the home screen
-                    strongSelf.db.collection("users").whereField("User Identifier", isEqualTo: strongSelf.uid).getDocuments() { querySnapshot, error in
+                    strongSelf.db.collection(FirestoreKeys.Collection.users).whereField(FirestoreKeys.User.userIdentifier, isEqualTo: strongSelf.uid).getDocuments() { querySnapshot, error in
                         guard error == nil else {
                             print("Error downloading user information from Firestore: \(error!)")
                             return
                         }
-                        UserDefaults.standard.set(strongSelf.uid, forKey: "uid")
+                        SecureStorage.uid = strongSelf.uid
                         self?.continuing = true
                         if querySnapshot?.documents.count == 0 {
                             
@@ -172,24 +173,20 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                             let vc = storyboard.instantiateViewController(identifier: "nameViewController") as! NameViewController
                             strongSelf.navigationController?.pushViewController(vc, animated: true)
                         } else {
-                            for document in querySnapshot!.documents {
-                                let name = document.get("Name") as! String
-                                let status = document.get("Status") as! String
-                                let substatus = document.get("Substatus") as! String
-                                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
-                                let fcmToken = document.get("FCM Token") as! String
-                                let joined = document.get("Joined") as! String
+                            guard let documents = querySnapshot?.documents else { return }
+                            for document in documents {
+                                guard let user = try? document.data(as: User.self) else { continue }
                                 
-                                UserDefaults.standard.set(name, forKey: "name")
-                                UserDefaults.standard.set(status, forKey: "status")
-                                UserDefaults.standard.set(substatus, forKey: "substatus")
-                                UserDefaults.standard.set(profileImageURL, forKey: "profileImageURL")
-                                UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
-                                UserDefaults.standard.set(joined, forKey: "joinedTime")
+                                UserDefaults.standard.set(user.name, forKey: "name")
+                                UserDefaults.standard.set(user.status, forKey: "status")
+                                UserDefaults.standard.set(user.substatus, forKey: "substatus")
+                                UserDefaults.standard.set(user.profileImageURL, forKey: "profileImageURL")
+                                SecureStorage.fcmToken = user.fcmToken
+                                UserDefaults.standard.set(user.joinedTime, forKey: "joinedTime")
                                 UserDefaults.standard.set(true, forKey: "loggedIn")
                                 
                                 // Download profile image
-                                if profileImageURL != "No profile picture yet" {
+                                if user.profileImageURL != "No profile picture yet" {
                                     let storageRef = strongSelf.storage.reference(withPath: "profile images/\(strongSelf.uid) - profile image.png")
                                     storageRef.getData(maxSize: 2 * 2048 * 2048) { data, error in
                                         if let error = error {
@@ -198,7 +195,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                                             // Data for profile image is returned
                                             print("data = \(data!)")
                                             let imageToSave = UIImage(data: data!)
-                                            ImageStoreManager.shared.store(image: imageToSave!, forKey: "profileImage", withStorageType: .fileSystem)
+                                            ImageStoreManager.shared.store(image: imageToSave!, forKey: "profileImage")
                                         }
                                     }
                                 }
@@ -228,7 +225,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func updateFriendsList() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         var uids = [String]()
@@ -248,7 +245,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func updateFriendGroups() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         var groupIDs = [String]()

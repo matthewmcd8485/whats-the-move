@@ -8,8 +8,10 @@
 import Foundation
 import UIKit
 
-final class AlertManager: UIViewController {
+final class AlertManager {
     static let shared = AlertManager()
+    
+    private init() {}
 
     public func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -17,11 +19,11 @@ final class AlertManager: UIViewController {
 
         let keyWindow = UIApplication.shared.connectedScenes
             .filter({$0.activationState == .foregroundActive})
-            .map({$0 as? UIWindowScene})
-            .compactMap({$0})
+            .compactMap({$0 as? UIWindowScene})
             .first?.windows
             .filter({$0.isKeyWindow}).first
-        keyWindow!.rootViewController?.present(alert, animated: true, completion: nil)
+        guard let rootViewController = keyWindow?.rootViewController else { return }
+        rootViewController.present(alert, animated: true, completion: nil)
     }
 }
 

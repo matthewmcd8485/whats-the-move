@@ -60,45 +60,41 @@ class FriendSelectionViewController: UIViewController, UITableViewDelegate, UITa
     
     // MARK: - Load Groups
     private func loadGroups() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         
         groups.removeAll()
         
-        db.collection("friend groups").whereField("People", arrayContains: uid).getDocuments() { [weak self] querySnapshot, error in
-            guard error == nil else {
+        databaseManager.downloadAllGroups(uid: uid) { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print("error downloading groups: \(error)")
                 return
-            }
-            
-            for document in querySnapshot!.documents {
-                let name = document.get("Name") as! String
-                let groupID = document.get("Group Identifier") as! String
-                let people = document.get("People") as! [String]
-                
-                let group = FriendGroup(name: name.lowercased(), groupID: groupID, people: people)
-                
-                // Download the friends in each group
-                self?.databaseManager.downloadFriends(fromGroupWith: people, completion: { result in
-                    switch result {
-                    case .success(let friends):
-                        let selectableGroup = SelectableGroup(group: group, friends: friends, isSelected: false)
-                        
-                        
-                        for x in 0..<selectableGroup.friends.count {
-                            print(selectableGroup.friends[x].name)
+            case .success(let groups):
+                for group in groups {
+                    guard let people = group.people else { continue }
+                    self?.databaseManager.downloadFriends(fromGroupWith: people, completion: { [weak self] result in
+                        guard let self = self else { return }
+                        switch result {
+                        case .success(let friends):
+                            let selectableGroup = SelectableGroup(group: group, friends: friends, isSelected: false)
+                            
+                            for x in 0..<selectableGroup.friends.count {
+                                print(selectableGroup.friends[x].name)
+                            }
+                            
+                            self.groups.append(selectableGroup)
+                            self.groups = self.groups.filterDuplicates { $0.group.groupID == $1.group.groupID }
+                            self.groups.sort { $0.group.name < $1.group.name }
+                            
+                            self.tableView.reloadData()
+                            self.updateUI()
+                        case .failure(let error):
+                            print("error downloading friends: \(error)")
                         }
-                        
-                        self?.groups.append(selectableGroup)
-                        self?.groups = self!.groups.filterDuplicates { $0.group.groupID == $1.group.groupID }
-                        self?.groups.sort { $0.group.name < $1.group.name }
-                        
-                        self?.tableView.reloadData()
-                        self?.updateUI()
-                    case .failure(let error):
-                        print("error downloading friends: \(error)")
-                    }
-                })
+                    })
+                }
             }
         }
 

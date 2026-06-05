@@ -69,7 +69,7 @@ class BoredResponseTableViewCell: UITableViewCell {
         let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.user.uid)
         
         // Name label
-        if model.user.uid == UserDefaults.standard.string(forKey: "uid") {
+        if model.user.uid == SecureStorage.uid {
             nameLabel.text = "you"
         } else {
             nameLabel.text = model.user.name.lowercased()

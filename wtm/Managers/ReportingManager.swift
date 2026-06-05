@@ -16,7 +16,7 @@ final class ReportingManager {
     
     // Checks a cached array to see if a particular user is blocked
     public func userIsBlocked(theirUID: String) -> Bool {
-        let blockedUsers = UserDefaults.standard.stringArray(forKey: "blockedUsers") ?? [""]
+        let blockedUsers = SecureStorage.blockedUsers
         
         guard !blockedUsers.isEmpty else {
             return false
@@ -32,7 +32,7 @@ final class ReportingManager {
     
     // Checks a cached array to see if a particular user blocked you
     public func userBlockedYou(theirUID: String) -> Bool {
-        let whoBlockedMe = UserDefaults.standard.stringArray(forKey: "whoBlockedMe") ?? [""]
+        let whoBlockedMe = SecureStorage.whoBlockedMe
         
         guard !whoBlockedMe.isEmpty else {
             return false
@@ -48,13 +48,13 @@ final class ReportingManager {
     
     // Adds an external user's account to a "Reported Users" collection on Firestore
     public func reportUser(uid: String, name: String, date: String, completion: @escaping (Bool) -> Void) {
-        firestore.collection("reported users").document("\(uid)_\(date)").setData([
-            "User Identifier" : uid,
-            "Reported Date" : date,
-            "User Name" : name
+        firestore.collection(FirestoreKeys.Collection.reportedUsers).document("\(uid)_\(date)").setData([
+            FirestoreKeys.ReportedUser.userIdentifier : uid,
+            FirestoreKeys.ReportedUser.reportedDate : date,
+            FirestoreKeys.ReportedUser.userName : name
         ], merge: false, completion: { error in
             guard error == nil else {
-                print("Error reporting user: \(error!)")
+                Log.database.error("Error reporting user: \(error!.localizedDescription, privacy: .public)")
                 completion(false)
                 return
             }

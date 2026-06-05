@@ -24,13 +24,13 @@ final class StorageManager {
             }
             
             guard error == nil else {
-                print("Failed to upload picture data to firebase")
+                Log.storage.error("Failed to upload picture data to firebase")
                 completion(.failure(StorageErrors.failedToUpload))
                 return
             }
             strongSelf.storage.child("profile images/\(fileName)").downloadURL(completion: { url, error in
                 guard let url = url else {
-                    print("Failed to get download URL")
+                    Log.storage.error("Failed to get download URL")
                     completion(.failure(StorageErrors.failedToGetDownloadURL))
                     return
                 }
@@ -46,13 +46,13 @@ final class StorageManager {
     public func uploadMessagePhoto(with data: Data, fileName: String, completion: @escaping UploadPictureCompletion) {
         storage.child("message_images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] metadata, error in
             guard error == nil else {
-                print("Failed to upload picture data to firebase")
+                Log.storage.error("Failed to upload picture data to firebase")
                 completion(.failure(StorageErrors.failedToUpload))
                 return
             }
             self?.storage.child("message_images/\(fileName)").downloadURL(completion: { url, error in
                 guard let url = url else {
-                    print("Failed to get download URL")
+                    Log.storage.error("Failed to get download URL")
                     completion(.failure(StorageErrors.failedToGetDownloadURL))
                     return
                 }
@@ -68,13 +68,13 @@ final class StorageManager {
     public func uploadMessageVideo(with fileURL: URL, fileName: String, completion: @escaping UploadPictureCompletion) {
         storage.child("message_videos/\(fileName)").putFile(from: fileURL, metadata: nil, completion: { [weak self] metadata, error in
             guard error == nil else {
-                print("Failed to upload video file to firebase")
+                Log.storage.error("Failed to upload video file to firebase")
                 completion(.failure(StorageErrors.failedToUpload))
                 return
             }
             self?.storage.child("message_videos/\(fileName)").downloadURL(completion: { url, error in
                 guard let url = url else {
-                    print("Failed to get download URL")
+                    Log.storage.error("Failed to get download URL")
                     completion(.failure(StorageErrors.failedToGetDownloadURL))
                     return
                 }
@@ -91,7 +91,7 @@ final class StorageManager {
         group.enter()
         storage.child("\(collection)/\(imageName).png").downloadURL { url, error in
             guard let url = url else {
-                print("Failed to get download URL: \(error!)")
+                Log.storage.error("Failed to get download URL: \(error!.localizedDescription, privacy: .public)")
                 completion(.failure(StorageErrors.failedToGetDownloadURL))
                 group.leave()
                 return
@@ -101,6 +101,42 @@ final class StorageManager {
             print("Download URL returned: \(urlString)")
             group.leave()
             completion(.success(urlString))
+        }
+    }
+}
+
+// MARK: - Async/Await API
+extension StorageManager {
+    
+    public func uploadProfilePicture(with data: Data, fileName: String) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            uploadProfilePicture(with: data, fileName: fileName) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    public func uploadMessagePhoto(with data: Data, fileName: String) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            uploadMessagePhoto(with: data, fileName: fileName) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    public func uploadMessageVideo(with fileURL: URL, fileName: String) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            uploadMessageVideo(with: fileURL, fileName: fileName) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    public func downloadImageURL(imageName: String, collection: String) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            downloadImageURL(imageName: imageName, collection: collection) { result in
+                continuation.resume(with: result)
+            }
         }
     }
 }

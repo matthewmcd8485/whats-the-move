@@ -12,5 +12,6 @@ extension UserDefaults {
         if let bundleID = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
         }
+        SecureStorage.clear()
     }
 }

@@ -69,45 +69,38 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     
     // MARK: - Loading Group
     private func loadGroup() {
-        db.collection("friend groups").whereField("Group Identifier", isEqualTo: groupID).getDocuments() { [weak self] querySnapshot, error in
-            guard error == nil else {
-                print("error loading group: \(error!)")
-                return
-            }
-            
-            for document in querySnapshot!.documents {
-                let name = document.get("Name") as! String
-                let groupID = document.get("Group Identifier") as! String
-                let people = document.get("People") as! [String]
-
-                self?.group = FriendGroup(name: name, groupID: groupID, people: people)
-                self?.loadUsers()
+        databaseManager.loadGroup(groupID: groupID) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                print("error loading group: \(error)")
+            case .success(let group):
+                self.group = group
+                self.loadUsers()
             }
         }
     }
     
     private func loadUsers() {
-        DispatchQueue.global().async(execute: {
-            DispatchQueue.main.sync { [weak self] in
-                for x in 0..<self!.group.people!.count {
-                    self?.databaseManager.downloadUser(where: "User Identifier", isEqualTo: self!.group.people![x], completion: { result in
-                        switch result {
-                        case .success(let user):
-                            
-                            self?.groupMembers.append(user)
-                            self?.groupMembers = self!.groupMembers.filterDuplicates { $0.uid == $1.uid }
-                            self?.groupMembers.sort { $0.name < $1.name }
-                            
-                            self?.tableView.reloadData()
-                            self?.updateUI()
-                        case .failure(let error):
-                            self?.cancelOperation()
-                            print(error)
-                        }
-                    })
+        guard let people = group.people else { return }
+        
+        for memberUID in people {
+            databaseManager.downloadUser(where: "User Identifier", isEqualTo: memberUID, completion: { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let user):
+                    self.groupMembers.append(user)
+                    self.groupMembers = self.groupMembers.filterDuplicates { $0.uid == $1.uid }
+                    self.groupMembers.sort { $0.name < $1.name }
+                    
+                    self.tableView.reloadData()
+                    self.updateUI()
+                case .failure(let error):
+                    self.cancelOperation()
+                    print(error)
                 }
-            }
-        })
+            })
+        }
     }
     
     private func updateUI() {
@@ -127,8 +120,8 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
                     
                     if self?.groupMembers.count == 1 {
                         self?.peopleLabel.text = "you're the only one in this group!"
-                    } else {
-                        self?.peopleLabel.text = "\(self!.groupMembers.count) people in this group"
+                    } else if let count = self?.groupMembers.count {
+                        self?.peopleLabel.text = "\(count) people in this group"
                     }
                     self?.nameLabel.text = self?.group.name
                 })
@@ -146,34 +139,32 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
 
     @IBAction func leaveGroupButton(_ sender: Any) {
-        let uid = UserDefaults.standard.string(forKey: "uid")
+        let uid = SecureStorage.uid
         let alert = UIAlertController(title: "leave group", message: "are you sure you want to leave this group?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "leave", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
             // Remove from UserDefaults
-            var groupsUID = UserDefaults.standard.stringArray(forKey: "groupsUID")
+            var groupsUID = UserDefaults.standard.stringArray(forKey: "groupsUID") ?? []
             var found = false
-            for x in 0..<groupsUID!.count {
+            for x in 0..<groupsUID.count {
                 if !found {
-                    if groupsUID![x] == self?.group.groupID {
+                    if groupsUID[x] == self.group.groupID {
                         found = true
-                        groupsUID?.remove(at: x)
+                        groupsUID.remove(at: x)
                         UserDefaults.standard.set(groupsUID, forKey: "groupsUID")
                     }
                 }
             }
             
             // Remove from Firestore
-            let document = self?.db.collection("friend groups").document(self!.group.groupID)
-            document?.updateData([
-                "People": FieldValue.arrayRemove([uid!])
-            ], completion: { error in
-                guard error == nil else {
-                    print("error removing user from group: \(error!)")
-                    return
+            self.databaseManager.removePersonFromGroup(groupID: self.group.groupID, uid: uid!, completion: { [weak self] result in
+                switch result {
+                case .failure(let error):
+                    print("error removing user from group: \(error)")
+                case .success:
+                    self?.navigationController?.popViewController(animated: true)
                 }
-                
-                self?.navigationController?.popViewController(animated: true)
             })
         }))
         
@@ -191,18 +182,19 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
             textField.placeholder = placeholder
         }
         alert.addAction(UIAlertAction(title: "save", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
             let textField = alert.textFields![0]
             guard textField.text != nil && textField.text != "" else {
                 return
             }
 
-            if self!.profanityManager.checkForProfanity(in: textField.text!) {
-                self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
+            if self.profanityManager.checkForProfanity(in: textField.text!) {
+                self.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
             } else {
                 let lowercasedName = textField.text!.lowercased()
                 let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
-                self?.nameLabel.text = whitespaceName
-                self?.uploadNewName(name: whitespaceName)
+                self.nameLabel.text = whitespaceName
+                self.uploadNewName(name: whitespaceName)
             }
         }))
         alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
@@ -210,14 +202,14 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func uploadNewName(name: String) {
-        db.collection("friend groups").document(group.groupID).setData([
-            "Name" : name
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil else {
+        databaseManager.renameGroup(groupID: group.groupID, name: name, completion: { [weak self] result in
+            switch result {
+            case .failure:
                 self?.alertManager.showAlert(title: "error saving name", message: "something went wrong when we tried to save your new grop name. please try again.")
                 return
+            case .success:
+                print("name change saved! new name: \(name)")
             }
-            print("name change saved! new name: \(name)")
         })
     }
     
@@ -232,10 +224,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
         if duplicate {
             alertManager.showAlert(title: "duplicate person", message: "this person is already in this group, so we won't add them again. \n\ntry using your eyes next time. or get some more friends so you don't need to add duplicates?")
         } else {
-            let ref = db.collection("friend groups").document(group.groupID)
-            ref.updateData([
-                "People": FieldValue.arrayUnion([newUID])
-            ])
+            databaseManager.addPersonToGroup(groupID: group.groupID, uid: newUID)
             group.people?.append(newUID)
             tableView.reloadData()
         }
@@ -262,7 +251,7 @@ class GroupDetailViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let uid = UserDefaults.standard.string(forKey: "uid")
+        let uid = SecureStorage.uid
         
         // Check if the selected user is in your friends list
         var isFriend = false

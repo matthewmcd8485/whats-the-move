@@ -63,7 +63,7 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     private func loadFriendGroups() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         var groupIDs = [String]()
@@ -98,18 +98,19 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
                 textField.placeholder = placeholder
             }
             alert.addAction(UIAlertAction(title: "save", style: .default, handler: { [weak self] _ in
+                guard let self = self else { return }
                 let textField = alert.textFields![0]
                 guard textField.text != nil && textField.text != "" else {
                     return
                 }
 
-                if self!.profanityManager.checkForProfanity(in: textField.text!) {
-                    self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
+                if self.profanityManager.checkForProfanity(in: textField.text!) {
+                    self.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
                 } else {
                     let lowercasedName = textField.text!.lowercased()
                     let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
 
-                    self?.createGroup(name: whitespaceName)
+                    self.createGroup(name: whitespaceName)
                 }
             }))
             alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
@@ -119,27 +120,22 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func createGroup(name: String) {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         
-        let UUID = UUID().uuidString
-        db.collection("friend groups").document(UUID).setData([
-            "Group Identifier" : UUID,
-            "Name" : name,
-            "People" : [uid]
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil else {
-                print("error: \(error!)")
+        DatabaseManager.shared.createGroup(name: name, ownerUID: uid, completion: { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print("error creating group: \(error)")
                 return
+            case .success(let newGroupID):
+                print("group created")
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "groupDetailViewController") as! GroupDetailViewController
+                vc.groupID = newGroupID
+                self?.navigationController?.pushViewController(vc, animated: true)
             }
-            
-            print("group created")
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "groupDetailViewController") as! GroupDetailViewController
-            vc.groupID = UUID
-            self?.navigationController?.pushViewController(vc, animated: true)
             
         })
     }

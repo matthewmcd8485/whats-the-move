@@ -60,35 +60,24 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
     }
 
     private func loadRequests() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         
-        db.collection("users").document(uid).collection("friend requests").getDocuments() { [weak self] querySnapshot, error in
-            guard error == nil else {
-                return
-            }
-            
-            for document in querySnapshot!.documents {
-                let name = document.get("Name") as! String
-                let uid = document.get("User Identifier") as! String
-                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
-                
-                let user = FriendRequest(name: name.lowercased(), uid: uid, profileImageURL: profileImageURL)
-                
-                if !ReportingManager.shared.userIsBlocked(theirUID: uid) {
-                    self?.requests.append(user)
-                    self?.tableView.reloadData()
-                    self?.updateUI()
+        DatabaseManager.shared.downloadFriendRequests(uid: uid) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                print("error loading friend requests: \(error)")
+            case .success(let requests):
+                let lowercased = requests.map {
+                    FriendRequest(name: $0.name.lowercased(), uid: $0.uid, profileImageURL: $0.profileImageURL)
                 }
+                self.requests = lowercased.filter { !ReportingManager.shared.userIsBlocked(theirUID: $0.uid) }
             }
+            self.tableView.reloadData()
+            self.updateUI()
         }
-        
-        if requests.count == 0 {
-            tableView.reloadData()
-            updateUI()
-        }
-        
     }
     
     private func updateUI() {
@@ -117,7 +106,7 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let uid = UserDefaults.standard.string(forKey: "uid")
+        let uid = SecureStorage.uid
         let nameToAdd = requests[indexPath.row].name
         let uidToAdd = requests[indexPath.row].uid
         
@@ -141,7 +130,7 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }))
         alert.addAction(UIAlertAction(title: "delete", style: .destructive, handler: { [weak self] _ in
-            self?.db.collection("users").document(uid!).collection("friend requests").document(uidToAdd).delete()
+            DatabaseManager.shared.deleteFriendRequest(forUID: uid!, fromUID: uidToAdd)
             self?.requests.removeAll()
             tableView.reloadData()
         }))
@@ -165,38 +154,21 @@ class RequestsViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Adding Friend
     private func addFriendToDatabase(with friendsUID: String, friendsName: String, index: Int) {
-        guard let myUID = UserDefaults.standard.string(forKey: "uid"), let myName = UserDefaults.standard.string(forKey: "name") else {
+        guard let myUID = SecureStorage.uid, let myName = UserDefaults.standard.string(forKey: "name") else {
             return
         }
         
-        // Add friend to personal Firestore collection
-        db.collection("users").document(myUID).collection("friends").document(friendsUID).setData([
-            "Name" : friendsName,
-            "User Identifier" : friendsUID
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil else {
-                print("error adding friend to personal firestore: \(error!)")
+        DatabaseManager.shared.acceptFriendRequest(myUID: myUID, myName: myName, friendUID: friendsUID, friendName: friendsName, completion: { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print("error accepting friend request: \(error)")
                 return
-            }
-            print("friend added to personal firestore!")
-
-            // Add friend to friend's Firestore collection
-            self?.db.collection("users").document(friendsUID).collection("friends").document(myUID).setData([
-                "Name" : myName,
-                "User Identifier" : myUID
-            ], merge: true, completion: { error in
-                guard error == nil else {
-                    print("error adding friend to friend's firestore: \(error!)")
-                    return
-                }
-                print("friend added to friend's firestore!")
-                
-                // Remove the pending friend request and reload the screen
-                self?.db.collection("users").document(myUID).collection("friend requests").document(friendsUID).delete()
+            case .success:
+                print("friend added to both Firestore collections; request cleared")
                 self?.requests.remove(at: index)
                 self?.tableView.reloadData()
                 self?.updateUI()
-            })
+            }
         })
     }
 }

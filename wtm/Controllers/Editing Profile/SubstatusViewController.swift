@@ -14,7 +14,7 @@ class SubstatusViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var tableView: UITableView!
     
     let db = Firestore.firestore()
-    let uid = UserDefaults.standard.string(forKey: "uid")!
+    let uid = SecureStorage.uid!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,17 +60,14 @@ class SubstatusViewController: UIViewController, UITableViewDelegate, UITableVie
         UserDefaults.standard.set(array[indexPath.row], forKey: "substatus")
         tableView.deselectRow(at: indexPath, animated: true)
         
-        db.collection("users").document(uid).setData([
-            "Status" : status,
-            "Substatus" : array[indexPath.row]
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil else {
-                print("Error updating status in Firestore: \(error!)")
+        DatabaseManager.shared.updateUserStatus(uid: uid, status: status, substatus: array[indexPath.row], completion: { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print("Error updating status in Firestore: \(error)")
                 return
+            case .success:
+                self?.navigationController?.popToRootViewController(animated: true)
             }
-            
-            // Document successfully written
-            self?.navigationController?.popToRootViewController(animated: true)
         })
     }
 

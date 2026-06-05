@@ -11,7 +11,7 @@ import FirebaseFirestore
 class ChangeResponseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let db = Firestore.firestore()
-    let uid = UserDefaults.standard.string(forKey: "uid")!
+    let uid = SecureStorage.uid!
     
     public var completion: ((String) -> (Void))?
     public var status: String = ""

@@ -71,7 +71,7 @@ class BoredRequestsViewController: UIViewController, UITableViewDelegate, UITabl
         groups.removeAll()
         groupsWithRequests.removeAll()
         
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         var groupIDs = [String]()
@@ -100,35 +100,15 @@ class BoredRequestsViewController: UIViewController, UITableViewDelegate, UITabl
         
         // 7200 seconds was two hours ago
         let expiredCutoff = Timestamp(date: Date(timeInterval: TimeInterval(-7200), since: Date()))
-        for x in 0..<groupIDs.count {
-            db.collection("friend groups").document(groupIDs[x]).collection("bored requests").whereField("Posted Time", isGreaterThanOrEqualTo: expiredCutoff).getDocuments() { [weak self] querySnapshot, error in
-                guard error == nil else {
-                    print(error!)
-                    return
-                }
-                
-                for document in querySnapshot!.documents {
-                    let activity = document.get("Activity") as! String
-                    let postedTimestamp = document.get("Posted Time") as! Timestamp
-                    let expiresTimestamp = document.get("Expires At") as! Timestamp
-                    let initiatedBy = document.get("Initiated By") as! String
-                    let groupID = document.get("Group Identifier") as! String
-                    let requestID = document.get("Request Identifier") as! String
-                    
-                    let postedTime = postedTimestamp.dateValue()
-                    let expiresAt = expiresTimestamp.dateValue()
-                    
-                    let request = BoredRequest(groupID: groupID, requestID: requestID, activity: activity, postedTime: postedTime, expiresAt: expiresAt, initiatedBy: initiatedBy, people: [BoredRequestUser]())
-                    print(request)
-                    self?.groupsWithRequests.append(request)
-                    
-                    self?.groupsWithRequests = self!.groupsWithRequests.filterDuplicates { $0.requestID == $1.requestID }
-                    
-                    
-                }
-                
-                if self?.groupsWithRequests.count != 0 {
-                    self?.sortGroupsAndRequests()
+        DatabaseManager.shared.downloadBoredRequests(forGroupIDs: groupIDs, notExpiredSince: expiredCutoff) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                print("error loading bored requests: \(error)")
+            case .success(let requests):
+                self.groupsWithRequests = requests
+                if !self.groupsWithRequests.isEmpty {
+                    self.sortGroupsAndRequests()
                 }
             }
         }

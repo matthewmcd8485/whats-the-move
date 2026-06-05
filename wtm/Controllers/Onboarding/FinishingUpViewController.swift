@@ -50,7 +50,7 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
                         print("Error fetching FCM registration token: \(error)")
                     } else if let token = token {
                         print("FCM registration token: \(token)")
-                        UserDefaults.standard.set(token, forKey: "fcmToken")
+                        SecureStorage.fcmToken = token
                     }
                 }
             }
@@ -59,12 +59,12 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
 
     // MARK: - Uploading User Info
     @IBAction func finishButton(_ sender: Any) {
-        guard let name = UserDefaults.standard.string(forKey: "name"), let phoneNumber = UserDefaults.standard.string(forKey: "phoneNumber"), let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let name = UserDefaults.standard.string(forKey: "name"), let phoneNumber = SecureStorage.phoneNumber, let uid = SecureStorage.uid else {
             
             alertManager.showAlert(title: "error creating account", message: "some of your information was not found. please try again.")
             return
         }
-        let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") ?? "Notifications not set up yet"
+        let fcmToken = SecureStorage.fcmToken ?? "Notifications not set up yet"
         
         let date = Date()
         let joinedTime = date.month + " " + date.year
@@ -82,19 +82,14 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
         UserDefaults.standard.set(substatus, forKey: "substatus")
         UserDefaults.standard.set(status, forKey: "status")
         
-        db.collection("users").document(uid).setData([
-            "Name" : name.lowercased(),
-            "Phone Number" : phoneNumber,
-            "User Identifier" : uid,
-            "FCM Token" : fcmToken,
-            "Status" : "available",
-            "Substatus" : substatus,
-            "Joined" : joinedTime,
-            "Profile Image URL" : profileImageURL
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil else {
-                print("Error creating user in Firestore: \(error!)")
+        let newUser = User(name: name.lowercased(), phoneNumber: phoneNumber, uid: uid, fcmToken: fcmToken, status: "available", substatus: substatus, profileImageURL: profileImageURL, joinedTime: joinedTime)
+        DatabaseManager.shared.createUser(newUser, completion: { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print("Error creating user in Firestore: \(error)")
                 return
+            case .success:
+                break
             }
             
             // Document successfully written

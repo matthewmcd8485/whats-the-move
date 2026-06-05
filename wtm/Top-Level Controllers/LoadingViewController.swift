@@ -71,68 +71,73 @@ class LoadingViewController: UIViewController {
         let launchedBefore = checkForLaunchHistory()
         let loggedIn = checkForLoginHistory()
         
-        if launchedBefore == false || loggedIn == false {
+        // Treat a missing uid as logged-out, even if the loggedIn flag is true.
+        // That can happen after the Tier 2 Keychain migration if the legacy
+        // UserDefaults uid was unreadable.
+        guard loggedIn, launchedBefore, let uid = SecureStorage.uid else {
             print("User is not set up, showing login screen")
-            
-            // Send to login screen
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                let onboarding = storyboard.instantiateViewController(withIdentifier: "welcomeViewController") as! WelcomeViewController
-                self.navigationController?.pushViewController(onboarding, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: { [weak self] in
+                self?.pushWelcomeScreen()
             })
-        } else {
-            // Send to home screen
-            self.updateFriendsList()
-            self.updateFCMToken()
-            self.updateGroupsList()
-            
-            let group = DispatchGroup()
-            group.enter()
-            
-            let uid = UserDefaults.standard.string(forKey: "uid")
-            self.databaseManager.updateBlockedUsersList(uid: uid!, completion: { [weak self] success in
-                if !success {
-                    UserDefaults.standard.set(false, forKey: "loggedIn")
-                    self?.showLoginIfNecessary()
-                    return
-                }
-                group.leave()
-            })
-            
-            group.notify(queue: .main) { [weak self] in
-                self?.goHome()
+            return
+        }
+        
+        // Send to home screen
+        self.updateFriendsList()
+        self.updateFCMToken()
+        self.updateGroupsList()
+        
+        let group = DispatchGroup()
+        group.enter()
+        self.databaseManager.updateBlockedUsersList(uid: uid, completion: { [weak self] success in
+            if !success {
+                UserDefaults.standard.set(false, forKey: "loggedIn")
+                self?.showLoginIfNecessary()
+                return
             }
+            group.leave()
+        })
+        
+        group.notify(queue: .main) { [weak self] in
+            self?.goHome()
         }
     }
     
+    private func pushWelcomeScreen() {
+        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let onboarding = storyboard.instantiateViewController(withIdentifier: "welcomeViewController") as? WelcomeViewController else {
+            print("Failed to instantiate welcomeViewController from storyboard")
+            return
+        }
+        navigationController?.pushViewController(onboarding, animated: true)
+    }
+    
     private func goHome() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: { [weak self] in
             let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let onboarding = storyboard.instantiateViewController(withIdentifier: "tabBarController") as! TabBarController
-            self.navigationController?.pushViewController(onboarding, animated: true)
+            guard let tabBar = storyboard.instantiateViewController(withIdentifier: "tabBarController") as? TabBarController else {
+                print("Failed to instantiate tabBarController from storyboard")
+                return
+            }
+            self?.navigationController?.pushViewController(tabBar, animated: true)
         })
     }
     
     private func updateFCMToken() {
-        let uid = UserDefaults.standard.string(forKey: "uid")
-        if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
-            Messaging.messaging().token { [weak self] token, error in
-                if let error = error {
-                    print("Error fetching FCM registration token: \(error)")
-                } else if let token = token {
-                    print("FCM registration token: \(token)")
-                    
-                    if token != fcmToken {
-                        self?.databaseManager.updateFCMToken(uid: uid!, newToken: token)
-                        UIApplication.shared.registerForRemoteNotifications()
-                    }
-                }
+        guard let uid = SecureStorage.uid, let fcmToken = SecureStorage.fcmToken else { return }
+        Messaging.messaging().token { [weak self] token, error in
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+                return
             }
+            guard let token = token, token != fcmToken else { return }
+            self?.databaseManager.updateFCMToken(uid: uid, newToken: token)
+            UIApplication.shared.registerForRemoteNotifications()
         }
     }
     
     private func updateFriendsList() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         var uids = [String]()
@@ -151,7 +156,7 @@ class LoadingViewController: UIViewController {
     }
     
     private func updateGroupsList() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             return
         }
         var groupIDs = [String]()

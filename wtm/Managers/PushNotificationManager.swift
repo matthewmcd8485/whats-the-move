@@ -4,58 +4,42 @@
 //
 //  Created by Matthew McDonnell on 6/2/21.
 //
+//  NOTE: As of the Tier 3 stabilization pass, this manager is not invoked
+//  from anywhere in the codebase. AppDelegate handles MessagingDelegate
+//  directly, and FCM token refresh happens inline in VerificationVC /
+//  FinishingUpVC. Kept here as a real singleton in case it gets wired up
+//  again — otherwise safe to delete.
+//
 
 import UIKit
 import FirebaseFirestore
 import FirebaseMessaging
 import UserNotifications
 
-class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCenterDelegate {
-    let uid: String
+final class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCenterDelegate {
     
-    let firestore = Firestore.firestore()
+    static let shared = PushNotificationManager()
     
-    init(uid: String) {
-        self.uid = uid
+    private override init() {
         super.init()
     }
     
     public func registerForPushNotifications() {
-        if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: { _, _ in })
-            // For iOS 10 data message (sent via FCM)
-            Messaging.messaging().delegate = self
-        } else {
-            let settings: UIUserNotificationSettings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            UIApplication.shared.registerUserNotificationSettings(settings)
-        }
+        UNUserNotificationCenter.current().delegate = self
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: { _, _ in })
+        Messaging.messaging().delegate = self
         
         UIApplication.shared.registerForRemoteNotifications()
         updateFirestorePushTokenIfNeeded()
     }
     
     public func updateFirestorePushTokenIfNeeded() {
-        if let token = Messaging.messaging().fcmToken {
-            firestore.collection("users").document(uid).setData([
-                "FCM Token": token
-            ], merge: true) { error in
-                guard error == nil else {
-                    print("Error updating cloud messaging token: \(error!)")
-                    return
-                }
-            }
-        }
+        guard let uid = SecureStorage.uid, let token = Messaging.messaging().fcmToken else { return }
+        DatabaseManager.shared.updateFCMToken(uid: uid, newToken: token)
     }
-    
-    //func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-    //    print(remoteMessage.appData) // or do whatever
-    //}
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         updateFirestorePushTokenIfNeeded()

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User {
+struct User: Codable {
     
     let name: String
     let phoneNumber: String
@@ -27,6 +27,29 @@ struct User {
         self.substatus = substatus
         self.profileImageURL = profileImageURL
         self.joinedTime = joinedTime
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "Name"
+        case phoneNumber = "Phone Number"
+        case uid = "User Identifier"
+        case fcmToken = "FCM Token"
+        case status = "Status"
+        case substatus = "Substatus"
+        case profileImageURL = "Profile Image URL"
+        case joinedTime = "Joined"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.phoneNumber = try container.decode(String.self, forKey: .phoneNumber)
+        self.uid = try container.decode(String.self, forKey: .uid)
+        self.fcmToken = try container.decode(String.self, forKey: .fcmToken)
+        self.status = try container.decode(String.self, forKey: .status)
+        self.substatus = try container.decode(String.self, forKey: .substatus)
+        self.profileImageURL = (try? container.decode(String.self, forKey: .profileImageURL)) ?? "no url"
+        self.joinedTime = try container.decode(String.self, forKey: .joinedTime)
     }
 }
 

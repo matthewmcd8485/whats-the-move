@@ -125,24 +125,25 @@ class FriendVerifyViewController: UIViewController {
         }
         
         databaseManager.downloadUser(where: "Phone Number", isEqualTo: phoneNumber, completion: { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let user):
-                self?.friendToAdd = user
+                self.friendToAdd = user
                 
                 // Check if someone blocked someone
-                if self!.reportingManager.userBlockedYou(theirUID: self!.friendToAdd.uid) || self!.reportingManager.userIsBlocked(theirUID: self!.friendToAdd.uid) {
+                if self.reportingManager.userBlockedYou(theirUID: self.friendToAdd.uid) || self.reportingManager.userIsBlocked(theirUID: self.friendToAdd.uid) {
                     let alert = UIAlertController(title: "user is blocked", message: "either they blocked you or you blocked them.\n we don't know, though.\n it's not really our business.\n\nsorry for any drama this may cause...", preferredStyle: .alert)
-                    let action = UIAlertAction(title: "rude, but okay", style: .default, handler: { _ in
+                    let action = UIAlertAction(title: "rude, but okay", style: .default, handler: { [weak self] _ in
                         self?.navigationController?.popViewController(animated: true)
                     })
                     alert.addAction(action)
-                    self?.present(alert, animated: true, completion: nil)
+                    self.present(alert, animated: true, completion: nil)
                 } else {
-                    self?.updateUI()
-                    self?.configureStatusView()
+                    self.updateUI()
+                    self.configureStatusView()
                 }
             case .failure(let error):
-                self?.cancelOperation()
+                self.cancelOperation()
                 print(error)
             }
         })
@@ -188,7 +189,7 @@ class FriendVerifyViewController: UIViewController {
     
     // MARK: - Add Friend
     @IBAction func addFriend(_ sender: Any) {
-        guard let uid = UserDefaults.standard.string(forKey: "uid"), let name = UserDefaults.standard.string(forKey: "name"), let profileImageURL = UserDefaults.standard.string(forKey: "profileImageURL"), friendToAdd.uid != "" else {
+        guard let uid = SecureStorage.uid, let name = UserDefaults.standard.string(forKey: "name"), let profileImageURL = UserDefaults.standard.string(forKey: "profileImageURL"), friendToAdd.uid != "" else {
             alertManager.showAlert(title: "error adding friend", message: "dont worry. \n we don't know what happened either.")
             return
         }
@@ -200,18 +201,13 @@ class FriendVerifyViewController: UIViewController {
             }))
             present(alert, animated: true)
         } else {
-            db.collection("users").document(friendToAdd.uid).collection("friend requests").document(uid).setData([
-                "Name" : name,
-                "User Identifier" : uid,
-                "Profile Image URL" : profileImageURL
-            ], merge: true, completion: { [weak self] error in
-                guard error == nil, let strongSelf = self else {
+            databaseManager.sendFriendRequest(toUID: friendToAdd.uid, fromName: name, fromUID: uid, profileImageURL: profileImageURL, completion: { [weak self] result in
+                guard case .success = result, let strongSelf = self else {
                     return
                 }
                 
-                let sender = PushNotificationSender()
-                let profileImageURL = UserDefaults.standard.string(forKey: "profileImageURL") ?? ""
-                sender.sendPushNotification(to: strongSelf.friendToAdd.fcmToken, title: "new friend request", subtitle: "", body: "\(name) wants to be your friend.", urlToImage: profileImageURL)
+                // Note: client-side push send removed; a Cloud Function on
+                // friend-request creation should notify the recipient.
                 
                 print("friend request sent!")
                 
@@ -252,10 +248,11 @@ class FriendVerifyViewController: UIViewController {
         let alert = UIAlertController(title: "block user", message: "are you sure? \n \nany groups you are in with this person will NOT be deleted.\n\nthis action cannot be undone.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "oops, cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "block user", style: .destructive, handler: { [weak self] _ in
-            self?.databaseManager.blockUser(uidToBlock: self!.friendToAdd.uid, completion: { success in
+            guard let self = self else { return }
+            self.databaseManager.blockUser(uidToBlock: self.friendToAdd.uid, completion: { [weak self] success in
                 if success {
                     let alert = UIAlertController(title: "user blocked", message: "you have successfully blocked this person.\n\nsorry they were mean to you or whatever.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "yeah, me too", style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: "yeah, me too", style: .default, handler: { [weak self] _ in
                         self?.navigationController?.popViewController(animated: true)
                     }))
                     self?.present(alert, animated: true, completion: nil)
@@ -271,7 +268,8 @@ class FriendVerifyViewController: UIViewController {
         let alert = UIAlertController(title: "report user", message: "are you sure? \n this action cannot be undone.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "oops, cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "report user", style: .destructive, handler: { [weak self] _ in
-            self?.reportingManager.reportUser(uid: self!.friendToAdd.uid, name: self!.friendToAdd.name, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
+            guard let self = self else { return }
+            self.reportingManager.reportUser(uid: self.friendToAdd.uid, name: self.friendToAdd.name, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { [weak self] success in
                 if success {
                     print("user reported!")
                     self?.navigationController?.popViewController(animated: true)

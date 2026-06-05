@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FriendGroup {
+struct FriendGroup: Codable {
     let name: String
     let groupID: String
     var people: [String]?
@@ -22,5 +22,11 @@ struct FriendGroup {
         name = ""
         groupID = ""
         people = [String]()
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "Name"
+        case groupID = "Group Identifier"
+        case people = "People"
     }
 }

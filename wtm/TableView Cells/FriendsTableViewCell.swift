@@ -69,7 +69,7 @@ class FriendsTableViewCell: UITableViewCell {
         let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: model.uid)
         
         // Name label
-        if model.uid == UserDefaults.standard.string(forKey: "uid") {
+        if model.uid == SecureStorage.uid {
             nameLabel.text = "you"
         } else {
             nameLabel.text = model.name.lowercased()

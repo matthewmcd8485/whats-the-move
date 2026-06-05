@@ -15,7 +15,7 @@ class PictureEditViewController: UIViewController {
     
     public var completion: ((UIImage) -> (Void))?
     
-    let uid = UserDefaults.standard.string(forKey: "uid")!
+    let uid = SecureStorage.uid!
     
     let db = Firestore.firestore()
     
@@ -54,7 +54,7 @@ class PictureEditViewController: UIViewController {
     
     func updateImageView() {
         DispatchQueue.global(qos: .background).async {
-            if let savedImage = ImageStoreManager.shared.retrieveImage(forKey: "profileImage", inStorageType: .fileSystem) {
+            if let savedImage = ImageStoreManager.shared.retrieveImage(forKey: "profileImage") {
                 DispatchQueue.main.async {
                     self.profileImage.image = savedImage
                 }
@@ -71,18 +71,18 @@ class PictureEditViewController: UIViewController {
         let image = self.profileImage.image
         if let uploadData = UIImage.pngData(image!)() {
             StorageManager.shared.uploadProfilePicture(with: uploadData, fileName: "\(uid) - profile image.png", completion: { [weak self] result in
-                
+                guard let self = self else { return }
                 switch result {
                 case .success(let url):
                     UserDefaults.standard.set(url, forKey: "profileImageURL")
-                    self?.db.collection("users").document(self!.uid).setData([ "Profile Image URL": "\(url)"], merge: true)
-                    if let imageToSave = self?.profileImage.image {
+                    DatabaseManager.shared.updateUserProfileImageURL(uid: self.uid, url: "\(url)")
+                    if let imageToSave = self.profileImage.image {
                         DispatchQueue.global(qos: .background).async {
-                            ImageStoreManager.shared.store(image: imageToSave, forKey: "profileImage", withStorageType: .fileSystem)
+                            ImageStoreManager.shared.store(image: imageToSave, forKey: "profileImage")
                             print("image saved to device!")
                         }
                     }
-                    self?.showSavedImageCompletion()
+                    self.showSavedImageCompletion()
                 case .failure(let error):
                     AlertManager.shared.showAlert(title: "Error uploading image", message: "There was an error saving your new image to the database. Please try again. \n \n Error: \(error)")
                     print("Error uploading placeholder profile picture to Firebase: \(error)")

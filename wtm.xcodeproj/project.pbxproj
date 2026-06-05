@@ -32,13 +32,9 @@
 		C9119E332FD27B4C0089ACA1 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E322FD27B4C0089ACA1 /* FirebaseStorage */; };
 		C9119E352FD27B4C0089ACA1 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E342FD27B4C0089ACA1 /* FirebaseStorageCombine-Community */; };
 		C9119E382FD284840089ACA1 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E372FD284840089ACA1 /* JGProgressHUD */; };
-		C9119E3B2FD284E20089ACA1 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E3A2FD284E20089ACA1 /* RealmSwift */; };
 		C9119E3E2FD285050089ACA1 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E3D2FD285050089ACA1 /* SDWebImage */; };
 		C9119E402FD285050089ACA1 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E3F2FD285050089ACA1 /* SDWebImageMapKit */; };
-		C9119E432FD286710089ACA1 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E422FD286710089ACA1 /* GoogleSignIn */; };
-		C9119E452FD286710089ACA1 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E442FD286710089ACA1 /* GoogleSignInSwift */; };
 		C9574FCD2665E9B100405B8B /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = C9574FCC2665E9B100405B8B /* AnyFormatKit */; };
-		C9760B502663FDC6009F66DA /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = C9760B4F2663FDC6009F66DA /* MessageKit */; };
 		C9760B68266416DC009F66DA /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = C9760B67266416DC009F66DA /* PhoneNumberKit */; };
 		C988D509268F728400CAEA8E /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D508268F728400CAEA8E /* NotificationService.swift */; };
 		C988D50D268F728400CAEA8E /* WTM Notification Service Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C988D506268F728400CAEA8E /* WTM Notification Service Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -47,7 +43,9 @@
 		C988D52B268FD79A00CAEA8E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C988D52A268FD79A00CAEA8E /* NotificationViewController.swift */; };
 		C988D52E268FD79A00CAEA8E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C988D52C268FD79A00CAEA8E /* MainInterface.storyboard */; };
 		C988D532268FD79A00CAEA8E /* WTM Notification Content Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C988D524268FD79A00CAEA8E /* WTM Notification Content Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C9C3818926A7C22300AAC66D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C9C3818826A7C22300AAC66D /* Alamofire */; };
+		C9CD502A2FD38B0A003DE6A4 /* FirestoreKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50292FD38B0A003DE6A4 /* FirestoreKeys.swift */; };
+		C9CD502C2FD38D24003DE6A4 /* SecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD502B2FD38D24003DE6A4 /* SecureStorage.swift */; };
+		C9CD502E2FD393A2003DE6A4 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD502D2FD393A2003DE6A4 /* Log.swift */; };
 		C9F43EF82FD3245D004B1F1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9F43ECF2FD3245D004B1F1C /* GoogleService-Info.plist */; };
 		C9F43FC22FD3245D004B1F1C /* SuperBasic-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F417512FD3245D004B1F1C /* SuperBasic-Thin.otf */; };
 		C9F43FFA2FD3245D004B1F1C /* SuperBasic-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F4174F2FD3245D004B1F1C /* SuperBasic-Bold.otf */; };
@@ -67,7 +65,6 @@
 		C9F4428E2FD3245D004B1F1C /* StorageErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173F2FD3245D004B1F1C /* StorageErrors.swift */; };
 		C9F442942FD3245D004B1F1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E7C2FD3245D004B1F1C /* User.swift */; };
 		C9F442B02FD3245D004B1F1C /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4174A2FD3245D004B1F1C /* UIApplication.swift */; };
-		C9F443042FD3245D004B1F1C /* ValueKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417422FD3245D004B1F1C /* ValueKey.swift */; };
 		C9F4431E2FD3245D004B1F1C /* VerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417312FD3245D004B1F1C /* VerificationViewController.swift */; };
 		C9F443212FD3245D004B1F1C /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417162FD3245D004B1F1C /* HomeScreenViewController.swift */; };
 		C9F443332FD3245D004B1F1C /* BoredRequestResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417342FD3245D004B1F1C /* BoredRequestResponseViewController.swift */; };
@@ -81,7 +78,6 @@
 		C9F443DE2FD3245D004B1F1C /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417492FD3245D004B1F1C /* String.swift */; };
 		C9F444182FD3245D004B1F1C /* AboutThisAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172A2FD3245D004B1F1C /* AboutThisAppViewController.swift */; };
 		C9F444332FD3245D004B1F1C /* PickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E792FD3245D004B1F1C /* PickerData.swift */; };
-		C9F444862FD3245D004B1F1C /* RemoteConfigValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4175E2FD3245D004B1F1C /* RemoteConfigValues.swift */; };
 		C9F444B92FD3245D004B1F1C /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417302FD3245D004B1F1C /* PhoneNumberViewController.swift */; };
 		C9F444D22FD3245D004B1F1C /* NameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172F2FD3245D004B1F1C /* NameViewController.swift */; };
 		C9F444F12FD3245D004B1F1C /* FriendGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417202FD3245D004B1F1C /* FriendGroupsViewController.swift */; };
@@ -116,7 +112,6 @@
 		C9F448E82FD3245D004B1F1C /* AddFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417232FD3245D004B1F1C /* AddFriendsViewController.swift */; };
 		C9F448EF2FD3245D004B1F1C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173A2FD3245D004B1F1C /* SceneDelegate.swift */; };
 		C9F449812FD3245D004B1F1C /* EditStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417192FD3245D004B1F1C /* EditStatusViewController.swift */; };
-		C9F449A02FD3245D004B1F1C /* StorageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417402FD3245D004B1F1C /* StorageType.swift */; };
 		C9F449A32FD3245D004B1F1C /* GroupNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E772FD3245D004B1F1C /* GroupNotification.swift */; };
 		C9F449BA2FD3245D004B1F1C /* PictureEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171C2FD3245D004B1F1C /* PictureEditViewController.swift */; };
 		C9F44A052FD3245D004B1F1C /* CategoryImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E732FD3245D004B1F1C /* CategoryImages.swift */; };
@@ -129,7 +124,6 @@
 		C9F44B452FD3245D004B1F1C /* MyProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E782FD3245D004B1F1C /* MyProfileCell.swift */; };
 		C9F44B562FD3245D004B1F1C /* ImportedContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E882FD3245D004B1F1C /* ImportedContactsTableViewCell.swift */; };
 		C9F44B792FD3245D004B1F1C /* KeychainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E7E2FD3245D004B1F1C /* KeychainItem.swift */; };
-		C9F44B802FD3245D004B1F1C /* BASEViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417602FD3245D004B1F1C /* BASEViewController.swift */; };
 		C9F44BA22FD3245D004B1F1C /* SubstatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E8C2FD3245D004B1F1C /* SubstatusTableViewCell.swift */; };
 		C9F44BBC2FD3245D004B1F1C /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417452FD3245D004B1F1C /* Data.swift */; };
 		C9F44BBD2FD3245D004B1F1C /* FriendGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E752FD3245D004B1F1C /* FriendGroup.swift */; };
@@ -138,7 +132,6 @@
 		C9F44C532FD3245D004B1F1C /* PictureEditHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171B2FD3245D004B1F1C /* PictureEditHandlers.swift */; };
 		C9F44C7F2FD3245D004B1F1C /* DeleteAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172B2FD3245D004B1F1C /* DeleteAccountViewController.swift */; };
 		C9F44CA22FD3245D004B1F1C /* ProfanityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417562FD3245D004B1F1C /* ProfanityManager.swift */; };
-		C9F44CA62FD3245D004B1F1C /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E812FD3245D004B1F1C /* PushNotificationSender.swift */; };
 		C9F44CE42FD3245D004B1F1C /* NotificationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173E2FD3245D004B1F1C /* NotificationTitle.swift */; };
 		C9F44CFF2FD3245D004B1F1C /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171F2FD3245D004B1F1C /* AddPeopleViewController.swift */; };
 		C9F44D192FD3245D004B1F1C /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417612FD3245D004B1F1C /* LoadingViewController.swift */; };
@@ -212,6 +205,9 @@
 		C988D52A268FD79A00CAEA8E /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		C988D52D268FD79A00CAEA8E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		C988D52F268FD79A00CAEA8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C9CD50292FD38B0A003DE6A4 /* FirestoreKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreKeys.swift; sourceTree = "<group>"; };
+		C9CD502B2FD38D24003DE6A4 /* SecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorage.swift; sourceTree = "<group>"; };
+		C9CD502D2FD393A2003DE6A4 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		C9F417122FD3245D004B1F1C /* ActivityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCollectionViewCell.swift; sourceTree = "<group>"; };
 		C9F417142FD3245D004B1F1C /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		C9F417152FD3245D004B1F1C /* FriendSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSelectionViewController.swift; sourceTree = "<group>"; };
@@ -248,9 +244,7 @@
 		C9F4173D2FD3245D004B1F1C /* DatabaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseError.swift; sourceTree = "<group>"; };
 		C9F4173E2FD3245D004B1F1C /* NotificationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTitle.swift; sourceTree = "<group>"; };
 		C9F4173F2FD3245D004B1F1C /* StorageErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageErrors.swift; sourceTree = "<group>"; };
-		C9F417402FD3245D004B1F1C /* StorageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageType.swift; sourceTree = "<group>"; };
 		C9F417412FD3245D004B1F1C /* UIColorInputError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorInputError.swift; sourceTree = "<group>"; };
-		C9F417422FD3245D004B1F1C /* ValueKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueKey.swift; sourceTree = "<group>"; };
 		C9F417442FD3245D004B1F1C /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		C9F417452FD3245D004B1F1C /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		C9F417462FD3245D004B1F1C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -273,8 +267,6 @@
 		C9F4175B2FD3245D004B1F1C /* BackBarButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackBarButtonItem.swift; sourceTree = "<group>"; };
 		C9F4175C2FD3245D004B1F1C /* PhoneContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContact.swift; sourceTree = "<group>"; };
 		C9F4175D2FD3245D004B1F1C /* PhoneContacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContacts.swift; sourceTree = "<group>"; };
-		C9F4175E2FD3245D004B1F1C /* RemoteConfigValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigValues.swift; sourceTree = "<group>"; };
-		C9F417602FD3245D004B1F1C /* BASEViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BASEViewController.swift; sourceTree = "<group>"; };
 		C9F417612FD3245D004B1F1C /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		C9F417622FD3245D004B1F1C /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		C9F43E6C2FD3245D004B1F1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -294,7 +286,6 @@
 		C9F43E7E2FD3245D004B1F1C /* KeychainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItem.swift; sourceTree = "<group>"; };
 		C9F43E7F2FD3245D004B1F1C /* notification.apn */ = {isa = PBXFileReference; lastKnownFileType = text; path = notification.apn; sourceTree = "<group>"; };
 		C9F43E802FD3245D004B1F1C /* Notification.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Notification.json; sourceTree = "<group>"; };
-		C9F43E812FD3245D004B1F1C /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
 		C9F43E832FD3245D004B1F1C /* BoredRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequestTableViewCell.swift; sourceTree = "<group>"; };
 		C9F43E842FD3245D004B1F1C /* BoredResponseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredResponseTableViewCell.swift; sourceTree = "<group>"; };
 		C9F43E852FD3245D004B1F1C /* CreateFriendGroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFriendGroupTableViewCell.swift; sourceTree = "<group>"; };
@@ -323,14 +314,12 @@
 			files = (
 				C9119E2D2FD27B4C0089ACA1 /* FirebaseMessaging in Frameworks */,
 				C9119E0B2FD27B4C0089ACA1 /* FirebaseAnalytics in Frameworks */,
-				C9119E432FD286710089ACA1 /* GoogleSignIn in Frameworks */,
 				C9119E092FD27B4C0089ACA1 /* FirebaseAILogic in Frameworks */,
 				C9119E0F2FD27B4C0089ACA1 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				C9119E252FD27B4C0089ACA1 /* FirebaseFunctionsCombine-Community in Frameworks */,
 				C9119E212FD27B4C0089ACA1 /* FirebaseFirestoreCombine-Community in Frameworks */,
 				C9119E072FD27B4C0089ACA1 /* FirebaseAI in Frameworks */,
 				C9119E1F2FD27B4C0089ACA1 /* FirebaseFirestore in Frameworks */,
-				C9119E452FD286710089ACA1 /* GoogleSignInSwift in Frameworks */,
 				C9119E192FD27B4C0089ACA1 /* FirebaseCore in Frameworks */,
 				C9119E272FD27B4C0089ACA1 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				C9119E2B2FD27B4C0089ACA1 /* FirebaseMLModelDownloader in Frameworks */,
@@ -338,15 +327,12 @@
 				C9119E1D2FD27B4C0089ACA1 /* FirebaseDatabase in Frameworks */,
 				C9119E292FD27B4C0089ACA1 /* FirebaseInstallations in Frameworks */,
 				C9119E402FD285050089ACA1 /* SDWebImageMapKit in Frameworks */,
-				C9C3818926A7C22300AAC66D /* Alamofire in Frameworks */,
 				C9119E232FD27B4C0089ACA1 /* FirebaseFunctions in Frameworks */,
 				C9760B68266416DC009F66DA /* PhoneNumberKit in Frameworks */,
 				C9119E2F2FD27B4C0089ACA1 /* FirebasePerformance in Frameworks */,
-				C9119E3B2FD284E20089ACA1 /* RealmSwift in Frameworks */,
 				C9574FCD2665E9B100405B8B /* AnyFormatKit in Frameworks */,
 				C9119E152FD27B4C0089ACA1 /* FirebaseAuth in Frameworks */,
 				C9119E332FD27B4C0089ACA1 /* FirebaseStorage in Frameworks */,
-				C9760B502663FDC6009F66DA /* MessageKit in Frameworks */,
 				C9119E3E2FD285050089ACA1 /* SDWebImage in Frameworks */,
 				C9119E382FD284840089ACA1 /* JGProgressHUD in Frameworks */,
 				C9119E352FD27B4C0089ACA1 /* FirebaseStorageCombine-Community in Frameworks */,
@@ -551,9 +537,7 @@
 				C9F4173D2FD3245D004B1F1C /* DatabaseError.swift */,
 				C9F4173E2FD3245D004B1F1C /* NotificationTitle.swift */,
 				C9F4173F2FD3245D004B1F1C /* StorageErrors.swift */,
-				C9F417402FD3245D004B1F1C /* StorageType.swift */,
 				C9F417412FD3245D004B1F1C /* UIColorInputError.swift */,
-				C9F417422FD3245D004B1F1C /* ValueKey.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -604,7 +588,8 @@
 				C9F4175B2FD3245D004B1F1C /* BackBarButtonItem.swift */,
 				C9F4175C2FD3245D004B1F1C /* PhoneContact.swift */,
 				C9F4175D2FD3245D004B1F1C /* PhoneContacts.swift */,
-				C9F4175E2FD3245D004B1F1C /* RemoteConfigValues.swift */,
+				C9CD50292FD38B0A003DE6A4 /* FirestoreKeys.swift */,
+				C9CD502D2FD393A2003DE6A4 /* Log.swift */,
 			);
 			path = Miscellaneous;
 			sourceTree = "<group>";
@@ -612,19 +597,10 @@
 		C9F417632FD3245D004B1F1C /* Top-Level Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				C9F417602FD3245D004B1F1C /* BASEViewController.swift */,
 				C9F417612FD3245D004B1F1C /* LoadingViewController.swift */,
 				C9F417622FD3245D004B1F1C /* TabBarController.swift */,
 			);
 			path = "Top-Level Controllers";
-			sourceTree = "<group>";
-		};
-		C9F417642FD3245D004B1F1C /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-				C9F417632FD3245D004B1F1C /* Top-Level Controllers */,
-			);
-			path = "New Group";
 			sourceTree = "<group>";
 		};
 		C9F43E702FD3245D004B1F1C /* Storyboards */ = {
@@ -661,7 +637,7 @@
 				C9F43E7E2FD3245D004B1F1C /* KeychainItem.swift */,
 				C9F43E7F2FD3245D004B1F1C /* notification.apn */,
 				C9F43E802FD3245D004B1F1C /* Notification.json */,
-				C9F43E812FD3245D004B1F1C /* PushNotificationSender.swift */,
+				C9CD502B2FD38D24003DE6A4 /* SecureStorage.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -694,7 +670,7 @@
 				C9F417522FD3245D004B1F1C /* Fonts */,
 				C9F4175A2FD3245D004B1F1C /* Managers */,
 				C9F4175F2FD3245D004B1F1C /* Miscellaneous */,
-				C9F417642FD3245D004B1F1C /* New Group */,
+				C9F417632FD3245D004B1F1C /* Top-Level Controllers */,
 				C9F43E702FD3245D004B1F1C /* Storyboards */,
 				C9F43E7D2FD3245D004B1F1C /* Structs */,
 				C9F43E822FD3245D004B1F1C /* Supporting Files */,
@@ -749,10 +725,8 @@
 			);
 			name = wtm;
 			packageProductDependencies = (
-				C9760B4F2663FDC6009F66DA /* MessageKit */,
 				C9760B67266416DC009F66DA /* PhoneNumberKit */,
 				C9574FCC2665E9B100405B8B /* AnyFormatKit */,
-				C9C3818826A7C22300AAC66D /* Alamofire */,
 				C9119E062FD27B4C0089ACA1 /* FirebaseAI */,
 				C9119E082FD27B4C0089ACA1 /* FirebaseAILogic */,
 				C9119E0A2FD27B4C0089ACA1 /* FirebaseAnalytics */,
@@ -778,11 +752,8 @@
 				C9119E322FD27B4C0089ACA1 /* FirebaseStorage */,
 				C9119E342FD27B4C0089ACA1 /* FirebaseStorageCombine-Community */,
 				C9119E372FD284840089ACA1 /* JGProgressHUD */,
-				C9119E3A2FD284E20089ACA1 /* RealmSwift */,
 				C9119E3D2FD285050089ACA1 /* SDWebImage */,
 				C9119E3F2FD285050089ACA1 /* SDWebImageMapKit */,
-				C9119E422FD286710089ACA1 /* GoogleSignIn */,
-				C9119E442FD286710089ACA1 /* GoogleSignInSwift */,
 			);
 			productName = wtm;
 			productReference = C9760B182663F646009F66DA /* wtm.app */;
@@ -929,15 +900,11 @@
 			);
 			mainGroup = C9760B0F2663F646009F66DA;
 			packageReferences = (
-				C9760B4E2663FDC6009F66DA /* XCRemoteSwiftPackageReference "MessageKit" */,
 				C9760B66266416DC009F66DA /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 				C9574FCB2665E9B100405B8B /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
-				C9C3818726A7C22300AAC66D /* XCRemoteSwiftPackageReference "Alamofire" */,
 				C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				C9119E362FD284840089ACA1 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
-				C9119E392FD284E20089ACA1 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				C9119E3C2FD285050089ACA1 /* XCRemoteSwiftPackageReference "SDWebImage" */,
-				C9119E412FD286710089ACA1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 100;
 			productRefGroup = C9760B192663F646009F66DA /* Products */;
@@ -1024,7 +991,6 @@
 				C9F4428E2FD3245D004B1F1C /* StorageErrors.swift in Sources */,
 				C9F442942FD3245D004B1F1C /* User.swift in Sources */,
 				C9F442B02FD3245D004B1F1C /* UIApplication.swift in Sources */,
-				C9F443042FD3245D004B1F1C /* ValueKey.swift in Sources */,
 				C9F4431E2FD3245D004B1F1C /* VerificationViewController.swift in Sources */,
 				C9F443212FD3245D004B1F1C /* HomeScreenViewController.swift in Sources */,
 				C9F443332FD3245D004B1F1C /* BoredRequestResponseViewController.swift in Sources */,
@@ -1038,7 +1004,6 @@
 				C9F443DE2FD3245D004B1F1C /* String.swift in Sources */,
 				C9F444182FD3245D004B1F1C /* AboutThisAppViewController.swift in Sources */,
 				C9F444332FD3245D004B1F1C /* PickerData.swift in Sources */,
-				C9F444862FD3245D004B1F1C /* RemoteConfigValues.swift in Sources */,
 				C9F444B92FD3245D004B1F1C /* PhoneNumberViewController.swift in Sources */,
 				C9F444D22FD3245D004B1F1C /* NameViewController.swift in Sources */,
 				C9F444F12FD3245D004B1F1C /* FriendGroupsViewController.swift in Sources */,
@@ -1060,7 +1025,9 @@
 				C9F446F12FD3245D004B1F1C /* FriendsTableViewCell.swift in Sources */,
 				C9F447072FD3245D004B1F1C /* UIColor.swift in Sources */,
 				C9F4470A2FD3245D004B1F1C /* PhoneContacts.swift in Sources */,
+				C9CD502A2FD38B0A003DE6A4 /* FirestoreKeys.swift in Sources */,
 				C9F4470B2FD3245D004B1F1C /* MyProfileViewController.swift in Sources */,
+				C9CD502E2FD393A2003DE6A4 /* Log.swift in Sources */,
 				C9F447682FD3245D004B1F1C /* BoredRequestsViewController.swift in Sources */,
 				C9F4476A2FD3245D004B1F1C /* Array.swift in Sources */,
 				C9F4476B2FD3245D004B1F1C /* FriendSelectionViewController.swift in Sources */,
@@ -1073,7 +1040,6 @@
 				C9F448E82FD3245D004B1F1C /* AddFriendsViewController.swift in Sources */,
 				C9F448EF2FD3245D004B1F1C /* SceneDelegate.swift in Sources */,
 				C9F449812FD3245D004B1F1C /* EditStatusViewController.swift in Sources */,
-				C9F449A02FD3245D004B1F1C /* StorageType.swift in Sources */,
 				C9F449A32FD3245D004B1F1C /* GroupNotification.swift in Sources */,
 				C9F449BA2FD3245D004B1F1C /* PictureEditViewController.swift in Sources */,
 				C9F44A052FD3245D004B1F1C /* CategoryImages.swift in Sources */,
@@ -1081,12 +1047,12 @@
 				C9F44A3E2FD3245D004B1F1C /* BoredResponseTableViewCell.swift in Sources */,
 				C9F44A862FD3245D004B1F1C /* FriendGroupsTableViewCell.swift in Sources */,
 				C9F44AD32FD3245D004B1F1C /* BackBarButtonItem.swift in Sources */,
+				C9CD502C2FD38D24003DE6A4 /* SecureStorage.swift in Sources */,
 				C9F44AF12FD3245D004B1F1C /* AppDelegate.swift in Sources */,
 				C9F44B082FD3245D004B1F1C /* Notifications.swift in Sources */,
 				C9F44B452FD3245D004B1F1C /* MyProfileCell.swift in Sources */,
 				C9F44B562FD3245D004B1F1C /* ImportedContactsTableViewCell.swift in Sources */,
 				C9F44B792FD3245D004B1F1C /* KeychainItem.swift in Sources */,
-				C9F44B802FD3245D004B1F1C /* BASEViewController.swift in Sources */,
 				C9F44BA22FD3245D004B1F1C /* SubstatusTableViewCell.swift in Sources */,
 				C9F44BBC2FD3245D004B1F1C /* Data.swift in Sources */,
 				C9F44BBD2FD3245D004B1F1C /* FriendGroup.swift in Sources */,
@@ -1095,7 +1061,6 @@
 				C9F44C532FD3245D004B1F1C /* PictureEditHandlers.swift in Sources */,
 				C9F44C7F2FD3245D004B1F1C /* DeleteAccountViewController.swift in Sources */,
 				C9F44CA22FD3245D004B1F1C /* ProfanityManager.swift in Sources */,
-				C9F44CA62FD3245D004B1F1C /* PushNotificationSender.swift in Sources */,
 				C9F44CE42FD3245D004B1F1C /* NotificationTitle.swift in Sources */,
 				C9F44CFF2FD3245D004B1F1C /* AddPeopleViewController.swift in Sources */,
 				C9F44D192FD3245D004B1F1C /* LoadingViewController.swift in Sources */,
@@ -1311,14 +1276,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = wtm/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = wtm;
+				INFOPLIST_KEY_CFBundleDisplayName = "wtm?";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
@@ -1328,6 +1293,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1343,12 +1309,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = wtm/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = wtm;
+				INFOPLIST_KEY_CFBundleDisplayName = "wtm?";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
@@ -1358,6 +1324,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1459,8 +1426,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1480,8 +1451,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Service-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1501,8 +1476,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1522,8 +1501,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthew.wtm-.WTM-Notification-Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -1597,28 +1580,12 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		C9119E392FD284E20089ACA1 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-swift";
-			requirement = {
-				branch = community;
-				kind = branch;
-			};
-		};
 		C9119E3C2FD285050089ACA1 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.21.7;
-			};
-		};
-		C9119E412FD286710089ACA1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.1.0;
 			};
 		};
 		C9574FCB2665E9B100405B8B /* XCRemoteSwiftPackageReference "AnyFormatKit" */ = {
@@ -1629,28 +1596,12 @@
 				minimumVersion = 2.5.1;
 			};
 		};
-		C9760B4E2663FDC6009F66DA /* XCRemoteSwiftPackageReference "MessageKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/MessageKit/MessageKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.6.1;
-			};
-		};
 		C9760B66266416DC009F66DA /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 3.3.3;
-			};
-		};
-		C9C3818726A7C22300AAC66D /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.4.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1781,11 +1732,6 @@
 			package = C9119E362FD284840089ACA1 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
 			productName = JGProgressHUD;
 		};
-		C9119E3A2FD284E20089ACA1 /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9119E392FD284E20089ACA1 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = RealmSwift;
-		};
 		C9119E3D2FD285050089ACA1 /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9119E3C2FD285050089ACA1 /* XCRemoteSwiftPackageReference "SDWebImage" */;
@@ -1796,35 +1742,15 @@
 			package = C9119E3C2FD285050089ACA1 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
 		};
-		C9119E422FD286710089ACA1 /* GoogleSignIn */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9119E412FD286710089ACA1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignIn;
-		};
-		C9119E442FD286710089ACA1 /* GoogleSignInSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9119E412FD286710089ACA1 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignInSwift;
-		};
 		C9574FCC2665E9B100405B8B /* AnyFormatKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9574FCB2665E9B100405B8B /* XCRemoteSwiftPackageReference "AnyFormatKit" */;
 			productName = AnyFormatKit;
 		};
-		C9760B4F2663FDC6009F66DA /* MessageKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9760B4E2663FDC6009F66DA /* XCRemoteSwiftPackageReference "MessageKit" */;
-			productName = MessageKit;
-		};
 		C9760B67266416DC009F66DA /* PhoneNumberKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9760B66266416DC009F66DA /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
-		};
-		C9C3818826A7C22300AAC66D /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9C3818726A7C22300AAC66D /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

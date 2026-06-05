@@ -92,7 +92,7 @@ class PhoneNumberViewController: UIViewController, UITextFieldDelegate {
             createSpinnerView()
             Auth.auth().languageCode = "en"
             
-            UserDefaults.standard.set(phoneNumberField.text!, forKey: "phoneNumber")
+            SecureStorage.phoneNumber = phoneNumberField.text!
             
             PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { [weak self] (verificationID, error) in
                 if let error = error {

@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-        _ = RemoteConfigValues.shared
         
         registerNotificationCategories()
         

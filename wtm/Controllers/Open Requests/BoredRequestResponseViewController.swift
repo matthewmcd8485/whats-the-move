@@ -152,18 +152,22 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     // MARK: - Load Users
     private func loadUsers() {
         // Download users in the group
-        for x in 0..<group.people!.count {
-            databaseManager.downloadUser(where: "User Identifier", isEqualTo: group.people![x], completion: { [weak self] result in
+        guard let people = group.people else { return }
+        let totalPeople = people.count
+        
+        for x in 0..<totalPeople {
+            databaseManager.downloadUser(where: "User Identifier", isEqualTo: people[x], completion: { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success(let user):
                     let boredUser = BoredRequestUser(user: user, responseStatus: "", responseSubstatus: "")
-                    self?.request.people.append(boredUser)
+                    self.request.people.append(boredUser)
                     
-                    if x == self!.group.people!.count - 1 {
-                        self?.downloadResponses()
+                    if x == totalPeople - 1 {
+                        self.downloadResponses()
                     }
                 case .failure(let error):
-                    self?.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
+                    self.alertManager.showAlert(title: "error loading friends", message: "there was an error loading your friends from the database. \n \n maybe you just don't have any?")
                     print(error)
                 }
             })
@@ -172,71 +176,70 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     }
     
     private func downloadResponses() {
-        db.collection("friend groups").document(group.groupID).collection("bored requests").whereField("Request Identifier", isEqualTo: request.requestID).getDocuments() { [weak self] querySnapshot, error in
+        db.collection(FirestoreKeys.Collection.friendGroups).document(group.groupID).collection(FirestoreKeys.Collection.boredRequests).whereField(FirestoreKeys.BoredRequest.requestIdentifier, isEqualTo: request.requestID).getDocuments() { [weak self] querySnapshot, error in
+            guard let self = self else { return }
             guard error == nil else {
                 print("error downloading request: \(error!)")
                 return
             }
             
-            guard querySnapshot?.documents.count != 0 else {
+            guard let documents = querySnapshot?.documents, !documents.isEmpty else {
                 let alert = UIAlertController(title: "error loading request", message: "there was an error loading this request. please try again later.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "okay", style: .default, handler: { _ in
+                alert.addAction(UIAlertAction(title: "okay", style: .default, handler: { [weak self] _ in
                     self?.navigationController?.popViewController(animated: true)
                 }))
-                self?.present(alert, animated: true)
+                self.present(alert, animated: true)
                 
                 print("querySnapshot for responses is empty [downloadResponses()]")
                 return
             }
             
-            for document in querySnapshot!.documents {
-                for x in 0..<self!.request.people.count {
-                    let id = self?.request.people[x].user.uid
-                    let response = document.get("\(id!) Availability") as? String ?? "no response"
-                    let substatus = document.get("\(id!) Substatus") as? String ?? "no response"
+            for document in documents {
+                for x in 0..<self.request.people.count {
+                    let id = self.request.people[x].user.uid
+                    let response = document.get(FirestoreKeys.BoredRequest.availabilityField(forUID: id)) as? String ?? "no response"
+                    let substatus = document.get(FirestoreKeys.BoredRequest.substatusField(forUID: id)) as? String ?? "no response"
                     
-                    self?.request.people[x].responseStatus = response
-                    self?.request.people[x].responseSubstatus = substatus
+                    self.request.people[x].responseStatus = response
+                    self.request.people[x].responseSubstatus = substatus
                 }
             }
             
-            self?.tableView.reloadData()
-            self?.tableView.alpha = 1
-            self?.loadingLabel.alpha = 0
-            self?.activityIndicator.alpha = 0
+            self.tableView.reloadData()
+            self.tableView.alpha = 1
+            self.loadingLabel.alpha = 0
+            self.activityIndicator.alpha = 0
         }
     }
     
     // MARK: - Edit Response
     private func showResponseEditScreen(status: String) {
-        let uid = UserDefaults.standard.string(forKey: "uid")
+        let uid = SecureStorage.uid
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "changeResponseViewController") as ChangeResponseViewController
         vc.status = status
         vc.completion = { [weak self] result in
+            guard let self = self else { return }
             guard result != "" else {
                 return
             }
             
-            for x in 0..<self!.request.people.count {
-                if self?.request.people[x].user.uid == uid {
+            for x in 0..<self.request.people.count {
+                if self.request.people[x].user.uid == uid {
                     // Change local UI immediately
-                    self?.request.people[x].responseStatus = status
-                    self?.request.people[x].responseSubstatus = result
+                    self.request.people[x].responseStatus = status
+                    self.request.people[x].responseSubstatus = result
                     
                     // Upload changes to Firebase
-                    self?.db.collection("friend groups").document(self!.group.groupID).collection("bored requests").document(self!.request.requestID).setData([
-                        "\(uid!) Availability" : status,
-                        "\(uid!) Substatus" : result
-                    ], merge: true, completion: { error in
-                        guard error == nil else {
-                            print("error updating response in Firebase: \(error!)")
+                    self.databaseManager.updateBoredRequestResponse(groupID: self.group.groupID, requestID: self.request.requestID, uid: uid!, status: status, substatus: result, completion: { [weak self] updateResult in
+                        switch updateResult {
+                        case .failure(let error):
+                            print("error updating response in Firebase: \(error)")
                             return
+                        case .success:
+                            self?.notifyFriends(status: status, substatus: result)
+                            self?.tableView.reloadData()
                         }
-                        
-                        self?.notifyFriends(status: status, substatus: result)
-                        
-                        self?.tableView.reloadData()
                     })
                 }
             }
@@ -245,7 +248,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     }
     
     private func notifyFriends(status: String, substatus: String) {
-        guard let name = UserDefaults.standard.string(forKey: "name"), let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let name = UserDefaults.standard.string(forKey: "name"), let uid = SecureStorage.uid else {
             return
         }
         
@@ -256,12 +259,11 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
             notificationTitle = "\(name) is not available"
         }
         
-        let sender = PushNotificationSender()
-        for x in 0..<request.people.count {
-            if request.people[x].user.status != "do not disturb" && request.people[x].user.uid != uid {
-                sender.sendPushNotification(to: request.people[x].user.fcmToken, title: notificationTitle, subtitle: group.name, body: "they said \"\(substatus)\"", urlToImage: "")
-            }
-        }
+        // Note: client-side FCM fan-out removed; push notifications need a
+        // Cloud Function trigger on response updates. The compose logic for
+        // notificationTitle/substatus stays in place for when that lands.
+        _ = notificationTitle
+        _ = substatus
     }
     
     private func respondToRequest() {
@@ -291,7 +293,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let uid = UserDefaults.standard.string(forKey: "uid")
+        let uid = SecureStorage.uid
         if request.people[indexPath.row].user.uid == uid {
             
             // Reply to your own request

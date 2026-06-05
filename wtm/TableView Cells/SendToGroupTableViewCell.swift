@@ -83,7 +83,7 @@ class SendToGroupTableViewCell: UITableViewCell {
         }
         
         if model.friends.count > 0 {
-            let uid = UserDefaults.standard.string(forKey: "uid")
+            let uid = SecureStorage.uid
             var names = [String]()
             for x in 0..<model.friends.count {
                 if model.friends[x].uid != uid {

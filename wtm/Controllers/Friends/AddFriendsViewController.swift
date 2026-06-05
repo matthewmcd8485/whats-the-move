@@ -54,7 +54,7 @@ class AddFriendsViewController: UIViewController, UITextFieldDelegate, CNContact
             return
         }
         
-        guard let phoneNumber = UserDefaults.standard.string(forKey: "phoneNumber"), phoneNumber != phoneNumberField.text else {
+        guard let phoneNumber = SecureStorage.phoneNumber, phoneNumber != phoneNumberField.text else {
             alertManager.showAlert(title: "slow your roll", message: "you can't add yourself as a friend. \n maybe try making real ones?")
             return
         }

@@ -103,7 +103,7 @@ class MyProfileViewController: UIViewController {
     private func updatePicture() {
         profileImage.alpha = 0
         DispatchQueue.global(qos: .background).async { [weak self] in
-            if let savedImage = self?.imageStoreManager.retrieveImage(forKey: "profileImage", inStorageType: .fileSystem) {
+            if let savedImage = self?.imageStoreManager.retrieveImage(forKey: "profileImage") {
                 DispatchQueue.main.async {
                     self?.profileImage.image = savedImage
                     UIView.animate(withDuration: 0.5) {
@@ -136,19 +136,20 @@ class MyProfileViewController: UIViewController {
             textField.placeholder = placeholder
         }
         alert.addAction(UIAlertAction(title: "save", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
             let textField = alert.textFields![0]
             guard textField.text != nil && textField.text != "" else {
                 return
             }
 
             if textField.text!.count > 16 {
-                self?.alertManager.showAlert(title: "name is too long", message: "read the directions, dude.\nwe aren't trying to write a shakespeare play here.")
-            } else if self!.profanityManager.checkForProfanity(in: textField.text!) {
-                self?.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your name. please make sure it is appropriate.")
+                self.alertManager.showAlert(title: "name is too long", message: "read the directions, dude.\nwe aren't trying to write a shakespeare play here.")
+            } else if self.profanityManager.checkForProfanity(in: textField.text!) {
+                self.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your name. please make sure it is appropriate.")
             } else {
                 let lowercasedName = textField.text!.lowercased()
                 let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
-                self?.uploadNewName(name: whitespaceName)
+                self.uploadNewName(name: whitespaceName)
             }
         }))
         alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
@@ -156,17 +157,18 @@ class MyProfileViewController: UIViewController {
     }
     
     private func uploadNewName(name: String) {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             alertManager.showAlert(title: "error updating name", message: "there was an error loading your profile details. please try again.")
             return
         }
         
-        db.collection("users").document(uid).setData([
-            "Name" : name
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil else {
+        databaseManager.updateUserName(uid: uid, name: name, completion: { [weak self] result in
+            switch result {
+            case .failure:
                 self?.alertManager.showAlert(title: "error saving name", message: "something went wrong when we tried to save your new name. please try again.")
                 return
+            case .success:
+                break
             }
             self?.nameLabel.text = name
             UserDefaults.standard.set(name, forKey: "name")

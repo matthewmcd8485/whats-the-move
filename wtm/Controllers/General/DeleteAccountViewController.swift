@@ -62,7 +62,7 @@ class DeleteAccountViewController: UIViewController {
     @IBAction func deleteButton(_ sender: Any) {
         showSpinnerView()
         
-        guard let phoneNumber = UserDefaults.standard.string(forKey: "phoneNumber") else {
+        guard let phoneNumber = SecureStorage.phoneNumber else {
             return
         }
         
@@ -109,43 +109,30 @@ class DeleteAccountViewController: UIViewController {
     }
     
     private func removeFirestoreData() {
-        guard let uid = UserDefaults.standard.string(forKey: "uid") else {
+        guard let uid = SecureStorage.uid else {
             print("No UID found")
             return
         }
         
         // Clear out Firestore Profile
-        db.collection("users").document(uid).setData([
-            "Name" : "user deleted",
-            "Phone Number" : "user deleted",
-            "Profile Image URL" : "user deleted",
-            "Joined" : "user deleted",
-            "FCM Token" : "user deleted",
-            "Status" : "user deleted",
-            "Substatus" : "user deleted"
-        ], merge: true, completion: { [weak self] error in
-            guard error == nil else {
-                print("Error deleting user's Firestore profole: \(error!)")
+        DatabaseManager.shared.softDeleteUserProfile(uid: uid, completion: { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print("Error deleting user's Firestore profile: \(error)")
                 return
+            case .success:
+                break
             }
             print("Firestore profile cleared!")
             
             // Clear friend's references
-            self?.db.collectionGroup("friends").whereField("User Identifier", isEqualTo: uid).getDocuments { (snapshot, error) in
-                guard error == nil else {
-                    print("Error retrieving collection group documents: \(error!)")
+            DatabaseManager.shared.softDeleteFriendReferences(toUID: uid, completion: { result in
+                switch result {
+                case .failure(let error):
+                    print("Error renaming friend references: \(error)")
                     return
-                }
-                
-                for document in snapshot!.documents {
-                    document.reference.setData([
-                        "Name" : "user deleted"
-                    ], merge: true, completion: { error in
-                        guard error == nil else {
-                            print("Error renaming friend document in Firestore: \(error!)")
-                            return
-                        }
-                    })
+                case .success:
+                    break
                 }
                 
                 print("Data cleared!")
@@ -158,7 +145,7 @@ class DeleteAccountViewController: UIViewController {
                         self?.goToLoadingScreen()
                     }
                 }
-            }
+            })
         })
     }
     

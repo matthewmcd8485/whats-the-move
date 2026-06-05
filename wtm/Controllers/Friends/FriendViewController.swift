@@ -109,24 +109,25 @@ class FriendViewController: UIViewController {
     
     private func loadUser() {
         databaseManager.downloadUser(where: "User Identifier", isEqualTo: friendsUID, completion: { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let user):
-                self?.friend = user
+                self.friend = user
                 
                 // Check if someone blocked someone
-                if self!.reportingManager.userBlockedYou(theirUID: self!.friendsUID) || self!.reportingManager.userIsBlocked(theirUID: self!.friendsUID) {
+                if self.reportingManager.userBlockedYou(theirUID: self.friendsUID) || self.reportingManager.userIsBlocked(theirUID: self.friendsUID) {
                     let alert = UIAlertController(title: "user is blocked", message: "either they blocked you or you blocked them.\n we don't know, though.\n it's not really our business.\n\nsorry for any drama this may cause...", preferredStyle: .alert)
-                    let action = UIAlertAction(title: "rude, but okay", style: .default, handler: { _ in
+                    let action = UIAlertAction(title: "rude, but okay", style: .default, handler: { [weak self] _ in
                         self?.navigationController?.popViewController(animated: true)
                     })
                     alert.addAction(action)
-                    self?.present(alert, animated: true, completion: nil)
+                    self.present(alert, animated: true, completion: nil)
                 } else {
-                    self?.updateUI()
-                    self?.configureStatusView()
+                    self.updateUI()
+                    self.configureStatusView()
                 }
             case .failure(let error):
-                self?.cancelOperation()
+                self.cancelOperation()
                 print(error)
             }
         })
@@ -180,10 +181,11 @@ class FriendViewController: UIViewController {
         let alert = UIAlertController(title: "block user", message: "are you sure? \n \nany groups you are in with this person will NOT be deleted.\n\nthis action cannot be undone.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "oops, cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "block user", style: .destructive, handler: { [weak self] _ in
-            self?.databaseManager.blockUser(uidToBlock: self!.friend.uid, completion: { success in
+            guard let self = self else { return }
+            self.databaseManager.blockUser(uidToBlock: self.friend.uid, completion: { [weak self] success in
                 if success {
                     let alert = UIAlertController(title: "user blocked", message: "you have successfully blocked this person.\n\nsorry they were mean to you or whatever.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "yeah, me too", style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: "yeah, me too", style: .default, handler: { [weak self] _ in
                         self?.navigationController?.popViewController(animated: true)
                     }))
                     self?.present(alert, animated: true, completion: nil)
@@ -199,7 +201,8 @@ class FriendViewController: UIViewController {
         let alert = UIAlertController(title: "report user", message: "are you sure? \n this action cannot be undone.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "oops, cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "report user", style: .destructive, handler: { [weak self] _ in
-            self?.reportingManager.reportUser(uid: self!.friend.uid, name: self!.friend.name, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { success in
+            guard let self = self else { return }
+            self.reportingManager.reportUser(uid: self.friend.uid, name: self.friend.name, date: Date().toString(dateFormat: "yyyy-MM-dd 'at' HH:mm:ss"), completion: { [weak self] success in
                 if success {
                     print("user reported!")
                     self?.navigationController?.popViewController(animated: true)

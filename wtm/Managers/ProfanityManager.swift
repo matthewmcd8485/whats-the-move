@@ -20,7 +20,7 @@ final class ProfanityManager {
                 let list = try String(contentsOfFile: path, encoding: .utf8)
                 blockedWords = list.components(separatedBy: ", ")
             } catch let error {
-                print("Error finding list: \(error)")
+                Log.database.error("Error loading blocked words list: \(error.localizedDescription, privacy: .public)")
             }
         }
         return blockedWords
@@ -31,7 +31,7 @@ final class ProfanityManager {
     public func checkForProfanity(in text: String) -> Bool {
         let blockedWords = self.blockedWords()
         guard !blockedWords.isEmpty else {
-            return true
+            return false
         }
                 
         // Check the string for bad words in the array

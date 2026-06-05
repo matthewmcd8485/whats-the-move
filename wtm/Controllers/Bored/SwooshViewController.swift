@@ -81,7 +81,7 @@ class SwooshViewController: UIViewController {
             }
         }
         
-        let uid = UserDefaults.standard.string(forKey: "uid")
+        let uid = SecureStorage.uid
         let name = UserDefaults.standard.string(forKey: "name")
         for x in 0..<groups.count {
             for y in 0..<groups[x].friends.count {
@@ -98,23 +98,23 @@ class SwooshViewController: UIViewController {
             
             // Create a bored request in Firestore; one for each group
             let uuidString = UUID().uuidString
-            let postedTime = NSDate(timeIntervalSinceNow: 0)
-            let expiresAt = NSDate(timeIntervalSinceNow: 7200)
-            db.collection("friend groups").document(groups[x].group.groupID).collection("bored requests").document(uuidString).setData([
-                "Request Identifier" : uuidString,
-                "Initiated By" : name!,
-                "Posted Time" : postedTime,
-                "Expires At" : expiresAt,
-                "Activity" : mood.rawValue,
-                "Group Identifier" : groups[x].group.groupID,
-                "\(uid!) Availability" : "available",
-                "\(uid!) Substatus" : "i'll be there!"
-            ], merge: false, completion: { [weak self] error in
-                guard error == nil else {
-                    print("error uploading Firestore bored request for group: \(self!.groups[x].group.groupID)")
-                    return
-                }
-            })
+            let postedTime = Date(timeIntervalSinceNow: 0)
+            let expiresAt = Date(timeIntervalSinceNow: 7200)
+            databaseManager.createBoredRequest(
+                requestID: uuidString,
+                groupID: groups[x].group.groupID,
+                initiatedBy: name!,
+                postedTime: postedTime,
+                expiresAt: expiresAt,
+                activity: mood.rawValue,
+                initiatorUID: uid!,
+                initiatorSubstatus: "i'll be there!",
+                completion: { [weak self] result in
+                    guard let self = self else { return }
+                    if case .failure(let error) = result {
+                        print("error uploading Firestore bored request for group: \(self.groups[x].group.groupID): \(error)")
+                    }
+                })
         }
         
         allFriends = allFriends.filterDuplicates { $0.uid == $1.uid }
@@ -133,13 +133,13 @@ class SwooshViewController: UIViewController {
         for x in 0..<allFriends.count {
             group.enter()
             databaseManager.downloadUser(where: "User Identifier", isEqualTo: allFriends[x].uid, completion: { [weak self] result in
+                defer { group.leave() }
                 switch result {
-                case.success(let user):
+                case .success(let user):
                     if user.status != "do not disturb" {
                         self?.allUsers.append(user)
                     }
-                    group.leave()
-                case.failure(let error):
+                case .failure(let error):
                     print("\n\n\n *CONVERT FUNCTION* \n \n error downloading user: \(error)")
                 }
             })
@@ -156,32 +156,20 @@ class SwooshViewController: UIViewController {
             return
         }
         
-        let group = DispatchGroup()
-        guard let name = UserDefaults.standard.string(forKey: "name"), let uid = UserDefaults.standard.string(forKey: "uid") else {
-            return
-        }
-
-        
+        // Note: client-side FCM fan-out was removed (the legacy HTTP send path
+        // was unauthenticated and silently 401'd). Push notifications should
+        // be sent by a Cloud Function triggered on bored-request creation.
+        // For now we just verify the mood image still exists and finish up.
         storageManager.downloadImageURL(imageName: mood.rawValue, collection: "mood images", completion: { [weak self] result in
+            guard let self = self else { return }
             switch result {
-            case .success(let imageURL):
-                for x in 0..<self!.allUsers.count {
-                    group.enter()
-                    
-                    let sender = PushNotificationSender()
-                    if self?.allUsers[x].uid != uid {
-                        sender.sendPushNotification(to: self!.allUsers[x].fcmToken, title: "new bored request", subtitle: "", body: "\(name) \(self!.mood.rawValue)", urlToImage: imageURL)
-                    }
-                    
-                    group.leave()
-                }
-                
-                group.notify(queue: .main) {
-                    self?.sent = true
-                    self?.finishUp()
-                }
+            case .success:
+                self.sent = true
+                self.finishUp()
             case .failure(let error):
                 print("error retrieving image URL: \(error)")
+                AlertManager.shared.showAlert(title: "couldn't send", message: "there was a problem sending your bored request. please try again.")
+                self.navigationController?.popViewController(animated: true)
             }
         })
     }

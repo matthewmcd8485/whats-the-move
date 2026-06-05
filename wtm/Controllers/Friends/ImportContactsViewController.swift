@@ -112,37 +112,26 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
             }
         }
         
-        db.collection("users").getDocuments() { [weak self] querySnapshot, error in
-            guard error == nil else {
-                print("Error downloading user information from Firestore: \(error!)")
+        DatabaseManager.shared.downloadAllUsers { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                print("Error downloading user information from Firestore: \(error)")
                 return
+            case .success(let users):
+                firestoreUsers = users
             }
             
-            for document in querySnapshot!.documents {
-                let name = document.get("Name") as! String
-                let status = document.get("Status") as! String
-                let substatus = document.get("Substatus") as! String
-                let profileImageURL = document.get("Profile Image URL") as? String ?? "no url"
-                let fcmToken = document.get("FCM Token") as! String
-                let joined = document.get("Joined") as! String
-                let phoneNumber = document.get("Phone Number") as! String
-                let uid = document.get("User Identifier") as! String
-                
-                let user = User(name: name, phoneNumber: phoneNumber, uid: uid, fcmToken: fcmToken, status: status, substatus: substatus, profileImageURL: profileImageURL, joinedTime: joined)
-                
-                firestoreUsers.append(user)
-            }
-            
-            self?.phoneContacts.sort {
+            self.phoneContacts.sort {
                 $0.name!.lowercased() < $1.name!.lowercased()
             }
             
             // Sort through contacts list for phone numbers that appear in Firestore
             let formatter = DefaultTextInputFormatter(textPattern: "+# (###) ###-####")
             var sortedUsers = [PhoneContact]()
-            for contact in 0..<self!.phoneContacts.count {
+            for contact in 0..<self.phoneContacts.count {
                 for user in 0..<firestoreUsers.count {
-                    var contactsPhoneNumber = (self!.phoneContacts[contact] as PhoneContact).phoneNumber[0]
+                    var contactsPhoneNumber = (self.phoneContacts[contact] as PhoneContact).phoneNumber[0]
                     if contactsPhoneNumber.count == 10 {
                         contactsPhoneNumber = "+1" + contactsPhoneNumber
                     } else if contactsPhoneNumber.count == 11 {
@@ -150,13 +139,13 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
                     }
                     let firestorePhoneNumber = (firestoreUsers[user] as User).phoneNumber
                     if formatter.unformat(contactsPhoneNumber) ==  formatter.unformat(firestorePhoneNumber) {
-                        sortedUsers.append(self!.phoneContacts[contact])
+                        sortedUsers.append(self.phoneContacts[contact])
                     }
                 }
             }
             
             sortedUsers = sortedUsers.filterDuplicates { $0.phoneNumber == $1.phoneNumber }
-            let phoneNumber = UserDefaults.standard.string(forKey: "phoneNumber")
+            let phoneNumber = SecureStorage.phoneNumber
             var removed = [PhoneContact]()
             for x in sortedUsers {
                 if formatter.unformat(x.phoneNumber[0]) != formatter.unformat(phoneNumber) {
@@ -164,17 +153,17 @@ class ImportContactsViewController: UIViewController, UITableViewDelegate, UITab
                 }
             }
             
-            self!.phoneContacts = removed
+            self.phoneContacts = removed
             
-            self?.tableView.reloadData()
+            self.tableView.reloadData()
             
-            self?.finished = true
-            if self?.phoneContacts.count == 0 {
-                self?.tableView.isHidden = true
+            self.finished = true
+            if self.phoneContacts.count == 0 {
+                self.tableView.isHidden = true
                 UIView.animate(withDuration: 0.5) {
-                    self?.noContactsLabel.alpha = 1
-                    self?.loadingLabel.alpha = 0
-                    self?.activityIndicator.alpha = 0
+                    self.noContactsLabel.alpha = 1
+                    self.loadingLabel.alpha = 0
+                    self.activityIndicator.alpha = 0
                 }
             }
         }
