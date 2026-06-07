@@ -54,7 +54,7 @@ class HomeScreenViewController: UIViewController {
           .stringValue
         print("The app's latest version is \(latestVersion).")
         
-        if !latestVersion.isEmpty && latestVersion != UIApplication.appVersion() {
+        if !latestVersion.isEmpty && UIApplication.appVersion().compare(latestVersion, options: .numeric) == .orderedAscending {
             let alert = UIAlertController(title: "new version available", message: "\"wtm?\" v\(latestVersion) is now available on the app store. please visit the app store to update it!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "ok, bet", style: .default, handler: { _ in
                 let url = "https://apps.apple.com/us/app/whats-the-move/id1574130925"

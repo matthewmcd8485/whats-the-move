@@ -61,7 +61,7 @@ class MyProfileViewController: UIViewController {
     }
     
     @IBAction func settingsButton(_ sender: Any) {
-        
+        navigationController?.pushViewController(SettingsView.makeHostingController(), animated: true)
     }
     
     // MARK: - Updating Information
@@ -93,9 +93,7 @@ class MyProfileViewController: UIViewController {
     }
     
     @IBAction @objc func statusButton(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "editStatusViewController") as EditStatusViewController
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(EditStatusView.makeHostingController(), animated: true)
     }
     
     

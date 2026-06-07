@@ -183,6 +183,7 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
                                 UserDefaults.standard.set(user.profileImageURL, forKey: "profileImageURL")
                                 SecureStorage.fcmToken = user.fcmToken
                                 UserDefaults.standard.set(user.joinedTime, forKey: "joinedTime")
+                                UserDefaults.standard.set(user.explicit, forKey: "explicit")
                                 UserDefaults.standard.set(true, forKey: "loggedIn")
                                 
                                 // Download profile image

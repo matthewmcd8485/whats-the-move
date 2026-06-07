@@ -27,8 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         if UserDefaults.standard.string(forKey: "profileImageURL") == nil {
             UserDefaults.standard.set("No profile image yet", forKey: "profileImageURL")
         }
+
+        syncVersionPreference()
         
         return true
+    }
+
+    private func syncVersionPreference() {
+        let value = "\(UIApplication.appVersion()) (build \(UIApplication.appBuild()))"
+        UserDefaults.standard.set(value, forKey: "version_preference")
     }
 
     // MARK: UISceneSession Lifecycle

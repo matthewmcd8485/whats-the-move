@@ -17,8 +17,9 @@ struct User: Codable {
     let substatus: String
     let profileImageURL: String
     let joinedTime: String
+    let explicit: Bool
     
-    init(name: String, phoneNumber: String, uid: String, fcmToken: String, status: String, substatus: String, profileImageURL: String, joinedTime: String) {
+    init(name: String, phoneNumber: String, uid: String, fcmToken: String, status: String, substatus: String, profileImageURL: String, joinedTime: String, explicit: Bool = false) {
         self.name = name
         self.phoneNumber = phoneNumber
         self.uid = uid
@@ -27,6 +28,7 @@ struct User: Codable {
         self.substatus = substatus
         self.profileImageURL = profileImageURL
         self.joinedTime = joinedTime
+        self.explicit = explicit
     }
     
     enum CodingKeys: String, CodingKey {
@@ -38,6 +40,7 @@ struct User: Codable {
         case substatus = "Substatus"
         case profileImageURL = "Profile Image URL"
         case joinedTime = "Joined"
+        case explicit = "Explicit"
     }
     
     init(from decoder: Decoder) throws {
@@ -50,6 +53,7 @@ struct User: Codable {
         self.substatus = try container.decode(String.self, forKey: .substatus)
         self.profileImageURL = (try? container.decode(String.self, forKey: .profileImageURL)) ?? "no url"
         self.joinedTime = try container.decode(String.self, forKey: .joinedTime)
+        self.explicit = (try? container.decode(Bool.self, forKey: .explicit)) ?? false
     }
 }
 

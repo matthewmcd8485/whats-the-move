@@ -23,7 +23,6 @@
 		C9119E212FD27B4C0089ACA1 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E202FD27B4C0089ACA1 /* FirebaseFirestoreCombine-Community */; };
 		C9119E232FD27B4C0089ACA1 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E222FD27B4C0089ACA1 /* FirebaseFunctions */; };
 		C9119E252FD27B4C0089ACA1 /* FirebaseFunctionsCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E242FD27B4C0089ACA1 /* FirebaseFunctionsCombine-Community */; };
-		C9119E272FD27B4C0089ACA1 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E262FD27B4C0089ACA1 /* FirebaseInAppMessaging-Beta */; };
 		C9119E292FD27B4C0089ACA1 /* FirebaseInstallations in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E282FD27B4C0089ACA1 /* FirebaseInstallations */; };
 		C9119E2B2FD27B4C0089ACA1 /* FirebaseMLModelDownloader in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E2A2FD27B4C0089ACA1 /* FirebaseMLModelDownloader */; };
 		C9119E2D2FD27B4C0089ACA1 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E2C2FD27B4C0089ACA1 /* FirebaseMessaging */; };
@@ -46,11 +45,19 @@
 		C9CD502A2FD38B0A003DE6A4 /* FirestoreKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50292FD38B0A003DE6A4 /* FirestoreKeys.swift */; };
 		C9CD502C2FD38D24003DE6A4 /* SecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD502B2FD38D24003DE6A4 /* SecureStorage.swift */; };
 		C9CD502E2FD393A2003DE6A4 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD502D2FD393A2003DE6A4 /* Log.swift */; };
+		C9CD50302FD39AD7003DE6A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9CD502F2FD39AD7003DE6A4 /* Main.storyboard */; };
+		C9CD50322FD39B1E003DE6A4 /* AboutThisAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50312FD39B1E003DE6A4 /* AboutThisAppView.swift */; };
+		C9CD50342FD3A833003DE6A4 /* Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50332FD3A833003DE6A4 /* Status.swift */; };
+		C9CD50372FD3A868003DE6A4 /* SubstatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50362FD3A868003DE6A4 /* SubstatusView.swift */; };
+		C9CD50382FD3A868003DE6A4 /* EditStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50352FD3A868003DE6A4 /* EditStatusView.swift */; };
+		C9CD503A2FD3A919003DE6A4 /* SubstatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50392FD3A919003DE6A4 /* SubstatusTableViewCell.swift */; };
+		C9CD503C2FD4CE8F003DE6A4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD503B2FD4CE8F003DE6A4 /* SettingsView.swift */; };
+		C9CD503E2FD4CEB0003DE6A4 /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD503D2FD4CEB0003DE6A4 /* DeleteAccountView.swift */; };
+		C9CD50412FD4D4D4003DE6A4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C9CD50402FD4D4D4003DE6A4 /* Settings.bundle */; };
 		C9F43EF82FD3245D004B1F1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9F43ECF2FD3245D004B1F1C /* GoogleService-Info.plist */; };
 		C9F43FC22FD3245D004B1F1C /* SuperBasic-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F417512FD3245D004B1F1C /* SuperBasic-Thin.otf */; };
 		C9F43FFA2FD3245D004B1F1C /* SuperBasic-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F4174F2FD3245D004B1F1C /* SuperBasic-Bold.otf */; };
 		C9F440032FD3245D004B1F1C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9F43E6D2FD3245D004B1F1C /* LaunchScreen.storyboard */; };
-		C9F4402D2FD3245D004B1F1C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9F43E6F2FD3245D004B1F1C /* Main.storyboard */; };
 		C9F4406A2FD3245D004B1F1C /* Blocked Words List.txt in Resources */ = {isa = PBXBuildFile; fileRef = C9F43ECD2FD3245D004B1F1C /* Blocked Words List.txt */; };
 		C9F440802FD3245D004B1F1C /* SuperBasic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F417502FD3245D004B1F1C /* SuperBasic-Regular.otf */; };
 		C9F440FB2FD3245D004B1F1C /* notification.apn in Resources */ = {isa = PBXBuildFile; fileRef = C9F43E7F2FD3245D004B1F1C /* notification.apn */; };
@@ -76,7 +83,6 @@
 		C9F443A42FD3245D004B1F1C /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417542FD3245D004B1F1C /* DatabaseManager.swift */; };
 		C9F443D42FD3245D004B1F1C /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E762FD3245D004B1F1C /* FriendRequest.swift */; };
 		C9F443DE2FD3245D004B1F1C /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417492FD3245D004B1F1C /* String.swift */; };
-		C9F444182FD3245D004B1F1C /* AboutThisAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172A2FD3245D004B1F1C /* AboutThisAppViewController.swift */; };
 		C9F444332FD3245D004B1F1C /* PickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E792FD3245D004B1F1C /* PickerData.swift */; };
 		C9F444B92FD3245D004B1F1C /* PhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417302FD3245D004B1F1C /* PhoneNumberViewController.swift */; };
 		C9F444D22FD3245D004B1F1C /* NameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172F2FD3245D004B1F1C /* NameViewController.swift */; };
@@ -89,7 +95,6 @@
 		C9F445702FD3245D004B1F1C /* ReportingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417582FD3245D004B1F1C /* ReportingManager.swift */; };
 		C9F445742FD3245D004B1F1C /* CreateFriendGroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E852FD3245D004B1F1C /* CreateFriendGroupTableViewCell.swift */; };
 		C9F445752FD3245D004B1F1C /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E742FD3245D004B1F1C /* Friend.swift */; };
-		C9F445862FD3245D004B1F1C /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172C2FD3245D004B1F1C /* SettingsViewController.swift */; };
 		C9F4459F2FD3245D004B1F1C /* PhoneContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4175C2FD3245D004B1F1C /* PhoneContact.swift */; };
 		C9F445CD2FD3245D004B1F1C /* BoredRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E832FD3245D004B1F1C /* BoredRequestTableViewCell.swift */; };
 		C9F446452FD3245D004B1F1C /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417322FD3245D004B1F1C /* WelcomeViewController.swift */; };
@@ -111,7 +116,6 @@
 		C9F448C72FD3245D004B1F1C /* BoredRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E712FD3245D004B1F1C /* BoredRequest.swift */; };
 		C9F448E82FD3245D004B1F1C /* AddFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417232FD3245D004B1F1C /* AddFriendsViewController.swift */; };
 		C9F448EF2FD3245D004B1F1C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173A2FD3245D004B1F1C /* SceneDelegate.swift */; };
-		C9F449812FD3245D004B1F1C /* EditStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417192FD3245D004B1F1C /* EditStatusViewController.swift */; };
 		C9F449A32FD3245D004B1F1C /* GroupNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E772FD3245D004B1F1C /* GroupNotification.swift */; };
 		C9F449BA2FD3245D004B1F1C /* PictureEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171C2FD3245D004B1F1C /* PictureEditViewController.swift */; };
 		C9F44A052FD3245D004B1F1C /* CategoryImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E732FD3245D004B1F1C /* CategoryImages.swift */; };
@@ -124,20 +128,17 @@
 		C9F44B452FD3245D004B1F1C /* MyProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E782FD3245D004B1F1C /* MyProfileCell.swift */; };
 		C9F44B562FD3245D004B1F1C /* ImportedContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E882FD3245D004B1F1C /* ImportedContactsTableViewCell.swift */; };
 		C9F44B792FD3245D004B1F1C /* KeychainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E7E2FD3245D004B1F1C /* KeychainItem.swift */; };
-		C9F44BA22FD3245D004B1F1C /* SubstatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E8C2FD3245D004B1F1C /* SubstatusTableViewCell.swift */; };
 		C9F44BBC2FD3245D004B1F1C /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417452FD3245D004B1F1C /* Data.swift */; };
 		C9F44BBD2FD3245D004B1F1C /* FriendGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E752FD3245D004B1F1C /* FriendGroup.swift */; };
 		C9F44BDC2FD3245D004B1F1C /* ContactsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173C2FD3245D004B1F1C /* ContactsFilter.swift */; };
 		C9F44C252FD3245D004B1F1C /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417532FD3245D004B1F1C /* AlertManager.swift */; };
 		C9F44C532FD3245D004B1F1C /* PictureEditHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171B2FD3245D004B1F1C /* PictureEditHandlers.swift */; };
-		C9F44C7F2FD3245D004B1F1C /* DeleteAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172B2FD3245D004B1F1C /* DeleteAccountViewController.swift */; };
 		C9F44CA22FD3245D004B1F1C /* ProfanityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417562FD3245D004B1F1C /* ProfanityManager.swift */; };
 		C9F44CE42FD3245D004B1F1C /* NotificationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173E2FD3245D004B1F1C /* NotificationTitle.swift */; };
 		C9F44CFF2FD3245D004B1F1C /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171F2FD3245D004B1F1C /* AddPeopleViewController.swift */; };
 		C9F44D192FD3245D004B1F1C /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417612FD3245D004B1F1C /* LoadingViewController.swift */; };
 		C9F44D4E2FD3245D004B1F1C /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4174D2FD3245D004B1F1C /* UserDefaults.swift */; };
 		C9F44D4F2FD3245D004B1F1C /* UIColorInputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417412FD3245D004B1F1C /* UIColorInputError.swift */; };
-		C9F44D832FD3245D004B1F1C /* SubstatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171D2FD3245D004B1F1C /* SubstatusViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -208,16 +209,23 @@
 		C9CD50292FD38B0A003DE6A4 /* FirestoreKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreKeys.swift; sourceTree = "<group>"; };
 		C9CD502B2FD38D24003DE6A4 /* SecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorage.swift; sourceTree = "<group>"; };
 		C9CD502D2FD393A2003DE6A4 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		C9CD502F2FD39AD7003DE6A4 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C9CD50312FD39B1E003DE6A4 /* AboutThisAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutThisAppView.swift; sourceTree = "<group>"; };
+		C9CD50332FD3A833003DE6A4 /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
+		C9CD50352FD3A868003DE6A4 /* EditStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStatusView.swift; sourceTree = "<group>"; };
+		C9CD50362FD3A868003DE6A4 /* SubstatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstatusView.swift; sourceTree = "<group>"; };
+		C9CD50392FD3A919003DE6A4 /* SubstatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstatusTableViewCell.swift; sourceTree = "<group>"; };
+		C9CD503B2FD4CE8F003DE6A4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C9CD503D2FD4CEB0003DE6A4 /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
+		C9CD50402FD4D4D4003DE6A4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		C9F417122FD3245D004B1F1C /* ActivityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCollectionViewCell.swift; sourceTree = "<group>"; };
 		C9F417142FD3245D004B1F1C /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		C9F417152FD3245D004B1F1C /* FriendSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSelectionViewController.swift; sourceTree = "<group>"; };
 		C9F417162FD3245D004B1F1C /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
 		C9F417172FD3245D004B1F1C /* SwooshViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwooshViewController.swift; sourceTree = "<group>"; };
-		C9F417192FD3245D004B1F1C /* EditStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStatusViewController.swift; sourceTree = "<group>"; };
 		C9F4171A2FD3245D004B1F1C /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		C9F4171B2FD3245D004B1F1C /* PictureEditHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEditHandlers.swift; sourceTree = "<group>"; };
 		C9F4171C2FD3245D004B1F1C /* PictureEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEditViewController.swift; sourceTree = "<group>"; };
-		C9F4171D2FD3245D004B1F1C /* SubstatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstatusViewController.swift; sourceTree = "<group>"; };
 		C9F4171F2FD3245D004B1F1C /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
 		C9F417202FD3245D004B1F1C /* FriendGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendGroupsViewController.swift; sourceTree = "<group>"; };
 		C9F417212FD3245D004B1F1C /* GroupDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailViewController.swift; sourceTree = "<group>"; };
@@ -227,9 +235,6 @@
 		C9F417262FD3245D004B1F1C /* ImportContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportContactsViewController.swift; sourceTree = "<group>"; };
 		C9F417272FD3245D004B1F1C /* MyFriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFriendsViewController.swift; sourceTree = "<group>"; };
 		C9F417282FD3245D004B1F1C /* RequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsViewController.swift; sourceTree = "<group>"; };
-		C9F4172A2FD3245D004B1F1C /* AboutThisAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutThisAppViewController.swift; sourceTree = "<group>"; };
-		C9F4172B2FD3245D004B1F1C /* DeleteAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountViewController.swift; sourceTree = "<group>"; };
-		C9F4172C2FD3245D004B1F1C /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C9F4172E2FD3245D004B1F1C /* FinishingUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishingUpViewController.swift; sourceTree = "<group>"; };
 		C9F4172F2FD3245D004B1F1C /* NameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameViewController.swift; sourceTree = "<group>"; };
 		C9F417302FD3245D004B1F1C /* PhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberViewController.swift; sourceTree = "<group>"; };
@@ -270,7 +275,6 @@
 		C9F417612FD3245D004B1F1C /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		C9F417622FD3245D004B1F1C /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		C9F43E6C2FD3245D004B1F1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		C9F43E6E2FD3245D004B1F1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C9F43E712FD3245D004B1F1C /* BoredRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequest.swift; sourceTree = "<group>"; };
 		C9F43E722FD3245D004B1F1C /* BoredRequestUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequestUser.swift; sourceTree = "<group>"; };
 		C9F43E732FD3245D004B1F1C /* CategoryImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryImages.swift; sourceTree = "<group>"; };
@@ -295,7 +299,6 @@
 		C9F43E892FD3245D004B1F1C /* MyProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileTableViewCell.swift; sourceTree = "<group>"; };
 		C9F43E8A2FD3245D004B1F1C /* RequestsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsTableViewCell.swift; sourceTree = "<group>"; };
 		C9F43E8B2FD3245D004B1F1C /* SendToGroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToGroupTableViewCell.swift; sourceTree = "<group>"; };
-		C9F43E8C2FD3245D004B1F1C /* SubstatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstatusTableViewCell.swift; sourceTree = "<group>"; };
 		C9F43ECC2FD3245D004B1F1C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9F43ECD2FD3245D004B1F1C /* Blocked Words List.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Blocked Words List.txt"; sourceTree = "<group>"; };
 		C9F43ECE2FD3245D004B1F1C /* File */ = {isa = PBXFileReference; lastKnownFileType = text; path = File; sourceTree = "<group>"; };
@@ -321,7 +324,6 @@
 				C9119E072FD27B4C0089ACA1 /* FirebaseAI in Frameworks */,
 				C9119E1F2FD27B4C0089ACA1 /* FirebaseFirestore in Frameworks */,
 				C9119E192FD27B4C0089ACA1 /* FirebaseCore in Frameworks */,
-				C9119E272FD27B4C0089ACA1 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				C9119E2B2FD27B4C0089ACA1 /* FirebaseMLModelDownloader in Frameworks */,
 				C9119E172FD27B4C0089ACA1 /* FirebaseAuthCombine-Community in Frameworks */,
 				C9119E1D2FD27B4C0089ACA1 /* FirebaseDatabase in Frameworks */,
@@ -381,6 +383,7 @@
 			isa = PBXGroup;
 			children = (
 				C9F43ED22FD3245D004B1F1C /* wtm */,
+				C9CD50402FD4D4D4003DE6A4 /* Settings.bundle */,
 				C9F44E792FD32485004B1F1C /* wtmTests */,
 				C9F44E7C2FD32485004B1F1C /* wtmUITests */,
 				C988D507268F728400CAEA8E /* WTM Notification Service Extension */,
@@ -443,11 +446,11 @@
 		C9F4171E2FD3245D004B1F1C /* Editing Profile */ = {
 			isa = PBXGroup;
 			children = (
-				C9F417192FD3245D004B1F1C /* EditStatusViewController.swift */,
 				C9F4171A2FD3245D004B1F1C /* MyProfileViewController.swift */,
 				C9F4171B2FD3245D004B1F1C /* PictureEditHandlers.swift */,
+				C9CD50352FD3A868003DE6A4 /* EditStatusView.swift */,
+				C9CD50362FD3A868003DE6A4 /* SubstatusView.swift */,
 				C9F4171C2FD3245D004B1F1C /* PictureEditViewController.swift */,
-				C9F4171D2FD3245D004B1F1C /* SubstatusViewController.swift */,
 			);
 			path = "Editing Profile";
 			sourceTree = "<group>";
@@ -478,9 +481,9 @@
 		C9F4172D2FD3245D004B1F1C /* General */ = {
 			isa = PBXGroup;
 			children = (
-				C9F4172A2FD3245D004B1F1C /* AboutThisAppViewController.swift */,
-				C9F4172B2FD3245D004B1F1C /* DeleteAccountViewController.swift */,
-				C9F4172C2FD3245D004B1F1C /* SettingsViewController.swift */,
+				C9CD50312FD39B1E003DE6A4 /* AboutThisAppView.swift */,
+				C9CD503B2FD4CE8F003DE6A4 /* SettingsView.swift */,
+				C9CD503D2FD4CEB0003DE6A4 /* DeleteAccountView.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 			isa = PBXGroup;
 			children = (
 				C9F4173C2FD3245D004B1F1C /* ContactsFilter.swift */,
+				C9CD50332FD3A833003DE6A4 /* Status.swift */,
 				C9F4173D2FD3245D004B1F1C /* DatabaseError.swift */,
 				C9F4173E2FD3245D004B1F1C /* NotificationTitle.swift */,
 				C9F4173F2FD3245D004B1F1C /* StorageErrors.swift */,
@@ -606,8 +610,8 @@
 		C9F43E702FD3245D004B1F1C /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
+				C9CD502F2FD39AD7003DE6A4 /* Main.storyboard */,
 				C9F43E6D2FD3245D004B1F1C /* LaunchScreen.storyboard */,
-				C9F43E6F2FD3245D004B1F1C /* Main.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -654,7 +658,7 @@
 				C9F43E892FD3245D004B1F1C /* MyProfileTableViewCell.swift */,
 				C9F43E8A2FD3245D004B1F1C /* RequestsTableViewCell.swift */,
 				C9F43E8B2FD3245D004B1F1C /* SendToGroupTableViewCell.swift */,
-				C9F43E8C2FD3245D004B1F1C /* SubstatusTableViewCell.swift */,
+				C9CD50392FD3A919003DE6A4 /* SubstatusTableViewCell.swift */,
 			);
 			path = "TableView Cells";
 			sourceTree = "<group>";
@@ -743,7 +747,6 @@
 				C9119E202FD27B4C0089ACA1 /* FirebaseFirestoreCombine-Community */,
 				C9119E222FD27B4C0089ACA1 /* FirebaseFunctions */,
 				C9119E242FD27B4C0089ACA1 /* FirebaseFunctionsCombine-Community */,
-				C9119E262FD27B4C0089ACA1 /* FirebaseInAppMessaging-Beta */,
 				C9119E282FD27B4C0089ACA1 /* FirebaseInstallations */,
 				C9119E2A2FD27B4C0089ACA1 /* FirebaseMLModelDownloader */,
 				C9119E2C2FD27B4C0089ACA1 /* FirebaseMessaging */,
@@ -928,8 +931,9 @@
 				C9F43FC22FD3245D004B1F1C /* SuperBasic-Thin.otf in Resources */,
 				C9F43FFA2FD3245D004B1F1C /* SuperBasic-Bold.otf in Resources */,
 				C9F440032FD3245D004B1F1C /* LaunchScreen.storyboard in Resources */,
-				C9F4402D2FD3245D004B1F1C /* Main.storyboard in Resources */,
+				C9CD50412FD4D4D4003DE6A4 /* Settings.bundle in Resources */,
 				C9F4406A2FD3245D004B1F1C /* Blocked Words List.txt in Resources */,
+				C9CD50302FD39AD7003DE6A4 /* Main.storyboard in Resources */,
 				C9F440802FD3245D004B1F1C /* SuperBasic-Regular.otf in Resources */,
 				C9F440FB2FD3245D004B1F1C /* notification.apn in Resources */,
 				C9F440FC2FD3245D004B1F1C /* File in Resources */,
@@ -1002,12 +1006,12 @@
 				C9F443A42FD3245D004B1F1C /* DatabaseManager.swift in Sources */,
 				C9F443D42FD3245D004B1F1C /* FriendRequest.swift in Sources */,
 				C9F443DE2FD3245D004B1F1C /* String.swift in Sources */,
-				C9F444182FD3245D004B1F1C /* AboutThisAppViewController.swift in Sources */,
 				C9F444332FD3245D004B1F1C /* PickerData.swift in Sources */,
 				C9F444B92FD3245D004B1F1C /* PhoneNumberViewController.swift in Sources */,
 				C9F444D22FD3245D004B1F1C /* NameViewController.swift in Sources */,
 				C9F444F12FD3245D004B1F1C /* FriendGroupsViewController.swift in Sources */,
 				C9F445092FD3245D004B1F1C /* UIImageView.swift in Sources */,
+				C9CD503A2FD3A919003DE6A4 /* SubstatusTableViewCell.swift in Sources */,
 				C9F445232FD3245D004B1F1C /* RequestsViewController.swift in Sources */,
 				C9F4452B2FD3245D004B1F1C /* DatabaseError.swift in Sources */,
 				C9F4452C2FD3245D004B1F1C /* FriendViewController.swift in Sources */,
@@ -1015,7 +1019,6 @@
 				C9F445702FD3245D004B1F1C /* ReportingManager.swift in Sources */,
 				C9F445742FD3245D004B1F1C /* CreateFriendGroupTableViewCell.swift in Sources */,
 				C9F445752FD3245D004B1F1C /* Friend.swift in Sources */,
-				C9F445862FD3245D004B1F1C /* SettingsViewController.swift in Sources */,
 				C9F4459F2FD3245D004B1F1C /* PhoneContact.swift in Sources */,
 				C9F445CD2FD3245D004B1F1C /* BoredRequestTableViewCell.swift in Sources */,
 				C9F446452FD3245D004B1F1C /* WelcomeViewController.swift in Sources */,
@@ -1024,6 +1027,7 @@
 				C9F446DC2FD3245D004B1F1C /* BoredRequestUser.swift in Sources */,
 				C9F446F12FD3245D004B1F1C /* FriendsTableViewCell.swift in Sources */,
 				C9F447072FD3245D004B1F1C /* UIColor.swift in Sources */,
+				C9CD50322FD39B1E003DE6A4 /* AboutThisAppView.swift in Sources */,
 				C9F4470A2FD3245D004B1F1C /* PhoneContacts.swift in Sources */,
 				C9CD502A2FD38B0A003DE6A4 /* FirestoreKeys.swift in Sources */,
 				C9F4470B2FD3245D004B1F1C /* MyProfileViewController.swift in Sources */,
@@ -1035,17 +1039,20 @@
 				C9F447A92FD3245D004B1F1C /* ChangeResponseViewController.swift in Sources */,
 				C9F447F52FD3245D004B1F1C /* GroupDetailViewController.swift in Sources */,
 				C9F448032FD3245D004B1F1C /* SendToGroupTableViewCell.swift in Sources */,
+				C9CD503E2FD4CEB0003DE6A4 /* DeleteAccountView.swift in Sources */,
 				C9F448332FD3245D004B1F1C /* SelectableGroup.swift in Sources */,
 				C9F448C72FD3245D004B1F1C /* BoredRequest.swift in Sources */,
+				C9CD503C2FD4CE8F003DE6A4 /* SettingsView.swift in Sources */,
 				C9F448E82FD3245D004B1F1C /* AddFriendsViewController.swift in Sources */,
 				C9F448EF2FD3245D004B1F1C /* SceneDelegate.swift in Sources */,
-				C9F449812FD3245D004B1F1C /* EditStatusViewController.swift in Sources */,
 				C9F449A32FD3245D004B1F1C /* GroupNotification.swift in Sources */,
 				C9F449BA2FD3245D004B1F1C /* PictureEditViewController.swift in Sources */,
 				C9F44A052FD3245D004B1F1C /* CategoryImages.swift in Sources */,
 				C9F44A342FD3245D004B1F1C /* RequestsTableViewCell.swift in Sources */,
 				C9F44A3E2FD3245D004B1F1C /* BoredResponseTableViewCell.swift in Sources */,
 				C9F44A862FD3245D004B1F1C /* FriendGroupsTableViewCell.swift in Sources */,
+				C9CD50372FD3A868003DE6A4 /* SubstatusView.swift in Sources */,
+				C9CD50382FD3A868003DE6A4 /* EditStatusView.swift in Sources */,
 				C9F44AD32FD3245D004B1F1C /* BackBarButtonItem.swift in Sources */,
 				C9CD502C2FD38D24003DE6A4 /* SecureStorage.swift in Sources */,
 				C9F44AF12FD3245D004B1F1C /* AppDelegate.swift in Sources */,
@@ -1053,20 +1060,18 @@
 				C9F44B452FD3245D004B1F1C /* MyProfileCell.swift in Sources */,
 				C9F44B562FD3245D004B1F1C /* ImportedContactsTableViewCell.swift in Sources */,
 				C9F44B792FD3245D004B1F1C /* KeychainItem.swift in Sources */,
-				C9F44BA22FD3245D004B1F1C /* SubstatusTableViewCell.swift in Sources */,
+				C9CD50342FD3A833003DE6A4 /* Status.swift in Sources */,
 				C9F44BBC2FD3245D004B1F1C /* Data.swift in Sources */,
 				C9F44BBD2FD3245D004B1F1C /* FriendGroup.swift in Sources */,
 				C9F44BDC2FD3245D004B1F1C /* ContactsFilter.swift in Sources */,
 				C9F44C252FD3245D004B1F1C /* AlertManager.swift in Sources */,
 				C9F44C532FD3245D004B1F1C /* PictureEditHandlers.swift in Sources */,
-				C9F44C7F2FD3245D004B1F1C /* DeleteAccountViewController.swift in Sources */,
 				C9F44CA22FD3245D004B1F1C /* ProfanityManager.swift in Sources */,
 				C9F44CE42FD3245D004B1F1C /* NotificationTitle.swift in Sources */,
 				C9F44CFF2FD3245D004B1F1C /* AddPeopleViewController.swift in Sources */,
 				C9F44D192FD3245D004B1F1C /* LoadingViewController.swift in Sources */,
 				C9F44D4E2FD3245D004B1F1C /* UserDefaults.swift in Sources */,
 				C9F44D4F2FD3245D004B1F1C /* UIColorInputError.swift in Sources */,
-				C9F44D832FD3245D004B1F1C /* SubstatusViewController.swift in Sources */,
 			);
 		};
 		C9760B2A2663F647009F66DA /* Sources */ = {
@@ -1131,14 +1136,6 @@
 				C9F43E6C2FD3245D004B1F1C /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		C9F43E6F2FD3245D004B1F1C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C9F43E6E2FD3245D004B1F1C /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1276,7 +1273,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				EXCLUDED_ARCHS = "";
@@ -1309,7 +1306,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_NO_COMMON_BLOCKS = NO;
@@ -1686,11 +1683,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFunctionsCombine-Community";
-		};
-		C9119E262FD27B4C0089ACA1 /* FirebaseInAppMessaging-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseInAppMessaging-Beta";
 		};
 		C9119E282FD27B4C0089ACA1 /* FirebaseInstallations */ = {
 			isa = XCSwiftPackageProductDependency;

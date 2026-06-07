@@ -622,7 +622,6 @@ touches</string>
                                 </state>
                                 <connections>
                                     <action selector="settingsButton:" destination="6zo-9a-ifm" eventType="touchUpInside" id="N2S-Vg-z5f"/>
-                                    <segue destination="HBn-WR-8Cf" kind="show" id="UKK-1z-hjK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zLa-nx-OdX">
@@ -758,144 +757,6 @@ touches</string>
             </objects>
             <point key="canvasLocation" x="3776.9230769230767" y="2317.5355450236966"/>
         </scene>
-        <!--Edit Status View Controller-->
-        <scene sceneID="UL7-vr-cEI">
-            <objects>
-                <viewController storyboardIdentifier="editStatusViewController" id="8el-I7-Frj" customClass="EditStatusViewController" customModule="wtm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="3XI-7Q-fND">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWf-aZ-5oY">
-                                <rect key="frame" x="16" y="410" width="358" height="120"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="lightYellowOnLight"/>
-                                <connections>
-                                    <action selector="busyButton:" destination="8el-I7-Frj" eventType="touchUpInside" id="YI2-dU-47V"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="what would you like to change your status to?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ao0-cb-TML">
-                                <rect key="frame" x="27" y="142" width="332" height="69"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u8v-Ao-ZcG">
-                                <rect key="frame" x="16" y="44" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" image="arrow.left" catalog="system">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButton:" destination="8el-I7-Frj" eventType="touchUpInside" id="6GX-sw-dBd"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8O-yQ-ThW">
-                                <rect key="frame" x="16" y="240" width="358" height="120"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="lightGreenOnLight"/>
-                                <connections>
-                                    <action selector="availableButton:" destination="8el-I7-Frj" eventType="touchUpInside" id="zw0-IW-kpJ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OJ3-Pm-FPk">
-                                <rect key="frame" x="17" y="580" width="358" height="120"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="lightRedOnLight"/>
-                                <connections>
-                                    <action selector="doNotDisturbButton:" destination="8el-I7-Frj" eventType="touchUpInside" id="YxD-ik-0C0"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="available" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U2D-JG-rTT">
-                                <rect key="frame" x="119" y="246" width="240" height="60"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="34"/>
-                                <color key="textColor" name="secondaryBlack"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="busy" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JFo-lZ-bR6">
-                                <rect key="frame" x="119" y="410" width="240" height="60"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="34"/>
-                                <color key="textColor" name="secondaryBlack"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="stfu!" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v6k-65-eHS">
-                                <rect key="frame" x="118" y="580" width="241" height="60"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="34"/>
-                                <color key="textColor" name="secondaryBlack"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="let's do something right this instant!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xKp-F3-5pC">
-                                <rect key="frame" x="118" y="291" width="241" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryBlack"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="checkmark.seal" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Pwe-Wn-EBo">
-                                <rect key="frame" x="27" y="259" width="80" height="80"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" name="darkGreenOnLight"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="exclamationmark.bubble" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="FOL-o2-UAH">
-                                <rect key="frame" x="27" y="430" width="80" height="80"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" name="darkYellowOnLight"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="i have better things to do than hang out with you" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99R-VU-ife">
-                                <rect key="frame" x="119" y="460" width="240" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryBlack"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="don't even think about talking to me right now" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mAa-2P-xME">
-                                <rect key="frame" x="118" y="628" width="240" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryBlack"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nosign" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="suX-eH-YWG">
-                                <rect key="frame" x="27" y="600" width="80" height="80"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" name="darkRedOnLight"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="edit status" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="86U-jn-5Jm">
-                                <rect key="frame" x="23" y="61" width="314" height="113"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(silences notifications)" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H5I-EJ-ZA1">
-                                <rect key="frame" x="200" y="605" width="174" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="12"/>
-                                <color key="textColor" name="secondaryBlack"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="qfD-jX-tqk"/>
-                        <color key="backgroundColor" name="backgroundColors"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="xWK-PZ-6fG"/>
-                    <connections>
-                        <outlet property="availableButtonView" destination="Z8O-yQ-ThW" id="RVM-au-Wu0"/>
-                        <outlet property="busyButtonView" destination="FWf-aZ-5oY" id="W09-4F-qLM"/>
-                        <outlet property="dndButtonView" destination="OJ3-Pm-FPk" id="dNE-Aq-UdI"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EhO-XS-Mng" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4620" y="2318"/>
-        </scene>
         <!--Picture Edit View Controller-->
         <scene sceneID="lED-dc-0yd">
             <objects>
@@ -980,117 +841,6 @@ your best is probably still pretty bad.</string>
             </objects>
             <point key="canvasLocation" x="3780" y="3059"/>
         </scene>
-        <!--Settings View Controller-->
-        <scene sceneID="pYh-NR-GqK">
-            <objects>
-                <viewController storyboardIdentifier="settingsViewController" hidesBottomBarWhenPushed="YES" id="HBn-WR-8Cf" customClass="SettingsViewController" customModule="wtm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="g9i-KW-cQx">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z9Y-aR-rU2">
-                                <rect key="frame" x="16" y="44" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" image="arrow.left" catalog="system">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="zGN-80-hGo"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="settings" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpU-fE-pNW">
-                                <rect key="frame" x="16" y="61" width="358" height="113"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mYT-IK-2k8">
-                                <rect key="frame" x="16" y="482" width="358" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="about">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                </state>
-                                <connections>
-                                    <segue destination="mqX-mv-5Tw" kind="show" id="MQd-AH-AFT"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dJ3-QQ-vkH">
-                                <rect key="frame" x="16" y="413" width="358" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="view iOS settings">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                </state>
-                                <connections>
-                                    <action selector="settingsButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="7GZ-vP-LbJ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KMp-YE-xCq">
-                                <rect key="frame" x="16" y="343" width="358" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="terms &amp; conditions">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                </state>
-                                <connections>
-                                    <action selector="termsButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="iZE-is-2sH"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zEO-Yn-cOV">
-                                <rect key="frame" x="16" y="274" width="358" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="privacy policy">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                </state>
-                                <connections>
-                                    <action selector="privacyButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="XT4-XY-YsL"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8g6-wa-qRV">
-                                <rect key="frame" x="16" y="641" width="358" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="log out">
-                                    <color key="titleColor" systemColor="systemRedColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="logOutButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="Boa-E9-Lf8"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="make your changes to the space-time continuum here." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iQr-ee-B9e">
-                                <rect key="frame" x="16" y="141" width="332" height="69"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hTJ-z8-kZv">
-                                <rect key="frame" x="16" y="704" width="358" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="delete account">
-                                    <color key="titleColor" systemColor="systemRedColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="deleteAccountButton:" destination="HBn-WR-8Cf" eventType="touchUpInside" id="IVr-HG-FR6"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="A6j-I9-Be4"/>
-                        <color key="backgroundColor" name="backgroundColors"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="AjS-TJ-Mnj"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2fd-tV-uh9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4622" y="3058"/>
-        </scene>
         <!--myself-->
         <scene sceneID="Lpw-4m-6ff">
             <objects>
@@ -1147,178 +897,6 @@ your best is probably still pretty bad.</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fWO-m7-QMz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2868" y="-665"/>
-        </scene>
-        <!--Substatus View Controller-->
-        <scene sceneID="wDB-RL-RLv">
-            <objects>
-                <viewController storyboardIdentifier="substatusViewController" id="LXl-ES-kRN" customClass="SubstatusViewController" customModule="wtm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="FTj-c0-nVK">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L6M-8X-Yns">
-                                <rect key="frame" x="16" y="44" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" image="arrow.left" catalog="system">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButton:" destination="LXl-ES-kRN" eventType="touchUpInside" id="JTT-Gx-gP0"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="edit status" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dav-zT-ODi">
-                                <rect key="frame" x="23" y="61" width="314" height="113"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="pick a substatus to further personalize your rather lame profile." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6x-9v-IcW">
-                                <rect key="frame" x="27" y="142" width="335" height="69"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="uBf-do-GNb">
-                                <rect key="frame" x="27" y="259" width="335" height="448"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="backgroundColors"/>
-                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </tableView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="aI3-uQ-Pct"/>
-                        <color key="backgroundColor" name="backgroundColors"/>
-                    </view>
-                    <connections>
-                        <outlet property="tableView" destination="uBf-do-GNb" id="DwD-cj-Zmk"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="50K-CO-WYw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5485" y="2318"/>
-        </scene>
-        <!--About This App View Controller-->
-        <scene sceneID="hsF-zM-hEj">
-            <objects>
-                <viewController storyboardIdentifier="aboutThisAppViewController" id="mqX-mv-5Tw" customClass="AboutThisAppViewController" customModule="wtm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Aao-p2-fJi">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWr-y6-cPK">
-                                <rect key="frame" x="16" y="44" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
-                                <color key="tintColor" name="secondaryWhite"/>
-                                <state key="normal" image="arrow.left" catalog="system">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButton:" destination="mqX-mv-5Tw" eventType="touchUpInside" id="qsx-8l-Iug"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bgC-NI-aMx">
-                                <rect key="frame" x="87" y="700" width="217" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="darkBlueOnLight"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="write a review">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="reviewButton:" destination="mqX-mv-5Tw" eventType="touchUpInside" id="GYQ-OC-cBN"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="wtm?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jIE-rk-PV1">
-                                <rect key="frame" x="16" y="70" width="358" height="155"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="100"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="app version 1.2 (1)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDa-Vg-Cd4">
-                                <rect key="frame" x="29" y="191" width="332" height="69"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="tell us how good we are!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4j2-5F-PRO">
-                                <rect key="frame" x="34" y="664" width="323" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="created with haste in naperville developed by matt and jackson" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zpw-On-2WA">
-                                <rect key="frame" x="0.0" y="268" width="390" height="110"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="17"/>
-                                <color key="textColor" name="secondaryWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="special thanks to jace for this bomb idea" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SG8-D1-mbP">
-                                <rect key="frame" x="0.0" y="330" width="390" height="69"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lo2-24-a0V">
-                                <rect key="frame" x="29" y="424" width="332" height="69"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <string key="text">© 2022 matthew mcdonnell.
-all rights reserved.</string>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b83-zS-iOy">
-                                <rect key="frame" x="119" y="573" width="152" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="darkBlueOnLight"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="tip jar">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="tipButton:" destination="mqX-mv-5Tw" eventType="touchUpInside" id="Kyh-Wq-5HX"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="support the dev team" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a6E-LV-VRl">
-                                <rect key="frame" x="34" y="537" width="323" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="fonts licensed from big cat creative" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l4w-PU-HDv">
-                                <rect key="frame" x="0.0" y="765" width="390" height="55"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="11"/>
-                                <color key="textColor" name="secondaryWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="XbZ-wr-0cS"/>
-                        <color key="backgroundColor" name="lightBlueOnLight"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="6SU-9V-DGK"/>
-                    <connections>
-                        <outlet property="reviewButton" destination="bgC-NI-aMx" id="L2Z-de-Ed0"/>
-                        <outlet property="supportLabel" destination="a6E-LV-VRl" id="gPt-Ri-Qmy"/>
-                        <outlet property="tipButton" destination="b83-zS-iOy" id="5FO-2t-sLI"/>
-                        <outlet property="versionLabel" destination="iDa-Vg-Cd4" id="aRC-FL-0ZH"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jfc-m0-hhS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5487.6923076923076" y="3058.2938388625589"/>
         </scene>
         <!--Add Friends View Controller-->
         <scene sceneID="GM3-ai-Ie3">
@@ -2537,91 +2115,6 @@ tragic.</string>
             </objects>
             <point key="canvasLocation" x="2868" y="90"/>
         </scene>
-        <!--Delete Account View Controller-->
-        <scene sceneID="RYP-sc-bha">
-            <objects>
-                <viewController storyboardIdentifier="deleteAccountViewController" hidesBottomBarWhenPushed="YES" id="cbo-Za-lT5" customClass="DeleteAccountViewController" customModule="wtm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="tgg-lB-c39">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tXO-J6-Gj1">
-                                <rect key="frame" x="16" y="44" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="16"/>
-                                <color key="tintColor" name="darkBlueOnLight"/>
-                                <state key="normal" image="arrow.left" catalog="system">
-                                    <color key="titleColor" name="darkBlueOnLight"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="default" weight="regular"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButton:" destination="cbo-Za-lT5" eventType="touchUpInside" id="dfg-hf-RcQ"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="woah, dude!" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fkW-UY-urR">
-                                <rect key="frame" x="16" y="61" width="358" height="113"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="48"/>
-                                <color key="textColor" name="darkBlueOnLight"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xe5-mb-Yjd">
-                                <rect key="frame" x="16" y="601" width="358" height="61"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="darkBlueOnLight"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="oh my bad, cancel">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="cancelButton:" destination="cbo-Za-lT5" eventType="touchUpInside" id="6GC-7A-8On"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="uAX-mD-TOn">
-                                <rect key="frame" x="16" y="678" width="358" height="111"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Bold" family="Super Basic" pointSize="20"/>
-                                <state key="normal" title="i hate this dumb app, delete my account this instant">
-                                    <color key="titleColor" name="darkRedOnLight"/>
-                                </state>
-                                <connections>
-                                    <action selector="deleteButton:" destination="cbo-Za-lT5" eventType="touchUpInside" id="Sn9-MJ-ErM"/>
-                                </connections>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="person.crop.circle.badge.exclamationmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Ygl-sM-fuI">
-                                <rect key="frame" x="69" y="274" width="250" height="250"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" name="darkRedOnLight"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="are you sure you want to do this? this is your last chance to turn back." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nB5-3O-BO7">
-                                <rect key="frame" x="16" y="141" width="332" height="83"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Regular" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="working..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDD-uB-0pn">
-                                <rect key="frame" x="89" y="710" width="210" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="SuperBasic-Thin" family="Super Basic" pointSize="15"/>
-                                <color key="textColor" name="secondaryLabelColors"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="HXF-W5-1o1"/>
-                        <color key="backgroundColor" name="backgroundColors"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Nds-iw-bRZ"/>
-                    <connections>
-                        <outlet property="cancelButton" destination="xe5-mb-Yjd" id="Dne-7l-KYH"/>
-                        <outlet property="deleteButtonLayer" destination="uAX-mD-TOn" id="6vO-ok-34l"/>
-                        <outlet property="workingLabel" destination="UDD-uB-0pn" id="DnI-jQ-20l"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lge-Lm-vEO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4620" y="3772.7488151658767"/>
-        </scene>
     </scenes>
     <resources>
         <image name="arrow.counterclockwise" catalog="system" width="110" height="128"/>
@@ -2634,7 +2127,6 @@ tragic.</string>
         <image name="checkmark.circle" catalog="system" width="128" height="123"/>
         <image name="checkmark.seal" catalog="system" width="128" height="124"/>
         <image name="ellipsis.bubble" catalog="system" width="128" height="110"/>
-        <image name="exclamationmark.bubble" catalog="system" width="128" height="110"/>
         <image name="exclamationmark.triangle" catalog="system" width="128" height="109"/>
         <image name="gear" catalog="system" width="128" height="122"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
@@ -2644,7 +2136,6 @@ tragic.</string>
         <image name="person.3.fill" catalog="system" width="128" height="66"/>
         <image name="person.circle" catalog="system" width="128" height="123"/>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>
-        <image name="person.crop.circle.badge.exclamationmark" catalog="system" width="128" height="114"/>
         <image name="person.crop.circle.badge.plus" catalog="system" width="128" height="114"/>
         <image name="person.crop.circle.fill.badge.checkmark" catalog="system" width="128" height="114"/>
         <image name="person.fill.xmark" catalog="system" width="128" height="89"/>
@@ -2659,12 +2150,6 @@ tragic.</string>
         <namedColor name="darkGreenOnLight">
             <color red="0.12941176470588237" green="0.61960784313725492" blue="0.22352941176470589" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="darkRedOnLight">
-            <color red="0.66666666666666663" green="0.15686274509803921" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="darkYellowOnLight">
-            <color red="0.76470588235294112" green="0.67843137254901964" blue="0.11372549019607843" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="lightBlue">
             <color red="0.36470588235294116" green="0.54117647058823526" blue="0.65098039215686276" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -2674,20 +2159,11 @@ tragic.</string>
         <namedColor name="lightGreenOnLight">
             <color red="0.22400000691413879" green="0.875" blue="0.3919999897480011" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="lightRedOnLight">
-            <color red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="lightYellowOnLight">
-            <color red="0.99900001287460327" green="0.98600000143051147" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="secondaryBlack">
             <color red="0.13725490196078433" green="0.13725490196078433" blue="0.13725490196078433" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="secondaryLabelColors">
             <color red="0.40392156862745099" green="0.54117647058823526" blue="0.64313725490196083" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="secondaryWhite">
-            <color red="0.84313725490196079" green="0.84313725490196079" blue="0.85098039215686272" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="tertiaryLabelColors">
             <color red="0.13725490196078433" green="0.24705882352941178" blue="0.3411764705882353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

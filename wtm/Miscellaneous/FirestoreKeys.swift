@@ -28,6 +28,7 @@ enum FirestoreKeys {
         static let substatus = "Substatus"
         static let profileImageURL = "Profile Image URL"
         static let joined = "Joined"
+        static let explicit = "Explicit"
     }
     
     enum Group {

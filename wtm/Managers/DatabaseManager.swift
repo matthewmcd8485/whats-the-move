@@ -60,7 +60,20 @@ final class DatabaseManager {
             FirestoreKeys.User.status : user.status,
             FirestoreKeys.User.substatus : user.substatus,
             FirestoreKeys.User.joined : user.joinedTime,
-            FirestoreKeys.User.profileImageURL : user.profileImageURL
+            FirestoreKeys.User.profileImageURL : user.profileImageURL,
+            FirestoreKeys.User.explicit : user.explicit
+        ], merge: true, completion: { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        })
+    }
+
+    public func updateUserExplicit(uid: String, enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        db.collection(FirestoreKeys.Collection.users).document(uid).setData([
+            FirestoreKeys.User.explicit : enabled
         ], merge: true, completion: { error in
             if let error = error {
                 completion(.failure(error))
