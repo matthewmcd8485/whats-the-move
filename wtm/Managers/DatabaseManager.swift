@@ -154,7 +154,7 @@ final class DatabaseManager {
     }
     
     // MARK: - Bored Requests
-    public func createBoredRequest(requestID: String, groupID: String, initiatedBy: String, postedTime: Date, expiresAt: Date, activity: String, initiatorUID uid: String, initiatorSubstatus substatus: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    public func createBoredRequest(requestID: String, groupID: String, initiatedBy: String, postedTime: Date, expiresAt: Date, activity: String, initiatorUID uid: String, initiatorSubstatus substatus: String, timeSensitive: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).document(requestID).setData([
             FirestoreKeys.BoredRequest.requestIdentifier : requestID,
             FirestoreKeys.BoredRequest.initiatedBy : initiatedBy,
@@ -162,6 +162,7 @@ final class DatabaseManager {
             FirestoreKeys.BoredRequest.expiresAt : expiresAt,
             FirestoreKeys.BoredRequest.activity : activity,
             FirestoreKeys.BoredRequest.groupIdentifier : groupID,
+            FirestoreKeys.BoredRequest.timeSensitive : timeSensitive,
             FirestoreKeys.BoredRequest.availabilityField(forUID: uid) : "available",
             FirestoreKeys.BoredRequest.substatusField(forUID: uid) : substatus
         ], merge: false, completion: { error in
@@ -298,6 +299,36 @@ final class DatabaseManager {
         db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).updateData([
             FirestoreKeys.Group.people : FieldValue.arrayUnion([uid])
         ])
+    }
+
+    // Synthesizes a deterministic two-person "direct" friend group used to back
+    // 1:1 bored requests. The ID is derived from the sorted UID pair so repeat
+    // sends between the same two users reuse the same group (and thus share a
+    // response thread). Marked with `Direct: true` so it can be filtered out of
+    // the visible groups list.
+    public func directGroupID(uidA: String, uidB: String) -> String {
+        let sorted = [uidA, uidB].sorted()
+        return "direct-\(sorted[0])-\(sorted[1])"
+    }
+
+    public func ensureDirectGroup(myUID: String, friendUID: String) async throws -> String {
+        let groupID = directGroupID(uidA: myUID, uidB: friendUID)
+        let ref = db.collection(FirestoreKeys.Collection.friendGroups).document(groupID)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            ref.setData([
+                FirestoreKeys.Group.groupIdentifier : groupID,
+                FirestoreKeys.Group.name : "direct",
+                FirestoreKeys.Group.people : [myUID, friendUID],
+                FirestoreKeys.Group.direct : true
+            ], merge: true, completion: { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: ())
+                }
+            })
+        }
+        return groupID
     }
     
     public func removePersonFromGroup(groupID: String, uid: String, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -762,9 +793,9 @@ extension DatabaseManager {
         }
     }
     
-    public func createBoredRequest(requestID: String, groupID: String, initiatedBy: String, postedTime: Date, expiresAt: Date, activity: String, initiatorUID: String, initiatorSubstatus: String) async throws {
+    public func createBoredRequest(requestID: String, groupID: String, initiatedBy: String, postedTime: Date, expiresAt: Date, activity: String, initiatorUID: String, initiatorSubstatus: String, timeSensitive: Bool) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            createBoredRequest(requestID: requestID, groupID: groupID, initiatedBy: initiatedBy, postedTime: postedTime, expiresAt: expiresAt, activity: activity, initiatorUID: initiatorUID, initiatorSubstatus: initiatorSubstatus) { result in
+            createBoredRequest(requestID: requestID, groupID: groupID, initiatedBy: initiatedBy, postedTime: postedTime, expiresAt: expiresAt, activity: activity, initiatorUID: initiatorUID, initiatorSubstatus: initiatorSubstatus, timeSensitive: timeSensitive) { result in
                 continuation.resume(with: result)
             }
         }

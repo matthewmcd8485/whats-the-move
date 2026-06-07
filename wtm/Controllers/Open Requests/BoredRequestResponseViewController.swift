@@ -61,9 +61,14 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     
     // MARK: - UI Configuration
     private func configureLabels() {
-        groupNameLabel.text = group.name
-        activityLabel.text = "\(request.initiatedBy) \(request.activity)"
-        
+        if group.isDirectGroup {
+            groupNameLabel.text = request.initiatedBy
+            activityLabel.text = request.activity
+        } else {
+            groupNameLabel.text = group.name
+            activityLabel.text = "\(request.initiatedBy) \(request.activity)"
+        }
+
         let expiringTime = request.expiresAt.toString(dateFormat: "h:mm a")
         expiresAtLabel.text = "this request expires at \(expiringTime)"
     }

@@ -74,9 +74,9 @@ class BoredRequestTableViewCell: UITableViewCell {
     }
     
     public func configure(model: BoredRequest, group: FriendGroup) {
-        nameLabel.text = group.name
-        
-        activityLabel.text = model.initiatedBy + " " + model.activity
+        nameLabel.text = group.isDirectGroup ? model.initiatedBy : group.name
+
+        activityLabel.text = group.isDirectGroup ? model.activity : model.initiatedBy + " " + model.activity
         
         // Configure expiringLabel
         let expiringTime = model.expiresAt.toString(dateFormat: "h:mm a")

@@ -75,7 +75,7 @@ class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITable
                     groupIDs.append(downloadedGroups[x].groupID)
                 }
                 UserDefaults.standard.set(groupIDs, forKey: "groupsUID")
-                self?.groups = downloadedGroups
+                self?.groups = downloadedGroups.filter { !$0.isDirectGroup }
                 self?.tableView.reloadData()
                 self?.updateUI()
             case .failure(let error):

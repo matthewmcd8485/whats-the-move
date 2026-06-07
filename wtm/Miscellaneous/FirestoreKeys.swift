@@ -35,6 +35,7 @@ enum FirestoreKeys {
         static let name = "Name"
         static let groupIdentifier = "Group Identifier"
         static let people = "People"
+        static let direct = "Direct"
     }
     
     enum FriendRequest {
@@ -50,6 +51,7 @@ enum FirestoreKeys {
         static let postedTime = "Posted Time"
         static let expiresAt = "Expires At"
         static let activity = "Activity"
+        static let timeSensitive = "Time Sensitive"
         
         static func availabilityField(forUID uid: String) -> String { "\(uid) Availability" }
         static func substatusField(forUID uid: String) -> String { "\(uid) Substatus" }

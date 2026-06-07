@@ -54,6 +54,10 @@
 		C9CD503C2FD4CE8F003DE6A4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD503B2FD4CE8F003DE6A4 /* SettingsView.swift */; };
 		C9CD503E2FD4CEB0003DE6A4 /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD503D2FD4CEB0003DE6A4 /* DeleteAccountView.swift */; };
 		C9CD50412FD4D4D4003DE6A4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C9CD50402FD4D4D4003DE6A4 /* Settings.bundle */; };
+		C9CD50432FD4FE64003DE6A4 /* SwooshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50422FD4FE64003DE6A4 /* SwooshView.swift */; };
+		C9CD50452FD4FE7F003DE6A4 /* FriendSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50442FD4FE7F003DE6A4 /* FriendSelectionView.swift */; };
+		C9CD50472FD4FE99003DE6A4 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50462FD4FE99003DE6A4 /* ActivityView.swift */; };
+		C9CD50492FD4FEAF003DE6A4 /* HomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50482FD4FEAF003DE6A4 /* HomeScreenView.swift */; };
 		C9F43EF82FD3245D004B1F1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9F43ECF2FD3245D004B1F1C /* GoogleService-Info.plist */; };
 		C9F43FC22FD3245D004B1F1C /* SuperBasic-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F417512FD3245D004B1F1C /* SuperBasic-Thin.otf */; };
 		C9F43FFA2FD3245D004B1F1C /* SuperBasic-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F4174F2FD3245D004B1F1C /* SuperBasic-Bold.otf */; };
@@ -64,16 +68,13 @@
 		C9F440FC2FD3245D004B1F1C /* File in Resources */ = {isa = PBXBuildFile; fileRef = C9F43ECE2FD3245D004B1F1C /* File */; };
 		C9F441D62FD3245D004B1F1C /* Notification.json in Resources */ = {isa = PBXBuildFile; fileRef = C9F43E802FD3245D004B1F1C /* Notification.json */; };
 		C9F441E72FD3245D004B1F1C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F43ECC2FD3245D004B1F1C /* Assets.xcassets */; };
-		C9F4423F2FD3245D004B1F1C /* SwooshViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417172FD3245D004B1F1C /* SwooshViewController.swift */; };
 		C9F442442FD3245D004B1F1C /* MyProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E892FD3245D004B1F1C /* MyProfileTableViewCell.swift */; };
 		C9F4426F2FD3245D004B1F1C /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417462FD3245D004B1F1C /* Date.swift */; };
 		C9F442832FD3245D004B1F1C /* SelectableUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E7B2FD3245D004B1F1C /* SelectableUser.swift */; };
-		C9F442852FD3245D004B1F1C /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417142FD3245D004B1F1C /* ActivityViewController.swift */; };
 		C9F4428E2FD3245D004B1F1C /* StorageErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4173F2FD3245D004B1F1C /* StorageErrors.swift */; };
 		C9F442942FD3245D004B1F1C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F43E7C2FD3245D004B1F1C /* User.swift */; };
 		C9F442B02FD3245D004B1F1C /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4174A2FD3245D004B1F1C /* UIApplication.swift */; };
 		C9F4431E2FD3245D004B1F1C /* VerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417312FD3245D004B1F1C /* VerificationViewController.swift */; };
-		C9F443212FD3245D004B1F1C /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417162FD3245D004B1F1C /* HomeScreenViewController.swift */; };
 		C9F443332FD3245D004B1F1C /* BoredRequestResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417342FD3245D004B1F1C /* BoredRequestResponseViewController.swift */; };
 		C9F443472FD3245D004B1F1C /* ImageStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417552FD3245D004B1F1C /* ImageStoreManager.swift */; };
 		C9F443722FD3245D004B1F1C /* ImportContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417262FD3245D004B1F1C /* ImportContactsViewController.swift */; };
@@ -107,7 +108,6 @@
 		C9F4470B2FD3245D004B1F1C /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4171A2FD3245D004B1F1C /* MyProfileViewController.swift */; };
 		C9F447682FD3245D004B1F1C /* BoredRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417352FD3245D004B1F1C /* BoredRequestsViewController.swift */; };
 		C9F4476A2FD3245D004B1F1C /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417442FD3245D004B1F1C /* Array.swift */; };
-		C9F4476B2FD3245D004B1F1C /* FriendSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417152FD3245D004B1F1C /* FriendSelectionViewController.swift */; };
 		C9F4479D2FD3245D004B1F1C /* FinishingUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4172E2FD3245D004B1F1C /* FinishingUpViewController.swift */; };
 		C9F447A92FD3245D004B1F1C /* ChangeResponseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417362FD3245D004B1F1C /* ChangeResponseViewController.swift */; };
 		C9F447F52FD3245D004B1F1C /* GroupDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F417212FD3245D004B1F1C /* GroupDetailViewController.swift */; };
@@ -218,11 +218,11 @@
 		C9CD503B2FD4CE8F003DE6A4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		C9CD503D2FD4CEB0003DE6A4 /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
 		C9CD50402FD4D4D4003DE6A4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		C9CD50422FD4FE64003DE6A4 /* SwooshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwooshView.swift; sourceTree = "<group>"; };
+		C9CD50442FD4FE7F003DE6A4 /* FriendSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSelectionView.swift; sourceTree = "<group>"; };
+		C9CD50462FD4FE99003DE6A4 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		C9CD50482FD4FEAF003DE6A4 /* HomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenView.swift; sourceTree = "<group>"; };
 		C9F417122FD3245D004B1F1C /* ActivityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCollectionViewCell.swift; sourceTree = "<group>"; };
-		C9F417142FD3245D004B1F1C /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
-		C9F417152FD3245D004B1F1C /* FriendSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSelectionViewController.swift; sourceTree = "<group>"; };
-		C9F417162FD3245D004B1F1C /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
-		C9F417172FD3245D004B1F1C /* SwooshViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwooshViewController.swift; sourceTree = "<group>"; };
 		C9F4171A2FD3245D004B1F1C /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		C9F4171B2FD3245D004B1F1C /* PictureEditHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEditHandlers.swift; sourceTree = "<group>"; };
 		C9F4171C2FD3245D004B1F1C /* PictureEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEditViewController.swift; sourceTree = "<group>"; };
@@ -435,10 +435,10 @@
 		C9F417182FD3245D004B1F1C /* Bored */ = {
 			isa = PBXGroup;
 			children = (
-				C9F417142FD3245D004B1F1C /* ActivityViewController.swift */,
-				C9F417152FD3245D004B1F1C /* FriendSelectionViewController.swift */,
-				C9F417162FD3245D004B1F1C /* HomeScreenViewController.swift */,
-				C9F417172FD3245D004B1F1C /* SwooshViewController.swift */,
+				C9CD50422FD4FE64003DE6A4 /* SwooshView.swift */,
+				C9CD50442FD4FE7F003DE6A4 /* FriendSelectionView.swift */,
+				C9CD50462FD4FE99003DE6A4 /* ActivityView.swift */,
+				C9CD50482FD4FEAF003DE6A4 /* HomeScreenView.swift */,
 			);
 			path = Bored;
 			sourceTree = "<group>";
@@ -987,16 +987,14 @@
 		C9760B142663F646009F66DA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
-				C9F4423F2FD3245D004B1F1C /* SwooshViewController.swift in Sources */,
 				C9F442442FD3245D004B1F1C /* MyProfileTableViewCell.swift in Sources */,
 				C9F4426F2FD3245D004B1F1C /* Date.swift in Sources */,
 				C9F442832FD3245D004B1F1C /* SelectableUser.swift in Sources */,
-				C9F442852FD3245D004B1F1C /* ActivityViewController.swift in Sources */,
 				C9F4428E2FD3245D004B1F1C /* StorageErrors.swift in Sources */,
 				C9F442942FD3245D004B1F1C /* User.swift in Sources */,
 				C9F442B02FD3245D004B1F1C /* UIApplication.swift in Sources */,
 				C9F4431E2FD3245D004B1F1C /* VerificationViewController.swift in Sources */,
-				C9F443212FD3245D004B1F1C /* HomeScreenViewController.swift in Sources */,
+				C9CD50492FD4FEAF003DE6A4 /* HomeScreenView.swift in Sources */,
 				C9F443332FD3245D004B1F1C /* BoredRequestResponseViewController.swift in Sources */,
 				C9F443472FD3245D004B1F1C /* ImageStoreManager.swift in Sources */,
 				C9F443722FD3245D004B1F1C /* ImportContactsViewController.swift in Sources */,
@@ -1034,7 +1032,6 @@
 				C9CD502E2FD393A2003DE6A4 /* Log.swift in Sources */,
 				C9F447682FD3245D004B1F1C /* BoredRequestsViewController.swift in Sources */,
 				C9F4476A2FD3245D004B1F1C /* Array.swift in Sources */,
-				C9F4476B2FD3245D004B1F1C /* FriendSelectionViewController.swift in Sources */,
 				C9F4479D2FD3245D004B1F1C /* FinishingUpViewController.swift in Sources */,
 				C9F447A92FD3245D004B1F1C /* ChangeResponseViewController.swift in Sources */,
 				C9F447F52FD3245D004B1F1C /* GroupDetailViewController.swift in Sources */,
@@ -1047,6 +1044,7 @@
 				C9F448EF2FD3245D004B1F1C /* SceneDelegate.swift in Sources */,
 				C9F449A32FD3245D004B1F1C /* GroupNotification.swift in Sources */,
 				C9F449BA2FD3245D004B1F1C /* PictureEditViewController.swift in Sources */,
+				C9CD50452FD4FE7F003DE6A4 /* FriendSelectionView.swift in Sources */,
 				C9F44A052FD3245D004B1F1C /* CategoryImages.swift in Sources */,
 				C9F44A342FD3245D004B1F1C /* RequestsTableViewCell.swift in Sources */,
 				C9F44A3E2FD3245D004B1F1C /* BoredResponseTableViewCell.swift in Sources */,
@@ -1058,10 +1056,12 @@
 				C9F44AF12FD3245D004B1F1C /* AppDelegate.swift in Sources */,
 				C9F44B082FD3245D004B1F1C /* Notifications.swift in Sources */,
 				C9F44B452FD3245D004B1F1C /* MyProfileCell.swift in Sources */,
+				C9CD50432FD4FE64003DE6A4 /* SwooshView.swift in Sources */,
 				C9F44B562FD3245D004B1F1C /* ImportedContactsTableViewCell.swift in Sources */,
 				C9F44B792FD3245D004B1F1C /* KeychainItem.swift in Sources */,
 				C9CD50342FD3A833003DE6A4 /* Status.swift in Sources */,
 				C9F44BBC2FD3245D004B1F1C /* Data.swift in Sources */,
+				C9CD50472FD4FE99003DE6A4 /* ActivityView.swift in Sources */,
 				C9F44BBD2FD3245D004B1F1C /* FriendGroup.swift in Sources */,
 				C9F44BDC2FD3245D004B1F1C /* ContactsFilter.swift in Sources */,
 				C9F44C252FD3245D004B1F1C /* AlertManager.swift in Sources */,
