@@ -6,7 +6,7 @@
 //
 
 import UserNotifications
-import UIKit
+import Foundation
 
 class NotificationService: UNNotificationServiceExtension {
     
@@ -17,18 +17,27 @@ class NotificationService: UNNotificationServiceExtension {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
-        guard let bestAttemptContent = bestAttemptContent, let attachmentURLAsString = bestAttemptContent.userInfo["url"] as? String, let attachmentURL = URL(string: attachmentURLAsString) else {
-            
+        // Every exit path must call contentHandler exactly once, otherwise the
+        // notification isn't delivered until the system times the extension out.
+        guard let bestAttemptContent else {
+            contentHandler(request.content)
             return
         }
-        
-        downloadImageFrom(url: attachmentURL) { attachment in
-            if let attachment = attachment {
-                bestAttemptContent.attachments = [attachment]
-                contentHandler(bestAttemptContent)
-            }
+
+        guard let attachmentURLAsString = bestAttemptContent.userInfo["url"] as? String,
+              let attachmentURL = URL(string: attachmentURLAsString) else {
+            // No image to attach — deliver the payload unmodified.
+            contentHandler(bestAttemptContent)
+            return
         }
-        
+
+        Task {
+            // A failed download still delivers the notification, just without art.
+            if let attachment = await Self.downloadAttachment(from: attachmentURL) {
+                bestAttemptContent.attachments = [attachment]
+            }
+            contentHandler(bestAttemptContent)
+        }
     }
     
     override func serviceExtensionTimeWillExpire() {
@@ -39,28 +48,18 @@ class NotificationService: UNNotificationServiceExtension {
         }
     }
     
-    private func downloadImageFrom(url: URL, with completionHandler: @escaping (UNNotificationAttachment?) -> Void) {
-        let task = URLSession.shared.downloadTask(with: url) { (downloadURL, response, error) in
-            
-            guard let downloadedURL = downloadURL else {
-                completionHandler(nil)
-                return
-            }
-            
-            var urlPath = URL(fileURLWithPath: NSTemporaryDirectory())
-            let uniqueURLEnding = ProcessInfo.processInfo.globallyUniqueString + ".png"
-            urlPath = urlPath.appendingPathComponent(uniqueURLEnding)
-            
-            try? FileManager.default.moveItem(at: downloadedURL, to: urlPath)
-            
-            do {
-                let attachment = try UNNotificationAttachment(identifier: "image", url: urlPath, options: nil)
-                completionHandler(attachment)
-            } catch {
-                completionHandler(nil)
-            }
+    // `static` so the download doesn't capture `self`, and returning the
+    // attachment instead of taking a completion handler keeps the whole path
+    // clear of non-Sendable closure captures.
+    private static func downloadAttachment(from url: URL) async -> UNNotificationAttachment? {
+        do {
+            let (downloadedURL, _) = try await URLSession.shared.download(from: url)
+            let destination = URL.temporaryDirectory
+                .appendingPathComponent(ProcessInfo.processInfo.globallyUniqueString + ".png")
+            try FileManager.default.moveItem(at: downloadedURL, to: destination)
+            return try UNNotificationAttachment(identifier: "image", url: destination, options: nil)
+        } catch {
+            return nil
         }
-        task.resume()
     }
-    
 }

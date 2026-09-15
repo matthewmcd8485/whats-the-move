@@ -8,8 +8,10 @@
 
 import Foundation
 
-final class ProfanityManager {
-    
+// Stateless — every method derives its result from the bundled word list, so
+// the shared instance is safe to touch from any isolation domain.
+final class ProfanityManager: Sendable {
+
     static let shared = ProfanityManager()
     
     // Returns a list of blocked words in the "Blocked Words List.txt" file

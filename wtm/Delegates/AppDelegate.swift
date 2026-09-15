@@ -10,8 +10,12 @@ import FirebaseCore
 import FirebaseMessaging
 import UserNotifications
 
+// AppDelegate is implicitly @MainActor via UIApplicationDelegate, while
+// MessagingDelegate and UNUserNotificationCenterDelegate are nonisolated Obj-C
+// protocols. `@preconcurrency` on the conformances tells the compiler these
+// callbacks do arrive on the main thread.
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, @preconcurrency MessagingDelegate {
 
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
@@ -112,17 +116,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         // Note: This callback is fired at each app startup and whenever a new token is generated.
     }
     
+    // Identifiers for the actions on the "someone is bored" push. Each action
+    // needs its own identifier — they previously all reused the reserved
+    // `UNNotificationDefaultActionIdentifier`, which made them indistinguishable
+    // in `didReceive` and conflated them with a plain tap on the notification.
+    enum BoredPushAction {
+        static let category = "CustomPush"
+        static let available = "wtm.boredResponse.available"
+        static let busy = "wtm.boredResponse.busy"
+        static let doNotDisturb = "wtm.boredResponse.doNotDisturb"
+    }
+
     private func registerNotificationCategories() {
-        let availableAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "count me in!", options: UNNotificationActionOptions.foreground)
-        let busyAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "might be busy today", options: UNNotificationActionOptions.foreground)
-        let dndAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "stop talking to me", options: UNNotificationActionOptions.foreground)
-        let someoneIsBoredCategory = UNNotificationCategory(identifier: "CustomPush", actions: [availableAction, busyAction, dndAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
+        let availableAction = UNNotificationAction(identifier: BoredPushAction.available, title: "count me in!", options: .foreground)
+        let busyAction = UNNotificationAction(identifier: BoredPushAction.busy, title: "might be busy today", options: .foreground)
+        let dndAction = UNNotificationAction(identifier: BoredPushAction.doNotDisturb, title: "stop talking to me", options: .foreground)
+        let someoneIsBoredCategory = UNNotificationCategory(
+            identifier: BoredPushAction.category,
+            actions: [availableAction, busyAction, dndAction],
+            intentIdentifiers: [],
+            hiddenPreviewsBodyPlaceholder: "",
+            options: .customDismissAction
+        )
         UNUserNotificationCenter.current().setNotificationCategories([someoneIsBoredCategory])
     }
 }
 
-@available(iOS 10, *)
-extension AppDelegate : UNUserNotificationCenterDelegate {
+extension AppDelegate: @preconcurrency UNUserNotificationCenterDelegate {
     
     // Receive displayed notifications for iOS 10 devices.
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -154,20 +174,27 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         defer {
             completionHandler()
         }
-        
-        // Identify the action by matching its identifier.
-        guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else {
-            return
+
+        // Identify the action by matching its identifier. Now that the three
+        // response buttons carry distinct identifiers they can be told apart
+        // here; a plain tap on the notification still arrives as the default
+        // action identifier.
+        switch response.actionIdentifier {
+        case UNNotificationDefaultActionIdentifier:
+            Log.push.info("Notification body tapped")
+            // TODO: deep-link into the open request.
+        case BoredPushAction.available:
+            Log.push.info("Bored push answered: available")
+            // TODO: write the chosen response back to Firestore.
+        case BoredPushAction.busy:
+            Log.push.info("Bored push answered: busy")
+            // TODO: write the chosen response back to Firestore.
+        case BoredPushAction.doNotDisturb:
+            Log.push.info("Bored push answered: do not disturb")
+            // TODO: write the chosen response back to Firestore.
+        default:
+            break
         }
-        
-        if response.actionIdentifier == "i'm bored" {
-            
-        }
-        
-        // Perform the related action
-        print("Open board tapped from a notification!")
-        
-        // .. deeplink into the board
     }
 }
 

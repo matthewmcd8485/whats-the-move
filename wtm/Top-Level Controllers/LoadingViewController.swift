@@ -86,21 +86,21 @@ class LoadingViewController: UIViewController {
         self.updateFriendsList()
         self.updateFCMToken()
         self.updateGroupsList()
+        self.warmLocalCache(uid: uid)
         
-        let group = DispatchGroup()
-        group.enter()
+        // Only one async call gates going home, so it sequences directly. The
+        // previous DispatchGroup skipped `leave()` on the failure path, which
+        // meant `notify` never fired and the group was never released.
         self.databaseManager.updateBlockedUsersList(uid: uid, completion: { [weak self] success in
-            if !success {
+            guard let self else { return }
+            guard success else {
+                // Couldn't sync the blocked list — fall back to the login flow.
                 UserDefaults.standard.set(false, forKey: "loggedIn")
-                self?.showLoginIfNecessary()
+                self.showLoginIfNecessary()
                 return
             }
-            group.leave()
+            self.goHome()
         })
-        
-        group.notify(queue: .main) { [weak self] in
-            self?.goHome()
-        }
     }
     
     private func pushWelcomeScreen() {
@@ -155,6 +155,12 @@ class LoadingViewController: UIViewController {
         })
     }
     
+    private func warmLocalCache(uid: String) {
+        Task {
+            await LocalCacheManager.shared.refreshFromNetwork(myUID: uid)
+        }
+    }
+
     private func updateGroupsList() {
         guard let uid = SecureStorage.uid else {
             return

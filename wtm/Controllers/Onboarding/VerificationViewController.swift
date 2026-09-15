@@ -71,19 +71,21 @@ class VerificationViewController: UIViewController, UITextFieldDelegate {
     
     private func enableNotifications() {
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            
-            if let error = error {
+        // Both closures capture self weakly. Previously only the inner one did,
+        // so the outer closure still held a strong implicit reference.
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] granted, error in
+
+            if let error {
                 print(error)
             }
-            
+
             if granted {
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
                 Messaging.messaging().token { [weak self] token, error in
-                    guard let self = self else { return }
-                    if let error = error {
+                    guard let self else { return }
+                    if let error {
                         print("Error fetching FCM registration token: \(error)")
                     } else if let token = token {
                         print("FCM registration token: \(token)")

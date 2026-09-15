@@ -8,9 +8,11 @@
 import Foundation
 import FirebaseStorage
 
-final class StorageManager {
+// `@unchecked` because the only stored property is a Firebase Storage
+// reference, which is thread-safe but not annotated as Sendable.
+final class StorageManager: @unchecked Sendable {
     static let shared = StorageManager()
-    
+
     private let storage = Storage.storage().reference()
     
     public typealias UploadPictureCompletion = (Result<String, Error>) -> Void

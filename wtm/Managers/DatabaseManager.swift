@@ -8,9 +8,12 @@
 import Foundation
 import FirebaseFirestore
 
-final class DatabaseManager {
+// `@unchecked` because the only stored property is a Firestore client, which
+// Firebase documents as thread-safe but does not annotate as Sendable. There is
+// no other mutable state on this type.
+final class DatabaseManager: @unchecked Sendable {
     static let shared = DatabaseManager()
-    
+
     let db = Firestore.firestore()
     
     // MARK: - Download User

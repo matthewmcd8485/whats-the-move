@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C9119E072FD27B4C0089ACA1 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E062FD27B4C0089ACA1 /* FirebaseAI */; };
-		C9119E092FD27B4C0089ACA1 /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E082FD27B4C0089ACA1 /* FirebaseAILogic */; };
 		C9119E0B2FD27B4C0089ACA1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E0A2FD27B4C0089ACA1 /* FirebaseAnalytics */; };
 		C9119E0D2FD27B4C0089ACA1 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E0C2FD27B4C0089ACA1 /* FirebaseAnalyticsCore */; };
 		C9119E0F2FD27B4C0089ACA1 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E0E2FD27B4C0089ACA1 /* FirebaseAnalyticsIdentitySupport */; };
@@ -30,7 +28,6 @@
 		C9119E312FD27B4C0089ACA1 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E302FD27B4C0089ACA1 /* FirebaseRemoteConfig */; };
 		C9119E332FD27B4C0089ACA1 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E322FD27B4C0089ACA1 /* FirebaseStorage */; };
 		C9119E352FD27B4C0089ACA1 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E342FD27B4C0089ACA1 /* FirebaseStorageCombine-Community */; };
-		C9119E382FD284840089ACA1 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E372FD284840089ACA1 /* JGProgressHUD */; };
 		C9119E3E2FD285050089ACA1 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E3D2FD285050089ACA1 /* SDWebImage */; };
 		C9119E402FD285050089ACA1 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E3F2FD285050089ACA1 /* SDWebImageMapKit */; };
 		C9574FCD2665E9B100405B8B /* AnyFormatKit in Frameworks */ = {isa = PBXBuildFile; productRef = C9574FCC2665E9B100405B8B /* AnyFormatKit */; };
@@ -58,6 +55,9 @@
 		C9CD50452FD4FE7F003DE6A4 /* FriendSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50442FD4FE7F003DE6A4 /* FriendSelectionView.swift */; };
 		C9CD50472FD4FE99003DE6A4 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50462FD4FE99003DE6A4 /* ActivityView.swift */; };
 		C9CD50492FD4FEAF003DE6A4 /* HomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD50482FD4FEAF003DE6A4 /* HomeScreenView.swift */; };
+		C9CD504B2FD61CEB003DE6A4 /* LocalCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD504A2FD61CEB003DE6A4 /* LocalCacheManager.swift */; };
+		C9CD504D2FD61E6B003DE6A4 /* MyFriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD504C2FD61E6B003DE6A4 /* MyFriendsView.swift */; };
+		C9CD504F2FD61E96003DE6A4 /* FriendGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD504E2FD61E96003DE6A4 /* FriendGroupsView.swift */; };
 		C9F43EF82FD3245D004B1F1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9F43ECF2FD3245D004B1F1C /* GoogleService-Info.plist */; };
 		C9F43FC22FD3245D004B1F1C /* SuperBasic-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F417512FD3245D004B1F1C /* SuperBasic-Thin.otf */; };
 		C9F43FFA2FD3245D004B1F1C /* SuperBasic-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9F4174F2FD3245D004B1F1C /* SuperBasic-Bold.otf */; };
@@ -222,6 +222,9 @@
 		C9CD50442FD4FE7F003DE6A4 /* FriendSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSelectionView.swift; sourceTree = "<group>"; };
 		C9CD50462FD4FE99003DE6A4 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		C9CD50482FD4FEAF003DE6A4 /* HomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenView.swift; sourceTree = "<group>"; };
+		C9CD504A2FD61CEB003DE6A4 /* LocalCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCacheManager.swift; sourceTree = "<group>"; };
+		C9CD504C2FD61E6B003DE6A4 /* MyFriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFriendsView.swift; sourceTree = "<group>"; };
+		C9CD504E2FD61E96003DE6A4 /* FriendGroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendGroupsView.swift; sourceTree = "<group>"; };
 		C9F417122FD3245D004B1F1C /* ActivityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCollectionViewCell.swift; sourceTree = "<group>"; };
 		C9F4171A2FD3245D004B1F1C /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		C9F4171B2FD3245D004B1F1C /* PictureEditHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEditHandlers.swift; sourceTree = "<group>"; };
@@ -317,11 +320,9 @@
 			files = (
 				C9119E2D2FD27B4C0089ACA1 /* FirebaseMessaging in Frameworks */,
 				C9119E0B2FD27B4C0089ACA1 /* FirebaseAnalytics in Frameworks */,
-				C9119E092FD27B4C0089ACA1 /* FirebaseAILogic in Frameworks */,
 				C9119E0F2FD27B4C0089ACA1 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				C9119E252FD27B4C0089ACA1 /* FirebaseFunctionsCombine-Community in Frameworks */,
 				C9119E212FD27B4C0089ACA1 /* FirebaseFirestoreCombine-Community in Frameworks */,
-				C9119E072FD27B4C0089ACA1 /* FirebaseAI in Frameworks */,
 				C9119E1F2FD27B4C0089ACA1 /* FirebaseFirestore in Frameworks */,
 				C9119E192FD27B4C0089ACA1 /* FirebaseCore in Frameworks */,
 				C9119E2B2FD27B4C0089ACA1 /* FirebaseMLModelDownloader in Frameworks */,
@@ -336,7 +337,6 @@
 				C9119E152FD27B4C0089ACA1 /* FirebaseAuth in Frameworks */,
 				C9119E332FD27B4C0089ACA1 /* FirebaseStorage in Frameworks */,
 				C9119E3E2FD285050089ACA1 /* SDWebImage in Frameworks */,
-				C9119E382FD284840089ACA1 /* JGProgressHUD in Frameworks */,
 				C9119E352FD27B4C0089ACA1 /* FirebaseStorageCombine-Community in Frameworks */,
 				C9119E112FD27B4C0089ACA1 /* FirebaseAppCheck in Frameworks */,
 				C9119E1B2FD27B4C0089ACA1 /* FirebaseCrashlytics in Frameworks */,
@@ -461,6 +461,7 @@
 				C9F4171F2FD3245D004B1F1C /* AddPeopleViewController.swift */,
 				C9F417202FD3245D004B1F1C /* FriendGroupsViewController.swift */,
 				C9F417212FD3245D004B1F1C /* GroupDetailViewController.swift */,
+				C9CD504E2FD61E96003DE6A4 /* FriendGroupsView.swift */,
 			);
 			path = "Friend Groups";
 			sourceTree = "<group>";
@@ -474,6 +475,7 @@
 				C9F417262FD3245D004B1F1C /* ImportContactsViewController.swift */,
 				C9F417272FD3245D004B1F1C /* MyFriendsViewController.swift */,
 				C9F417282FD3245D004B1F1C /* RequestsViewController.swift */,
+				C9CD504C2FD61E6B003DE6A4 /* MyFriendsView.swift */,
 			);
 			path = Friends;
 			sourceTree = "<group>";
@@ -582,6 +584,7 @@
 				C9F417572FD3245D004B1F1C /* PushNotificationManager.swift */,
 				C9F417582FD3245D004B1F1C /* ReportingManager.swift */,
 				C9F417592FD3245D004B1F1C /* StorageManager.swift */,
+				C9CD504A2FD61CEB003DE6A4 /* LocalCacheManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -731,8 +734,6 @@
 			packageProductDependencies = (
 				C9760B67266416DC009F66DA /* PhoneNumberKit */,
 				C9574FCC2665E9B100405B8B /* AnyFormatKit */,
-				C9119E062FD27B4C0089ACA1 /* FirebaseAI */,
-				C9119E082FD27B4C0089ACA1 /* FirebaseAILogic */,
 				C9119E0A2FD27B4C0089ACA1 /* FirebaseAnalytics */,
 				C9119E0C2FD27B4C0089ACA1 /* FirebaseAnalyticsCore */,
 				C9119E0E2FD27B4C0089ACA1 /* FirebaseAnalyticsIdentitySupport */,
@@ -754,7 +755,6 @@
 				C9119E302FD27B4C0089ACA1 /* FirebaseRemoteConfig */,
 				C9119E322FD27B4C0089ACA1 /* FirebaseStorage */,
 				C9119E342FD27B4C0089ACA1 /* FirebaseStorageCombine-Community */,
-				C9119E372FD284840089ACA1 /* JGProgressHUD */,
 				C9119E3D2FD285050089ACA1 /* SDWebImage */,
 				C9119E3F2FD285050089ACA1 /* SDWebImageMapKit */,
 			);
@@ -906,7 +906,6 @@
 				C9760B66266416DC009F66DA /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 				C9574FCB2665E9B100405B8B /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
 				C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				C9119E362FD284840089ACA1 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				C9119E3C2FD285050089ACA1 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			preferredProjectObjectVersion = 100;
@@ -1000,6 +999,7 @@
 				C9F443722FD3245D004B1F1C /* ImportContactsViewController.swift in Sources */,
 				C9F443762FD3245D004B1F1C /* MyFriendsViewController.swift in Sources */,
 				C9F4439C2FD3245D004B1F1C /* PushNotificationManager.swift in Sources */,
+				C9CD504D2FD61E6B003DE6A4 /* MyFriendsView.swift in Sources */,
 				C9F4439F2FD3245D004B1F1C /* StorageManager.swift in Sources */,
 				C9F443A42FD3245D004B1F1C /* DatabaseManager.swift in Sources */,
 				C9F443D42FD3245D004B1F1C /* FriendRequest.swift in Sources */,
@@ -1011,6 +1011,7 @@
 				C9F445092FD3245D004B1F1C /* UIImageView.swift in Sources */,
 				C9CD503A2FD3A919003DE6A4 /* SubstatusTableViewCell.swift in Sources */,
 				C9F445232FD3245D004B1F1C /* RequestsViewController.swift in Sources */,
+				C9CD504B2FD61CEB003DE6A4 /* LocalCacheManager.swift in Sources */,
 				C9F4452B2FD3245D004B1F1C /* DatabaseError.swift in Sources */,
 				C9F4452C2FD3245D004B1F1C /* FriendViewController.swift in Sources */,
 				C9F445542FD3245D004B1F1C /* FriendVerifyViewController.swift in Sources */,
@@ -1045,6 +1046,7 @@
 				C9F449A32FD3245D004B1F1C /* GroupNotification.swift in Sources */,
 				C9F449BA2FD3245D004B1F1C /* PictureEditViewController.swift in Sources */,
 				C9CD50452FD4FE7F003DE6A4 /* FriendSelectionView.swift in Sources */,
+				C9CD504F2FD61E96003DE6A4 /* FriendGroupsView.swift in Sources */,
 				C9F44A052FD3245D004B1F1C /* CategoryImages.swift in Sources */,
 				C9F44A342FD3245D004B1F1C /* RequestsTableViewCell.swift in Sources */,
 				C9F44A3E2FD3245D004B1F1C /* BoredResponseTableViewCell.swift in Sources */,
@@ -1282,7 +1284,7 @@
 				INFOPLIST_FILE = wtm/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "wtm?";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 2.0;
@@ -1294,7 +1296,6 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TVOS_DEPLOYMENT_TARGET = 14.0;
 			};
 			name = Debug;
 		};
@@ -1313,7 +1314,7 @@
 				INFOPLIST_FILE = wtm/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "wtm?";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 2.0;
@@ -1325,7 +1326,6 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TVOS_DEPLOYMENT_TARGET = 14.0;
 			};
 			name = Release;
 		};
@@ -1335,7 +1335,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1355,7 +1355,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1374,7 +1374,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1393,7 +1393,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = wtmUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1411,9 +1411,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1436,9 +1436,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1461,9 +1461,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1486,9 +1486,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1569,14 +1569,6 @@
 				minimumVersion = 12.14.0;
 			};
 		};
-		C9119E362FD284840089ACA1 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.0;
-			};
-		};
 		C9119E3C2FD285050089ACA1 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
@@ -1604,16 +1596,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C9119E062FD27B4C0089ACA1 /* FirebaseAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAI;
-		};
-		C9119E082FD27B4C0089ACA1 /* FirebaseAILogic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAILogic;
-		};
 		C9119E0A2FD27B4C0089ACA1 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -1718,11 +1700,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9119E052FD27B4C0089ACA1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
-		};
-		C9119E372FD284840089ACA1 /* JGProgressHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9119E362FD284840089ACA1 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
-			productName = JGProgressHUD;
 		};
 		C9119E3D2FD285050089ACA1 /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -8,10 +8,13 @@
 import Foundation
 import FirebaseFirestore
 
-final class ReportingManager {
-    
+// `@unchecked` because the only stored property is a Firestore client, which is
+// thread-safe but not annotated as Sendable. The blocked-user lists this reads
+// live in the Keychain, not in instance state.
+final class ReportingManager: @unchecked Sendable {
+
     static let shared = ReportingManager()
-    
+
     let firestore = Firestore.firestore()
     
     // Checks a cached array to see if a particular user is blocked

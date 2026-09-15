@@ -95,9 +95,12 @@ class FinishingUpViewController: UIViewController, UNUserNotificationCenterDeleg
             // Document successfully written
             
             DispatchQueue.main.async {
+                // This completion fires with a nil error on success, so the
+                // error must be unwrapped rather than force-unwrapped.
                 Messaging.messaging().subscribe(toTopic: "All users") { error in
-                    print("Failed to subscribe to notification topic: All users")
-                    print(error!)
+                    if let error {
+                        Log.push.error("Failed to subscribe to notification topic \"All users\": \(error.localizedDescription, privacy: .public)")
+                    }
                 }
                 UserDefaults.standard.set(true, forKey: "loggedIn")
                 UserDefaults.standard.set("available", forKey: "status")

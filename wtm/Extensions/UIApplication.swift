@@ -15,11 +15,11 @@ extension UIApplication {
     }
     
     class func appVersion() -> String {
-        return Bundle.main.object(forInfoDictionaryKey: Constants.CFBundleShortVersionString) as! String
+        return Bundle.main.object(forInfoDictionaryKey: Constants.CFBundleShortVersionString) as? String ?? "0"
     }
-    
+
     class func appBuild() -> String {
-        return Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as! String
+        return Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String ?? "0"
     }
     
     class func versionBuild() -> String {

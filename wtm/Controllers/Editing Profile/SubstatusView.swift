@@ -88,12 +88,10 @@ extension SubstatusView {
             onSelect: { [weak hc] substatus in
                 UserDefaults.standard.set(substatus, forKey: "substatus")
                 guard let uid = SecureStorage.uid else { return }
-                Task {
+                Task { @MainActor in
                     do {
                         try await DatabaseManager.shared.updateUserStatus(uid: uid, status: status.rawValue, substatus: substatus)
-                        await MainActor.run {
-                            hc?.navigationController?.popToRootViewController(animated: true)
-                        }
+                        hc?.navigationController?.popToRootViewController(animated: true)
                     } catch {
                         print("Error updating status in Firestore: \(error)")
                     }

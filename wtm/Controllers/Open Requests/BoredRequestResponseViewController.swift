@@ -253,7 +253,7 @@ class BoredRequestResponseViewController: UIViewController, UITableViewDelegate,
     }
     
     private func notifyFriends(status: String, substatus: String) {
-        guard let name = UserDefaults.standard.string(forKey: "name"), let uid = SecureStorage.uid else {
+        guard let name = UserDefaults.standard.string(forKey: "name") else {
             return
         }
         

@@ -8,9 +8,13 @@
 import Foundation
 import UIKit
 
+// Presents UIKit alerts, so the whole type belongs on the main actor. It was
+// previously nonisolated and reached into UIApplication.shared / window state
+// from whatever thread the caller happened to be on.
+@MainActor
 final class AlertManager {
     static let shared = AlertManager()
-    
+
     private init() {}
 
     public func showAlert(title: String, message: String) {

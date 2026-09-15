@@ -8,7 +8,9 @@
 import Foundation
 import UIKit
 
-final class ImageStoreManager {
+// Stateless — all storage goes through FileManager, so the shared instance
+// holds nothing that needs synchronizing.
+final class ImageStoreManager: Sendable {
     static let shared = ImageStoreManager()
     
     public func filePath(forKey key: String) -> URL? {

@@ -16,60 +16,32 @@ final class FriendSelectionViewModel: ObservableObject {
     @Published var friends: [Friend] = []
     @Published var isLoading = true
 
-    private let databaseManager = DatabaseManager.shared
-
     func load() async {
         guard let uid = SecureStorage.uid else {
             isLoading = false
             return
         }
 
-        async let groupsTask = loadGroups(myUID: uid)
-        async let friendsTask = loadFriends(myUID: uid)
+        // 1. Cache-first read — renders immediately if anything is cached.
+        let cachedGroups = LocalCacheManager.shared.cachedSelectableGroups()
+        let cachedFriends = filteredFriends(LocalCacheManager.shared.cachedFriends(excluding: uid))
+        groups = cachedGroups
+        friends = cachedFriends
+        if !cachedGroups.isEmpty || !cachedFriends.isEmpty {
+            isLoading = false
+        }
 
-        let (loadedGroups, loadedFriends) = await (groupsTask, friendsTask)
-        groups = loadedGroups
-        friends = loadedFriends
+        // 2. Refresh from network, then re-publish from the now-fresh cache.
+        await LocalCacheManager.shared.refreshFromNetwork(myUID: uid)
+        groups = LocalCacheManager.shared.cachedSelectableGroups()
+        friends = filteredFriends(LocalCacheManager.shared.cachedFriends(excluding: uid))
         isLoading = false
     }
 
-    private func loadGroups(myUID: String) async -> [SelectableGroup] {
-        do {
-            let friendGroups = try await databaseManager.downloadAllGroups(uid: myUID)
-            var collected: [SelectableGroup] = []
-            for group in friendGroups {
-                if group.isDirectGroup { continue }
-                guard let people = group.people else { continue }
-                do {
-                    let friends = try await databaseManager.downloadFriends(fromGroupWith: people)
-                    collected.append(SelectableGroup(group: group, friends: friends, isSelected: false))
-                } catch {
-                    print("error downloading friends: \(error)")
-                }
-            }
-            collected = collected.filterDuplicates { $0.group.groupID == $1.group.groupID }
-            collected.sort { $0.group.name < $1.group.name }
-            return collected
-        } catch {
-            print("error downloading groups: \(error)")
-            return []
-        }
-    }
-
-    private func loadFriends(myUID: String) async -> [Friend] {
-        do {
-            let allFriends = try await databaseManager.downloadAllFriends(uid: myUID)
-            let filtered = allFriends.filter { friend in
-                friend.name != "user deleted"
-                    && !ReportingManager.shared.userIsBlocked(theirUID: friend.uid)
-                    && !ReportingManager.shared.userBlockedYou(theirUID: friend.uid)
-            }
-            return filtered
-                .filterDuplicates { $0.uid == $1.uid }
-                .sorted { $0.name < $1.name }
-        } catch {
-            print("error downloading friends: \(error)")
-            return []
+    private func filteredFriends(_ source: [Friend]) -> [Friend] {
+        source.filter { friend in
+            !ReportingManager.shared.userIsBlocked(theirUID: friend.uid)
+                && !ReportingManager.shared.userBlockedYou(theirUID: friend.uid)
         }
     }
 }
@@ -208,7 +180,7 @@ struct FriendSelectionView: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 24, weight: .regular))
                 .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(Color("darkBlueOnLight"))
+                .foregroundStyle(.primary)
                 .frame(width: 24)
             
             VStack(alignment: .leading) {

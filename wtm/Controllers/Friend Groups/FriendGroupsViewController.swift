@@ -2,188 +2,70 @@
 //  FriendGroupsViewController.swift
 //  wtm?
 //
-//  Created by Matthew McDonnell on 6/24/21.
+//  Now a thin host for `FriendGroupsView` (SwiftUI). Storyboard outlets remain
+//  declared so loading the scene doesn't crash, but the storyboard-built
+//  subviews are hidden and a SwiftUI host fills the screen.
 //
 
 import UIKit
-import FirebaseFirestore
+import SwiftUI
 
-class FriendGroupsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    let db = Firestore.firestore()
-    let alertManager = AlertManager.shared
-    let databaseManager = DatabaseManager.shared
-    let profanityManager = ProfanityManager.shared
-    
-    var groups = [FriendGroup]()
-    
-    @IBOutlet weak var loadingLabel: UILabel!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var noGroupsLabel: UILabel!
-    @IBOutlet weak var groupButton: UIButton!
-    
-    let activityIndicator = UIActivityIndicatorView(style: .large)
-    
+class FriendGroupsViewController: UIViewController {
+
+    @IBOutlet weak var loadingLabel: UILabel?
+    @IBOutlet weak var tableView: UITableView?
+    @IBOutlet weak var noGroupsLabel: UILabel?
+    @IBOutlet weak var groupButton: UIButton?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        groupButton.layer.cornerRadius = 10
-        
-        noGroupsLabel.isHidden = true
-        loadingLabel.isHidden = false
-        
-        tableView.register(FriendGroupsTableViewCell.self, forCellReuseIdentifier: FriendGroupsTableViewCell.identifier)
-        tableView.tableFooterView = UIView(frame: CGRect.zero)
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        tableView.isHidden = true
-        
-        createSpinnerView()
-        //loadFriendGroups()
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        loadFriendGroups()
-    }
-    
-    private func createSpinnerView() {
-        activityIndicator.color = .white
-        activityIndicator.frame = CGRect(x: view.center.x - 10, y: loadingLabel.frame.maxY + 50, width: 20, height: 20)
-        activityIndicator.startAnimating()
-        view.addSubview(activityIndicator)
-        view.bringSubviewToFront(tableView)
-        //spinner.hudView.frame = CGRect(x: view.center.x, y: view.center.y - 120, width: 50, height: 50)
-        //spinner.show(in: view)
-        
-    }
-    
-    private func loadFriendGroups() {
-        guard let uid = SecureStorage.uid else {
-            return
-        }
-        var groupIDs = [String]()
-        
-        databaseManager.downloadAllGroups(uid: uid, completion: { [weak self] result in
-            switch result {
-            case .success(let downloadedGroups):
-                for x in 0..<downloadedGroups.count {
-                    groupIDs.append(downloadedGroups[x].groupID)
-                }
-                UserDefaults.standard.set(groupIDs, forKey: "groupsUID")
-                self?.groups = downloadedGroups.filter { !$0.isDirectGroup }
-                self?.tableView.reloadData()
-                self?.updateUI()
-            case .failure(let error):
-                print("\n *GROUPS VIEW CONTROLLER* \n error downloading friend from firebase: \(error)")
-            }
-        })
-    }
-    
-    @IBAction func newGroupButton(_ sender: Any) {
-        let friendsCount = UserDefaults.standard.integer(forKey: "friendsCount")
-        if friendsCount < 2 {
-            alertManager.showAlert(title: "slow your roll", message: "you need to have at least two friends to create a friend group. nice try, though.")
-        } else {
-            let alert = UIAlertController(title: "name group", message: "enter a name for the new group.", preferredStyle: .alert)
-            alert.addTextField { textField in
-                textField.autocapitalizationType = .none
-                let placeholder = "ex. the dream team"
-                textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:
-                                                                        [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-                textField.placeholder = placeholder
-            }
-            alert.addAction(UIAlertAction(title: "save", style: .default, handler: { [weak self] _ in
-                guard let self = self else { return }
-                let textField = alert.textFields![0]
-                guard textField.text != nil && textField.text != "" else {
-                    return
-                }
 
-                if self.profanityManager.checkForProfanity(in: textField.text!) {
-                    self.alertManager.showAlert(title: "ok, potty mouth", message: "there are some less-than-ideal words used in your group name. please make sure it is appropriate.")
-                } else {
-                    let lowercasedName = textField.text!.lowercased()
-                    let whitespaceName = lowercasedName.trimmingCharacters(in: .whitespacesAndNewlines)
+        view.subviews.forEach { $0.isHidden = true }
+        view.backgroundColor = UIColor(named: "backgroundColors")
 
-                    self.createGroup(name: whitespaceName)
-                }
-            }))
-            alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
-            present(alert, animated: true)
-
-        }
-    }
-    
-    func createGroup(name: String) {
-        guard let uid = SecureStorage.uid else {
-            return
-        }
-        
-        DatabaseManager.shared.createGroup(name: name, ownerUID: uid, completion: { [weak self] result in
-            switch result {
-            case .failure(let error):
-                print("error creating group: \(error)")
-                return
-            case .success(let newGroupID):
-                print("group created")
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(withIdentifier: "groupDetailViewController") as! GroupDetailViewController
-                vc.groupID = newGroupID
-                self?.navigationController?.pushViewController(vc, animated: true)
+        let rootView = FriendGroupsView(
+            onSelectGroup: { [weak self] group in
+                self?.pushGroupDetail(groupID: group.groupID)
+            },
+            onCreateGroup: { [weak self] name in
+                self?.createGroup(name: name)
             }
-            
-        })
+        )
+
+        let host = UIHostingController(rootView: rootView)
+        addChild(host)
+        view.addSubview(host.view)
+        host.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            host.view.topAnchor.constraint(equalTo: view.topAnchor),
+            host.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            host.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            host.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        host.didMove(toParent: self)
     }
-    
-    private func updateUI() {
-        loadingLabel.isHidden = true
-        activityIndicator.isHidden = true
-        
-        if groups.count > 0 {
-            tableView.isHidden = false
-            noGroupsLabel.isHidden = true
-        } else {
-            tableView.isHidden = true
-            noGroupsLabel.isHidden = false
-        }
-        
-    }
-    
-    // MARK: - TableView Delegates
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 65
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
+
+    // Storyboard still wires this @IBAction. SwiftUI's "new group" button
+    // hits `onCreateGroup` directly, so this is just a safety stub.
+    @IBAction func newGroupButton(_ sender: Any) {}
+
+    // MARK: - Navigation
+    private func pushGroupDetail(groupID: String) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "groupDetailViewController") as GroupDetailViewController
-        vc.groupID = groups[indexPath.row].groupID
+        vc.groupID = groupID
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
+    private func createGroup(name: String) {
+        guard let uid = SecureStorage.uid else { return }
+        DatabaseManager.shared.createGroup(name: name, ownerUID: uid) { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print("error creating group: \(error)")
+            case .success(let newGroupID):
+                self?.pushGroupDetail(groupID: newGroupID)
+            }
+        }
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = groups[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: FriendGroupsTableViewCell.identifier, for: indexPath) as! FriendGroupsTableViewCell
-        cell.backgroundColor = UIColor(named: "backgroundColors")
-        cell.accessoryType = .disclosureIndicator
-        cell.contentView.clipsToBounds = true
-        cell.configure(with: model)
-        return cell
-    }
-
 }
