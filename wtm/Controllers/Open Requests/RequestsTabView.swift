@@ -281,7 +281,7 @@ final class RequestDetailModel {
             }
 
             people = users
-                .sorted { $0.name < $1.name }
+                .sorted { $0.name.sortsBefore($1.name) }
                 .map { user in
                     let status = document.get(FirestoreKeys.BoredRequest.availabilityField(forUID: user.uid)) as? String ?? "no response"
                     let substatus = document.get(FirestoreKeys.BoredRequest.substatusField(forUID: user.uid)) as? String ?? "no response"

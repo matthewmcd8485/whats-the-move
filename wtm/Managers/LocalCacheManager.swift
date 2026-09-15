@@ -91,7 +91,7 @@ final class LocalCacheManager {
         return results
             .filter { $0.uid != myUID && $0.name != "user deleted" }
             .map { Friend(name: $0.name, uid: $0.uid) }
-            .sorted { $0.name < $1.name }
+            .sorted { $0.name.sortsBefore($1.name) }
     }
 
     func cachedFriendUsers(excluding myUID: String?) -> [User] {
@@ -111,7 +111,7 @@ final class LocalCacheManager {
                     explicit: false
                 )
             }
-            .sorted { $0.name < $1.name }
+            .sorted { $0.name.sortsBefore($1.name) }
     }
 
     func cachedSelectableGroups() -> [SelectableGroup] {
@@ -123,7 +123,7 @@ final class LocalCacheManager {
                 let group = FriendGroup(name: cached.name, groupID: cached.groupID, people: cached.peopleUIDs, isDirect: cached.isDirect)
                 return SelectableGroup(group: group, friends: members, isSelected: false)
             }
-            .sorted { $0.group.name < $1.group.name }
+            .sorted { $0.group.name.sortsBefore($1.group.name) }
     }
 
     func cachedFriendGroups() -> [FriendGroup] {
@@ -131,7 +131,7 @@ final class LocalCacheManager {
         return results
             .filter { !$0.isDirect }
             .map { FriendGroup(name: $0.name, groupID: $0.groupID, people: $0.peopleUIDs, isDirect: $0.isDirect) }
-            .sorted { $0.name < $1.name }
+            .sorted { $0.name.sortsBefore($1.name) }
     }
 
     func cachedFriendsCount() -> Int {

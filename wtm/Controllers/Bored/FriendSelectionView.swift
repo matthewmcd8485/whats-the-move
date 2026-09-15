@@ -183,7 +183,10 @@ struct FriendSelectionView: View {
                 List {
                     ForEach(viewModel.friends, id: \.uid) { friend in
                         selectionRow(
-                            label: friend.name,
+                            // Lowercased for display like every other person
+                            // row in the app; older accounts still hold
+                            // capitals, which read as the odd one out here.
+                            label: friend.name.lowercased(),
                             subtitle: nil,
                             isSelected: selectedFriendUIDs.contains(friend.uid),
                             toggle: { toggleFriend(friend.uid) }
@@ -275,11 +278,11 @@ struct FriendSelectionView: View {
         let myUID = SecureStorage.uid
         let others = selectable.friends.filter { $0.uid != myUID }
         guard !others.isEmpty else { return "" }
-        let sorted = others.sorted { $0.name < $1.name }
+        let sorted = others.sorted { $0.name.sortsBefore($1.name) }
         if sorted.count <= 3 {
-            return sorted.map(\.name).joined(separator: ", ")
+            return sorted.map { $0.name.lowercased() }.joined(separator: ", ")
         }
-        let head = sorted.prefix(3).map(\.name).joined(separator: ", ")
+        let head = sorted.prefix(3).map { $0.name.lowercased() }.joined(separator: ", ")
         let remaining = sorted.count - 3
         return "\(head) and \(remaining) more"
     }

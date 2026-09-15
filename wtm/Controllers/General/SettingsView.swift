@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State private var showLogOutFailed = false
     @State private var showDeleteConfirm = false
     @State private var showExplicitSaveError = false
+    @State private var showExplicitUnderConstruction = false
 
     var body: some View {
         ScrollView {
@@ -57,6 +58,11 @@ struct SettingsView: View {
             Button("ok", role: .cancel) {}
         } message: {
             Text("we couldn't update your explicit mode setting. please try again.")
+        }
+        .alert("still under construction", isPresented: $showExplicitUnderConstruction) {
+            Button("fine, i'll wait", role: .cancel) {}
+        } message: {
+            Text("explicit mode isn't finished yet.\n\nwe'll remember that you want it, but nothing gets any saltier until it ships.")
         }
     }
 
@@ -193,6 +199,12 @@ struct SettingsView: View {
 
     private func saveExplicit(_ newValue: Bool) {
         UserDefaults.standard.set(newValue, forKey: "explicit")
+
+        // The preference is stored and synced, but nothing reads it yet — say
+        // so when it's switched on rather than letting it look like a no-op.
+        if newValue {
+            showExplicitUnderConstruction = true
+        }
 
         guard let uid = SecureStorage.uid else { return }
         Task {

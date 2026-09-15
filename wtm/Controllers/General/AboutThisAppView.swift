@@ -53,7 +53,10 @@ struct AboutThisAppView: View {
                             .foregroundStyle(.white)
                             .frame(width: 152, height: 61)
                             .background(Color("darkBlueOnLight"))
+                            .clipShape(RoundedRectangle(cornerRadius: WTMLayout.cornerRadius))
+                            .contentShape(.rect)
                     }
+                    .buttonStyle(.plain)
                 }
 
                 VStack(spacing: 6) {
@@ -66,7 +69,10 @@ struct AboutThisAppView: View {
                             .foregroundStyle(.white)
                             .frame(width: 217, height: 61)
                             .background(Color("darkBlueOnLight"))
+                            .clipShape(RoundedRectangle(cornerRadius: WTMLayout.cornerRadius))
+                            .contentShape(.rect)
                     }
+                    .buttonStyle(.plain)
                 }
 
                 Text("fonts licensed from big cat creative")

@@ -155,6 +155,7 @@ struct RemoteAvatarView: View {
     private var placeholder: some View {
         Image(systemName: didFailToResolve ? "person.crop.circle.badge.questionmark" : fallbackSymbol)
             .resizable()
+            .symbolRenderingMode(.hierarchical)
             .scaledToFit()
             .foregroundStyle(Color.wtmDarkBlue)
     }

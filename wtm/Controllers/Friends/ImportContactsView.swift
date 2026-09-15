@@ -78,7 +78,7 @@ final class ImportContactsModel {
             found.append(Match(id: account.uid, name: contact.name, phoneNumber: account.phoneNumber))
         }
 
-        matches = found.sorted { $0.name.lowercased() < $1.name.lowercased() }
+        matches = found.sorted { $0.name.sortsBefore($1.name) }
     }
 
     /// Last 10 digits, which is the part that identifies a subscriber

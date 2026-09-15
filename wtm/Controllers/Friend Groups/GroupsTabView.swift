@@ -105,7 +105,7 @@ final class GroupDetailModel {
 
             members = fetched
                 .filterDuplicates { $0.uid == $1.uid }
-                .sorted { $0.name < $1.name }
+                .sorted { $0.name.sortsBefore($1.name) }
 
             if members.isEmpty { failed = true }
         } catch {

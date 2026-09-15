@@ -19,6 +19,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 // MARK: - Typography
 
@@ -80,6 +81,18 @@ extension Color {
 
     static let wtmDarkBlue = Color("darkBlueOnLight")
     static let wtmLightBlue = Color("lightBlueOnLight")
+
+    /// The bright blue, pinned to that value in both appearances.
+    ///
+    /// `lightBlueOnLight` and `darkBlueOnLight` swap places in dark mode, which
+    /// is right where one sits on the other. Some elements — the profile
+    /// screen's customize tiles, for one — sit on the plain background in both
+    /// schemes and want the bright blue either way, so this resolves the asset
+    /// against the light appearance rather than repeating its components here.
+    static let wtmBrightBlue = Color(
+        uiColor: (UIColor(named: "lightBlueOnLight") ?? .tintColor)
+            .resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+    )
 
     static let wtmSecondaryLabel = Color("secondaryLabelColors")
     static let wtmTertiaryLabel = Color("tertiaryLabelColors")

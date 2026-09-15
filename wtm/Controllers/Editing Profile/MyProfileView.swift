@@ -263,7 +263,10 @@ struct MyProfileView: View {
             VStack(spacing: 6) {
                 Image(systemName: icon)
                     .font(.system(size: 42, weight: .regular))
-                    .foregroundStyle(Color.wtmLightBlue)
+                    // These sit on the plain background rather than on a dark
+                    // blue card, so they keep the bright blue in dark mode
+                    // instead of following the palette's light/dark swap.
+                    .foregroundStyle(Color.wtmBrightBlue)
                     .frame(height: 50)
                 Text(title)
                     .font(.wtmBold(15, relativeTo: .subheadline))
