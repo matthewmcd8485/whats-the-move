@@ -52,6 +52,9 @@ enum FirestoreKeys {
         static let expiresAt = "Expires At"
         static let activity = "Activity"
         static let timeSensitive = "Time Sensitive"
+        /// Download URL for the activity artwork, so the push fan-out can
+        /// attach it without having to resolve Storage itself.
+        static let imageURL = "Image URL"
         
         static func availabilityField(forUID uid: String) -> String { "\(uid) Availability" }
         static func substatusField(forUID uid: String) -> String { "\(uid) Substatus" }

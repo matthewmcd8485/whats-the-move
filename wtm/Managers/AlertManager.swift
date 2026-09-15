@@ -18,16 +18,27 @@ final class AlertManager {
     private init() {}
 
     public func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "okay", style: .default, handler: nil))
-
         let keyWindow = UIApplication.shared.connectedScenes
             .filter({$0.activationState == .foregroundActive})
             .compactMap({$0 as? UIWindowScene})
             .first?.windows
             .filter({$0.isKeyWindow}).first
         guard let rootViewController = keyWindow?.rootViewController else { return }
-        rootViewController.present(alert, animated: true, completion: nil)
+
+        // Walk to whatever is actually frontmost. Presenting on the root while
+        // it already has something up throws "which is already presenting" and
+        // silently drops the alert.
+        var presenter = rootViewController
+        while let presented = presenter.presentedViewController {
+            // An alert is already on screen — a second one would be dropped, so
+            // let the first one stand rather than queueing a duplicate.
+            if presented is UIAlertController { return }
+            presenter = presented
+        }
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "okay", style: .default, handler: nil))
+        presenter.present(alert, animated: true, completion: nil)
     }
 }
 

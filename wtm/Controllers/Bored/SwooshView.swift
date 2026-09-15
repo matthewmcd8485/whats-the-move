@@ -11,12 +11,23 @@ struct SwooshView: View {
     let groups: [SelectableGroup]
     let individuals: [Friend]
     let timeSensitive: Bool
+    /// Identifies this one send. Request IDs are derived from it so running the
+    /// flow twice overwrites the same documents instead of creating a second
+    /// set — the Cloud Function triggers on create, so a repeat write doesn't
+    /// fan out a duplicate push either.
+    let sendID: UUID
     var onFinished: () -> Void = {}
 
     @State private var ringProgress: CGFloat = 0
     @State private var sent = false
     @State private var didTimeOut = false
     @State private var didFinish = false
+    /// `onAppear` can fire more than once for the same screen. Sending twice
+    /// would write duplicate requests — and so deliver duplicate pushes.
+    @State private var didStartSending = false
+    /// Set by the failure paths so the timeout doesn't stack a second alert on
+    /// top of the one already on screen.
+    @State private var didReportFailure = false
     @State private var titleText = "sending..."
     @State private var subtitleText = "entering the matrix..."
 
@@ -59,8 +70,12 @@ struct SwooshView: View {
                 Spacer()
             }
         }
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
+        .navigationBarBackButtonHidden()
         .onAppear {
+            guard !didStartSending else { return }
+            didStartSending = true
+
             withAnimation(.easeInOut(duration: 1.5)) {
                 ringProgress = 1
             }
@@ -71,10 +86,9 @@ struct SwooshView: View {
     private func startSending() {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 7_000_000_000)
-            guard !sent else { return }
+            guard !sent, !didReportFailure else { return }
             didTimeOut = true
-            AlertManager.shared.showAlert(title: "error sending notifications", message: "check your internet connection and try again.")
-            onFinished()
+            fail(title: "error sending notifications", message: "check your internet connection and try again.")
         }
 
         Task {
@@ -82,21 +96,36 @@ struct SwooshView: View {
         }
     }
 
+    /// Reports a send failure exactly once, then hands control back.
+    @MainActor
+    private func fail(title: String, message: String) {
+        guard !didReportFailure else { return }
+        didReportFailure = true
+        AlertManager.shared.showAlert(title: title, message: message)
+        onFinished()
+    }
+
+    @MainActor
     private func runSendFlow() async {
         guard let uid = SecureStorage.uid,
               let name = UserDefaults.standard.string(forKey: "name") else { return }
 
-        var allFriends = [Friend]()
-        for selectableGroup in groups {
-            for friend in selectableGroup.friends {
-                if friend.uid != uid
-                    && !ReportingManager.shared.userBlockedYou(theirUID: friend.uid)
-                    && !ReportingManager.shared.userIsBlocked(theirUID: friend.uid) {
-                    allFriends.append(friend)
-                }
-            }
+        // Resolve the activity artwork before writing anything. The URL gets
+        // stored on each bored request so the push fan-out can attach it to the
+        // notification without having to reach into Storage itself.
+        let imageURL: String
+        do {
+            imageURL = try await storageManager.downloadImageURL(imageName: mood.rawValue, collection: "mood images")
+        } catch {
+            print("error retrieving image URL: \(error)")
+            fail(title: "couldn't send", message: "there was a problem sending your bored request. please try again.")
+            return
+        }
 
-            let requestID = UUID().uuidString
+        var didCreateRequest = false
+
+        for selectableGroup in groups {
+            let requestID = requestID(forGroup: selectableGroup.group.groupID)
             let postedTime = Date()
             let expiresAt = Date(timeIntervalSinceNow: 7200)
             do {
@@ -109,8 +138,10 @@ struct SwooshView: View {
                     activity: mood.rawValue,
                     initiatorUID: uid,
                     initiatorSubstatus: "i'll be there!",
-                    timeSensitive: timeSensitive
+                    timeSensitive: timeSensitive,
+                    imageURL: imageURL
                 )
+                didCreateRequest = true
             } catch {
                 print("error uploading Firestore bored request for group: \(selectableGroup.group.groupID): \(error)")
             }
@@ -122,11 +153,9 @@ struct SwooshView: View {
                   !ReportingManager.shared.userIsBlocked(theirUID: friend.uid)
             else { continue }
 
-            allFriends.append(friend)
-
             do {
                 let groupID = try await databaseManager.ensureDirectGroup(myUID: uid, friendUID: friend.uid)
-                let requestID = UUID().uuidString
+                let requestID = requestID(forGroup: groupID)
                 let postedTime = Date()
                 let expiresAt = Date(timeIntervalSinceNow: 7200)
                 try await databaseManager.createBoredRequest(
@@ -138,56 +167,32 @@ struct SwooshView: View {
                     activity: mood.rawValue,
                     initiatorUID: uid,
                     initiatorSubstatus: "i'll be there!",
-                    timeSensitive: timeSensitive
+                    timeSensitive: timeSensitive,
+                    imageURL: imageURL
                 )
+                didCreateRequest = true
             } catch {
                 print("error uploading Firestore bored request for friend: \(friend.uid): \(error)")
             }
         }
 
-        allFriends = allFriends.filterDuplicates { $0.uid == $1.uid }
-        guard !allFriends.isEmpty else {
-            print("allFriends list is empty")
+        // Recipient resolution — blocked pairs, "do not disturb" and stale
+        // device tokens — is the Cloud Function's job now. Writing the request
+        // documents is the whole of the client's work, so succeeding here is
+        // what "sent" means.
+        guard didCreateRequest else {
+            print("no bored requests were created")
+            fail(title: "couldn't send", message: "there was a problem sending your bored request. please try again.")
             return
         }
 
-        var allUsers = [User]()
-        await withTaskGroup(of: User?.self) { group in
-            for friend in allFriends {
-                group.addTask {
-                    do {
-                        let user = try await DatabaseManager.shared.downloadUser(where: "User Identifier", isEqualTo: friend.uid)
-                        return user.status != "do not disturb" ? user : nil
-                    } catch {
-                        print("error downloading user: \(error)")
-                        return nil
-                    }
-                }
-            }
-            for await user in group {
-                if let user { allUsers.append(user) }
-            }
-        }
+        sent = true
+        if !didTimeOut { finishUp() }
+    }
 
-        guard !allUsers.isEmpty else {
-            print("allUsers list is empty")
-            return
-        }
-
-        // Client-side fan-out removed; verify the mood image still exists, then finish.
-        storageManager.downloadImageURL(imageName: mood.rawValue, collection: "mood images") { [self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    sent = true
-                    if !didTimeOut { finishUp() }
-                case .failure(let error):
-                    print("error retrieving image URL: \(error)")
-                    AlertManager.shared.showAlert(title: "couldn't send", message: "there was a problem sending your bored request. please try again.")
-                    onFinished()
-                }
-            }
-        }
+    /// Stable per send-and-group, so a repeated run lands on the same document.
+    private func requestID(forGroup groupID: String) -> String {
+        "\(sendID.uuidString)-\(groupID)"
     }
 
     @MainActor
@@ -206,29 +211,3 @@ struct SwooshView: View {
     }
 }
 
-private final class SwooshHostingController: UIHostingController<SwooshView> {
-    override init(rootView: SwooshView) {
-        super.init(rootView: rootView)
-        hidesBottomBarWhenPushed = true
-    }
-
-    @MainActor required dynamic init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension SwooshView {
-    static func makeHostingController(mood: NotificationTitle, groups: [SelectableGroup], individuals: [Friend], timeSensitive: Bool) -> UIViewController {
-        let hc = SwooshHostingController(rootView: SwooshView(mood: mood, groups: groups, individuals: individuals, timeSensitive: timeSensitive))
-        hc.rootView = SwooshView(
-            mood: mood,
-            groups: groups,
-            individuals: individuals,
-            timeSensitive: timeSensitive,
-            onFinished: { [weak hc] in
-                hc?.navigationController?.popToRootViewController(animated: true)
-            }
-        )
-        return hc
-    }
-}

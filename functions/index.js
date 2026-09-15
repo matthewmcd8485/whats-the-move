@@ -6,7 +6,9 @@
  * Trigger: friend groups/{groupId}/bored requests/{requestId} document create.
  * Sends a multicast push via FCM HTTP v1 to every group member except the
  * initiator, blocked pairs (either direction), and anyone whose Status is
- * "do not disturb". Honors the request's "Time Sensitive" flag.
+ * "do not disturb". Honors the request's "Time Sensitive" flag, and forwards
+ * the request's "Image URL" so the notification service extension can attach
+ * the activity artwork to the banner.
  */
 
 const { initializeApp } = require("firebase-admin/app");
@@ -31,6 +33,7 @@ const REQUEST_FIELDS = {
   initiatedBy: "Initiated By",
   activity: "Activity",
   timeSensitive: "Time Sensitive",
+  imageURL: "Image URL",
   availabilitySuffix: " Availability",
 };
 
@@ -68,6 +71,13 @@ exports.fanOutBoredRequest = onDocumentCreated(
     const activity = data[REQUEST_FIELDS.activity];
     const initiatorName = data[REQUEST_FIELDS.initiatedBy];
     const timeSensitive = data[REQUEST_FIELDS.timeSensitive] === true;
+    const rawImageURL = data[REQUEST_FIELDS.imageURL];
+    // Only forward a usable https URL — the notification service extension
+    // downloads whatever lands in `url`, so junk here costs delivery latency.
+    const imageURL =
+      typeof rawImageURL === "string" && rawImageURL.startsWith("https://")
+        ? rawImageURL
+        : null;
 
     if (!activity || !initiatorName) {
       logger.warn("Missing activity or initiator name", { requestId, groupId });
@@ -135,9 +145,16 @@ exports.fanOutBoredRequest = onDocumentCreated(
     }
 
     // Resolve FCM tokens, skipping DND users and empty tokens
-    const userDocs = await Promise.all(
-      candidateUIDs.map((uid) => db.collection(COLLECTIONS.users).doc(uid).get()),
-    );
+    const [initiatorDoc, ...userDocs] = await Promise.all([
+      db.collection(COLLECTIONS.users).doc(initiatorUID).get(),
+      ...candidateUIDs.map((uid) => db.collection(COLLECTIONS.users).doc(uid).get()),
+    ]);
+
+    // Filtering by UID isn't enough on its own: a device that has been signed
+    // in to more than one account can leave its token on an old account's
+    // document, and pushing that token delivers the request back to the person
+    // who sent it. Excluding the initiator's own token covers that directly.
+    const initiatorToken = initiatorDoc.exists ? initiatorDoc.get(USER_FIELDS.fcmToken) : null;
 
     const tokens = [];
     const tokenToUID = new Map();
@@ -147,10 +164,16 @@ exports.fanOutBoredRequest = onDocumentCreated(
       const status = userDoc.get(USER_FIELDS.status);
       if (status === "do not disturb") continue;
       const token = userDoc.get(USER_FIELDS.fcmToken);
-      if (typeof token === "string" && token.length > 0 && token !== "no token") {
-        tokens.push(token);
-        tokenToUID.set(token, candidateUIDs[i]);
+      if (typeof token !== "string" || token.length === 0 || token === "no token") continue;
+      if (initiatorToken && token === initiatorToken) {
+        logger.info("Skipped a token that matches the initiator's", {
+          requestId,
+          uid: candidateUIDs[i],
+        });
+        continue;
       }
+      tokens.push(token);
+      tokenToUID.set(token, candidateUIDs[i]);
     }
 
     if (tokens.length === 0) {
@@ -178,6 +201,10 @@ exports.fanOutBoredRequest = onDocumentCreated(
         initiator: initiatorName,
         initiatorUID,
         timeSensitive: timeSensitive ? "true" : "false",
+        // `NotificationService` reads this key out of `userInfo` and attaches
+        // the download as a UNNotificationAttachment, which is what puts the
+        // artwork on the banner and in the expanded notification.
+        ...(imageURL ? { url: imageURL } : {}),
       },
       apns: {
         headers: {
@@ -195,6 +222,7 @@ exports.fanOutBoredRequest = onDocumentCreated(
         priority: timeSensitive ? "high" : "normal",
         notification: {
           channelId: timeSensitive ? "wtm_time_sensitive" : "wtm_default",
+          ...(imageURL ? { imageUrl: imageURL } : {}),
         },
       },
     };
@@ -205,6 +233,7 @@ exports.fanOutBoredRequest = onDocumentCreated(
       requestId,
       groupId,
       timeSensitive,
+      hasImage: imageURL !== null,
       delivered: response.successCount,
       failed: response.failureCount,
       totalRecipients: tokens.length,

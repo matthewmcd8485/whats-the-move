@@ -7,10 +7,10 @@ import SwiftUI
 import FirebaseAuth
 
 struct SettingsView: View {
-    var onBack: () -> Void = {}
     var onAbout: () -> Void = {}
     var onDeleteAccount: () -> Void = {}
-    var onLoggedOut: () -> Void = {}
+    /// Called after Firebase sign-out succeeds; the caller resets the app root.
+    var onSignedOut: () -> Void = {}
 
     @State private var explicit = UserDefaults.standard.bool(forKey: "explicit")
     @State private var showLogOutConfirm = false
@@ -19,34 +19,22 @@ struct SettingsView: View {
     @State private var showExplicitSaveError = false
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color("backgroundColors").ignoresSafeArea()
-
+        ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 header
 
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        explicitSection.padding(.top, 16)
-                        infoSection.padding(.top, 22)
-                        logOutSection.padding(.top, 22)
-                        deleteSection
-                            .padding(.top, 22)
-                            .padding(.bottom, 60)
-                    }
-                    .padding(.horizontal, 16)
-                }
+                explicitSection.padding(.top, 16)
+                infoSection.padding(.top, 22)
+                logOutSection.padding(.top, 22)
+                deleteSection
+                    .padding(.top, 22)
+                    .padding(.bottom, 40)
             }
-
-            Button(action: onBack) {
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .frame(width: 40, height: 40)
-            }
-            .padding(.leading, 16)
+            .padding(.horizontal, WTMLayout.sideMargin)
+            .padding(.top, 8)
         }
-        .navigationBarHidden(true)
+        .background(Color.wtmBackground)
+        .scrollBounceBehavior(.basedOnSize)
         .symbolRenderingMode(.hierarchical)
         .alert("log out", isPresented: $showLogOutConfirm) {
             Button("cancel", role: .cancel) {}
@@ -75,19 +63,16 @@ struct SettingsView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("settings")
-                .font(.custom("SuperBasic-Bold", size: 48))
-                .foregroundStyle(Color("darkBlueOnLight"))
+                .font(.wtmLargeTitle)
+                .foregroundStyle(Color.wtmDarkBlue)
+                .accessibilityAddTraits(.isHeader)
 
             Text("make your changes to the space-time continuum here.")
-                .font(.custom("SuperBasic-Regular", size: 15))
-                .foregroundStyle(Color("secondaryLabelColors"))
+                .font(.wtmSubtitle)
+                .foregroundStyle(Color.wtmSecondaryLabel)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 61)
-        .padding(.bottom, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color("backgroundColors"))
     }
 
     private var explicitSection: some View {
@@ -129,7 +114,7 @@ struct SettingsView: View {
 
     private var deleteSection: some View {
         card {
-            linkRow(icon: "trash.fill", title: "delete account", color: Color("darkRedOnLight")) {
+            linkRow(icon: "trash.fill", title: "delete account", color: .wtmDarkRed) {
                 showDeleteConfirm = true
             }
         }
@@ -139,45 +124,49 @@ struct SettingsView: View {
         HStack(spacing: 14) {
             Image(systemName: "exclamationmark.bubble")
                 .font(.system(size: 18, weight: .regular))
-                .foregroundStyle(Color("darkBlueOnLight"))
+                .foregroundStyle(Color.wtmDarkBlue)
                 .frame(width: 24)
             Text("explicit mode")
-                .font(.custom("SuperBasic-Bold", size: 18))
-                .foregroundStyle(Color("darkBlueOnLight"))
+                .font(.wtmBold(18, relativeTo: .body))
+                .foregroundStyle(Color.wtmDarkBlue)
             Spacer()
-            Toggle("", isOn: $explicit)
+            Toggle("explicit mode", isOn: $explicit)
                 .labelsHidden()
-                .tint(Color("darkBlueOnLight"))
+                .tint(.wtmDarkBlue)
                 .onChange(of: explicit) { _, newValue in
                     saveExplicit(newValue)
                 }
         }
         .padding(.horizontal, 16)
-        .frame(height: 56)
+        .frame(minHeight: 56)
     }
 
-    private func linkRow(icon: String, title: String, color: Color = Color("darkBlueOnLight"), action: @escaping () -> Void) -> some View {
+    private func linkRow(
+        icon: String,
+        title: String,
+        color: Color = .wtmDarkBlue,
+        action: @escaping () -> Void
+    ) -> some View {
         Button(action: action) {
             HStack(spacing: 14) {
                 Image(systemName: icon)
                     .font(.system(size: 18, weight: .regular))
-                    .foregroundStyle(color)
                     .frame(width: 24)
                 Text(title)
-                    .font(.custom("SuperBasic-Bold", size: 18))
-                    .foregroundStyle(color)
+                    .font(.wtmBold(18, relativeTo: .body))
                 Spacer(minLength: 0)
             }
+            .foregroundStyle(color)
             .padding(.horizontal, 16)
-            .frame(height: 56)
-            .contentShape(Rectangle())
+            .frame(minHeight: 56)
+            .contentShape(.rect)
         }
         .buttonStyle(CardRowButtonStyle())
     }
 
     private var rowDivider: some View {
         Rectangle()
-            .fill(Color("secondaryLabelColors").opacity(0.18))
+            .fill(Color.wtmSecondaryLabel.opacity(0.18))
             .frame(height: 0.5)
             .padding(.leading, 54)
     }
@@ -186,14 +175,14 @@ struct SettingsView: View {
     private func card<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         content()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color("groupedCardBackground"))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .background(Color.wtmGroupedCard)
+            .clipShape(RoundedRectangle(cornerRadius: WTMLayout.cardCornerRadius))
     }
 
     private func sectionFooter(_ text: String) -> some View {
         Text(text)
-            .font(.custom("SuperBasic-Regular", size: 13))
-            .foregroundStyle(Color("secondaryLabelColors"))
+            .font(.wtmRegular(13, relativeTo: .footnote))
+            .foregroundStyle(Color.wtmSecondaryLabel)
             .padding(.horizontal, 16)
     }
 
@@ -206,14 +195,15 @@ struct SettingsView: View {
         UserDefaults.standard.set(newValue, forKey: "explicit")
 
         guard let uid = SecureStorage.uid else { return }
-        DatabaseManager.shared.updateUserExplicit(uid: uid, enabled: newValue) { result in
-            if case .failure = result {
-                DispatchQueue.main.async {
-                    let reverted = !newValue
-                    explicit = reverted
-                    UserDefaults.standard.set(reverted, forKey: "explicit")
-                    showExplicitSaveError = true
-                }
+        Task {
+            do {
+                try await DatabaseManager.shared.updateUserExplicit(uid: uid, enabled: newValue)
+            } catch {
+                // Roll the toggle back so the UI matches what's stored.
+                let reverted = !newValue
+                explicit = reverted
+                UserDefaults.standard.set(reverted, forKey: "explicit")
+                showExplicitSaveError = true
             }
         }
     }
@@ -221,9 +211,9 @@ struct SettingsView: View {
     private func performLogOut() {
         do {
             try Auth.auth().signOut()
-            onLoggedOut()
+            onSignedOut()
         } catch {
-            print("Sign out process failed: \(error)")
+            Log.auth.error("Sign out failed: \(error.localizedDescription, privacy: .public)")
             showLogOutFailed = true
         }
     }
@@ -233,45 +223,6 @@ private struct CardRowButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .background(configuration.isPressed ? Color.white.opacity(0.06) : Color.clear)
-    }
-}
-
-private final class SettingsHostingController: UIHostingController<SettingsView>, UIGestureRecognizerDelegate {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
-    }
-}
-
-extension SettingsView {
-    static func makeHostingController() -> UIViewController {
-        let hc = SettingsHostingController(rootView: SettingsView())
-        hc.rootView = SettingsView(
-            onBack: { [weak hc] in
-                hc?.navigationController?.popViewController(animated: true)
-            },
-            onAbout: { [weak hc] in
-                hc?.navigationController?.pushViewController(AboutThisAppView.makeHostingController(), animated: true)
-            },
-            onDeleteAccount: { [weak hc] in
-                hc?.navigationController?.pushViewController(DeleteAccountView.makeHostingController(), animated: true)
-            },
-            onLoggedOut: { [weak hc] in
-                guard let hc else { return }
-                hc.navigationController?.viewControllers = [hc]
-                hc.tabBarController?.viewControllers = [hc]
-                UserDefaults.resetDefaults()
-                UserDefaults.standard.set(true, forKey: "launchedBefore")
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(identifier: "loadingViewController") as LoadingViewController
-                hc.navigationController?.pushViewController(vc, animated: true)
-            }
-        )
-        return hc
     }
 }
 

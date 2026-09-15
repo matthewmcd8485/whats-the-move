@@ -54,8 +54,8 @@ final class DatabaseManager: @unchecked Sendable {
     }
     
     // MARK: - Create / Update User Profile
-    public func createUser(_ user: User, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.users).document(user.uid).setData([
+    public func createUser(_ user: User) async throws {
+        try await db.collection(FirestoreKeys.Collection.users).document(user.uid).setData([
             FirestoreKeys.User.name : user.name,
             FirestoreKeys.User.phoneNumber : user.phoneNumber,
             FirestoreKeys.User.userIdentifier : user.uid,
@@ -65,50 +65,26 @@ final class DatabaseManager: @unchecked Sendable {
             FirestoreKeys.User.joined : user.joinedTime,
             FirestoreKeys.User.profileImageURL : user.profileImageURL,
             FirestoreKeys.User.explicit : user.explicit
-        ], merge: true, completion: { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-        })
+        ], merge: true)
     }
 
-    public func updateUserExplicit(uid: String, enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.users).document(uid).setData([
+    public func updateUserExplicit(uid: String, enabled: Bool) async throws {
+        try await db.collection(FirestoreKeys.Collection.users).document(uid).setData([
             FirestoreKeys.User.explicit : enabled
-        ], merge: true, completion: { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-        })
+        ], merge: true)
     }
     
-    public func updateUserName(uid: String, name: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.users).document(uid).setData([
+    public func updateUserName(uid: String, name: String) async throws {
+        try await db.collection(FirestoreKeys.Collection.users).document(uid).setData([
             FirestoreKeys.User.name : name
-        ], merge: true, completion: { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-        })
+        ], merge: true)
     }
     
-    public func updateUserStatus(uid: String, status: String, substatus: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.users).document(uid).setData([
+    public func updateUserStatus(uid: String, status: String, substatus: String) async throws {
+        try await db.collection(FirestoreKeys.Collection.users).document(uid).setData([
             FirestoreKeys.User.status : status,
             FirestoreKeys.User.substatus : substatus
-        ], merge: true, completion: { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-        })
+        ], merge: true)
     }
     
     public func updateUserProfileImageURL(uid: String, url: String) {
@@ -118,9 +94,9 @@ final class DatabaseManager: @unchecked Sendable {
     }
     
     // MARK: - Soft-delete User
-    public func softDeleteUserProfile(uid: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    public func softDeleteUserProfile(uid: String) async throws {
         let deletedMarker = "user deleted"
-        db.collection(FirestoreKeys.Collection.users).document(uid).setData([
+        try await db.collection(FirestoreKeys.Collection.users).document(uid).setData([
             FirestoreKeys.User.name : deletedMarker,
             FirestoreKeys.User.phoneNumber : deletedMarker,
             FirestoreKeys.User.profileImageURL : deletedMarker,
@@ -128,37 +104,27 @@ final class DatabaseManager: @unchecked Sendable {
             FirestoreKeys.User.fcmToken : deletedMarker,
             FirestoreKeys.User.status : deletedMarker,
             FirestoreKeys.User.substatus : deletedMarker
-        ], merge: true, completion: { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-        })
+        ], merge: true)
     }
-    
-    public func softDeleteFriendReferences(toUID uid: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collectionGroup(FirestoreKeys.Collection.friends).whereField(FirestoreKeys.User.userIdentifier, isEqualTo: uid).getDocuments { (snapshot, error) in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            guard let documents = snapshot?.documents else {
-                completion(.success(()))
-                return
-            }
-            for document in documents {
-                document.reference.setData([
-                    FirestoreKeys.User.name : "user deleted"
-                ], merge: true)
-            }
-            completion(.success(()))
+
+    // Awaits each rename rather than firing them off unawaited, so a caller
+    // that returns successfully knows the references are actually updated.
+    public func softDeleteFriendReferences(toUID uid: String) async throws {
+        let snapshot = try await db
+            .collectionGroup(FirestoreKeys.Collection.friends)
+            .whereField(FirestoreKeys.User.userIdentifier, isEqualTo: uid)
+            .getDocuments()
+
+        for document in snapshot.documents {
+            try await document.reference.setData([
+                FirestoreKeys.User.name : "user deleted"
+            ], merge: true)
         }
     }
     
     // MARK: - Bored Requests
-    public func createBoredRequest(requestID: String, groupID: String, initiatedBy: String, postedTime: Date, expiresAt: Date, activity: String, initiatorUID uid: String, initiatorSubstatus substatus: String, timeSensitive: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).document(requestID).setData([
+    public func createBoredRequest(requestID: String, groupID: String, initiatedBy: String, postedTime: Date, expiresAt: Date, activity: String, initiatorUID uid: String, initiatorSubstatus substatus: String, timeSensitive: Bool, imageURL: String) async throws {
+        try await db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).document(requestID).setData([
             FirestoreKeys.BoredRequest.requestIdentifier : requestID,
             FirestoreKeys.BoredRequest.initiatedBy : initiatedBy,
             FirestoreKeys.BoredRequest.postedTime : postedTime,
@@ -166,15 +132,10 @@ final class DatabaseManager: @unchecked Sendable {
             FirestoreKeys.BoredRequest.activity : activity,
             FirestoreKeys.BoredRequest.groupIdentifier : groupID,
             FirestoreKeys.BoredRequest.timeSensitive : timeSensitive,
+            FirestoreKeys.BoredRequest.imageURL : imageURL,
             FirestoreKeys.BoredRequest.availabilityField(forUID: uid) : "available",
             FirestoreKeys.BoredRequest.substatusField(forUID: uid) : substatus
-        ], merge: false, completion: { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-        })
+        ], merge: false)
     }
     
     public func downloadBoredRequests(forGroupIDs groupIDs: [String], notExpiredSince expiredCutoff: Timestamp, completion: @escaping (Result<[BoredRequest], Error>) -> Void) {
@@ -225,16 +186,6 @@ final class DatabaseManager: @unchecked Sendable {
         group.notify(queue: .main) {
             let deduped = allRequests.filterDuplicates { $0.requestID == $1.requestID }
             completion(.success(deduped))
-        }
-    }
-    
-    public func downloadBoredRequestResponses(groupID: String, requestID: String, completion: @escaping (Result<DocumentSnapshot?, Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).whereField(FirestoreKeys.BoredRequest.requestIdentifier, isEqualTo: requestID).getDocuments() { querySnapshot, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            completion(.success(querySnapshot?.documents.first))
         }
     }
     
@@ -420,125 +371,91 @@ final class DatabaseManager: @unchecked Sendable {
     }
     
     // MARK: - Download Users In Subcollection
-    public func downloadUsersInSubcollection(uid: String, subcollection: String, completion: @escaping (Result<[User], Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.users).document(uid).collection(subcollection).getDocuments() { querySnapshot, error in
-            if let error = error  {
-                Log.database.error("Error loading friends from Firebase: \(error.localizedDescription, privacy: .public)")
-                completion(.failure(DatabaseError.failedToFetch))
-                return
-            }
-            
-            guard let documents = querySnapshot?.documents else {
-                completion(.failure(DatabaseError.failedToFetch))
-                return
-            }
-            
-            let users: [User] = documents.compactMap {
-                do {
-                    return try $0.data(as: User.self)
-                } catch {
-                    Log.database.error("Error decoding User from Firestore: \(error.localizedDescription, privacy: .public)")
-                    return nil
-                }
-            }
-            completion(.success(users))
-        }
-    }
-    
     // MARK: - Download All Friends
-    public func downloadAllFriends(uid: String, completion: @escaping (Result<[Friend], Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.users).document(uid).collection(FirestoreKeys.Collection.friends).getDocuments() { querySnapshot, error in
-            if let error = error  {
-                Log.database.error("Error loading friends from Firebase: \(error.localizedDescription, privacy: .public)")
-                completion(.failure(DatabaseError.failedToFetch))
-                return
-            }
-            
-            guard let documents = querySnapshot?.documents else {
-                completion(.failure(DatabaseError.failedToFetch))
-                return
-            }
-            
-            let users: [Friend] = documents.compactMap {
+    public func downloadAllFriends(uid: String) async throws -> [Friend] {
+        do {
+            let snapshot = try await db
+                .collection(FirestoreKeys.Collection.users)
+                .document(uid)
+                .collection(FirestoreKeys.Collection.friends)
+                .getDocuments()
+            return snapshot.documents.compactMap { document in
                 do {
-                    return try $0.data(as: Friend.self)
+                    return try document.data(as: Friend.self)
                 } catch {
                     Log.database.error("Error decoding Friend from Firestore: \(error.localizedDescription, privacy: .public)")
                     return nil
                 }
             }
-            completion(.success(users))
+        } catch {
+            Log.database.error("Error loading friends from Firebase: \(error.localizedDescription, privacy: .public)")
+            throw DatabaseError.failedToFetch
         }
     }
-    
+
     // MARK: - Download All Groups
-    public func downloadAllGroups(uid: String, completion: @escaping (Result<[FriendGroup], Error>) -> Void) {
-        db.collection(FirestoreKeys.Collection.friendGroups).whereField(FirestoreKeys.Group.people, arrayContains: uid).getDocuments() { querySnapshot, error in
-            guard error == nil else {
-                Log.database.error("Error downloading groups from Firestore: \(error!.localizedDescription, privacy: .public)")
-                completion(.failure(DatabaseError.failedToFetch))
-                return
-            }
-            
-            guard let documents = querySnapshot?.documents else {
-                completion(.failure(DatabaseError.failedToFetch))
-                return
-            }
-            
-            var groups: [FriendGroup] = documents.compactMap {
+    public func downloadAllGroups(uid: String) async throws -> [FriendGroup] {
+        do {
+            let snapshot = try await db
+                .collection(FirestoreKeys.Collection.friendGroups)
+                .whereField(FirestoreKeys.Group.people, arrayContains: uid)
+                .getDocuments()
+            let groups: [FriendGroup] = snapshot.documents.compactMap { document in
                 do {
-                    let group = try $0.data(as: FriendGroup.self)
+                    let group = try document.data(as: FriendGroup.self)
                     return FriendGroup(name: group.name.lowercased(), groupID: group.groupID, people: group.people)
                 } catch {
                     Log.database.error("Error decoding FriendGroup from Firestore: \(error.localizedDescription, privacy: .public)")
                     return nil
                 }
             }
-            groups = groups.filterDuplicates { $0.groupID == $1.groupID }
-            completion(.success(groups))
+            return groups.filterDuplicates { $0.groupID == $1.groupID }
+        } catch {
+            Log.database.error("Error downloading groups from Firestore: \(error.localizedDescription, privacy: .public)")
+            throw DatabaseError.failedToFetch
         }
     }
     
     // MARK: - Download Friends In Group
-    public func downloadFriends(fromGroupWith: [String], completion: @escaping (Result<[Friend], Error>) -> Void) {
-        guard !fromGroupWith.isEmpty else {
-            completion(.failure(DatabaseError.failedToFetch))
-            return
-        }
-        
-        var friendsReturn = [Friend]()
-        let group = DispatchGroup()
-        
-        for memberUID in fromGroupWith {
-            group.enter()
-            db.collection(FirestoreKeys.Collection.users).whereField(FirestoreKeys.User.userIdentifier, isEqualTo: memberUID).getDocuments() { querySnapshot, error in
-                defer { group.leave() }
-                
-                if let error = error  {
-                    Log.database.error("Error loading friends from Firebase: \(error.localizedDescription, privacy: .public)")
-                    return
-                }
-                
-                guard let documents = querySnapshot?.documents else { return }
-                
-                for document in documents {
+    // Fans out one query per member and collects the results. A task group
+    // replaces the previous DispatchGroup + shared mutable array, which was a
+    // genuine data race: several Firestore callbacks appended to `friendsReturn`
+    // concurrently with no synchronization.
+    public func downloadFriends(fromGroupWith people: [String]) async throws -> [Friend] {
+        guard !people.isEmpty else { throw DatabaseError.failedToFetch }
+
+        let friends = await withTaskGroup(of: [Friend].self) { group in
+            for memberUID in people {
+                group.addTask {
                     do {
-                        let friend = try document.data(as: Friend.self)
-                        friendsReturn.append(friend)
+                        let snapshot = try await self.db
+                            .collection(FirestoreKeys.Collection.users)
+                            .whereField(FirestoreKeys.User.userIdentifier, isEqualTo: memberUID)
+                            .getDocuments()
+                        return snapshot.documents.compactMap { document in
+                            do {
+                                return try document.data(as: Friend.self)
+                            } catch {
+                                Log.database.error("Error decoding Friend from Firestore: \(error.localizedDescription, privacy: .public)")
+                                return nil
+                            }
+                        }
                     } catch {
-                        Log.database.error("Error decoding Friend from Firestore: \(error.localizedDescription, privacy: .public)")
+                        Log.database.error("Error loading friends from Firebase: \(error.localizedDescription, privacy: .public)")
+                        return []
                     }
                 }
             }
-        }
-        
-        group.notify(queue: .main) {
-            if friendsReturn.isEmpty {
-                completion(.failure(DatabaseError.failedToFetch))
-            } else {
-                completion(.success(friendsReturn))
+
+            var collected = [Friend]()
+            for await batch in group {
+                collected.append(contentsOf: batch)
             }
+            return collected
         }
+
+        guard !friends.isEmpty else { throw DatabaseError.failedToFetch }
+        return friends
     }
     
     // MARK: - Block User
@@ -570,62 +487,49 @@ final class DatabaseManager: @unchecked Sendable {
     }
     
     // MARK: - Update Blocked Users List
-    // Updates a cached array of all blocked users for a given user
-    public func updateBlockedUsersList(uid: String, completion: @escaping (Bool) -> Void) {
-        SecureStorage.blockedUsers = [""]
-        SecureStorage.whoBlockedMe = [""]
-        
-        var blockedUsers: [String] = [""]
-        var whoBlockedMe: [String] = [""]
-        var encounteredError = false
-        let group = DispatchGroup()
-        
-        group.enter()
-        db.collection(FirestoreKeys.Collection.blockedUsers).whereField(FirestoreKeys.BlockedUser.blockedUserIdentifier, isEqualTo: uid).getDocuments() { (snapshot, error) in
-            defer { group.leave() }
-            
-            guard error == nil else {
-                Log.database.error("Error accessing blocked users subcollection: \(error!.localizedDescription, privacy: .public)")
-                encounteredError = true
-                return
-            }
-            
-            guard let documents = snapshot?.documents else { return }
-            
-            for document in documents {
-                if let blockedMe = document.get(FirestoreKeys.BlockedUser.blockingUserIdentifier) as? String {
-                    whoBlockedMe.append(blockedMe)
-                }
-            }
+    // Refreshes the cached block lists. Returns false if either query failed.
+    //
+    // The previous version cleared both cached lists up front and only wrote
+    // the new values on success, so a failed refresh left them empty — briefly
+    // un-blocking everyone. The caches are now only touched once both queries
+    // have come back.
+    public func updateBlockedUsersList(uid: String) async -> Bool {
+        async let iBlocked = blockedIdentifiers(
+            matching: FirestoreKeys.BlockedUser.blockingUserIdentifier,
+            equalTo: uid,
+            reading: FirestoreKeys.BlockedUser.blockedUserIdentifier
+        )
+        async let blockedMe = blockedIdentifiers(
+            matching: FirestoreKeys.BlockedUser.blockedUserIdentifier,
+            equalTo: uid,
+            reading: FirestoreKeys.BlockedUser.blockingUserIdentifier
+        )
+
+        guard let iBlocked = await iBlocked, let blockedMe = await blockedMe else {
+            return false
         }
-        
-        group.enter()
-        db.collection(FirestoreKeys.Collection.blockedUsers).whereField(FirestoreKeys.BlockedUser.blockingUserIdentifier, isEqualTo: uid).getDocuments() { (snapshot, error) in
-            defer { group.leave() }
-            
-            guard error == nil else {
-                Log.database.error("Error accessing blocked users subcollection: \(error!.localizedDescription, privacy: .public)")
-                encounteredError = true
-                return
-            }
-            
-            guard let documents = snapshot?.documents else { return }
-            
-            for document in documents {
-                if let blockedYou = document.get(FirestoreKeys.BlockedUser.blockedUserIdentifier) as? String {
-                    blockedUsers.append(blockedYou)
-                }
-            }
-        }
-        
-        group.notify(queue: .main) {
-            if encounteredError {
-                completion(false)
-                return
-            }
-            SecureStorage.whoBlockedMe = whoBlockedMe
-            SecureStorage.blockedUsers = blockedUsers
-            completion(true)
+
+        SecureStorage.blockedUsers = iBlocked
+        SecureStorage.whoBlockedMe = blockedMe
+        return true
+    }
+
+    /// Returns nil on failure so the caller can tell "no one" apart from
+    /// "couldn't check".
+    private func blockedIdentifiers(
+        matching field: String,
+        equalTo uid: String,
+        reading resultField: String
+    ) async -> [String]? {
+        do {
+            let snapshot = try await db
+                .collection(FirestoreKeys.Collection.blockedUsers)
+                .whereField(field, isEqualTo: uid)
+                .getDocuments()
+            return snapshot.documents.compactMap { $0.get(resultField) as? String }
+        } catch {
+            Log.database.error("Error accessing blocked users subcollection: \(error.localizedDescription, privacy: .public)")
+            return nil
         }
     }
 }
@@ -642,38 +546,6 @@ extension DatabaseManager {
         }
     }
     
-    public func downloadUsersInSubcollection(uid: String, subcollection: String) async throws -> [User] {
-        try await withCheckedThrowingContinuation { continuation in
-            downloadUsersInSubcollection(uid: uid, subcollection: subcollection) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func downloadAllFriends(uid: String) async throws -> [Friend] {
-        try await withCheckedThrowingContinuation { continuation in
-            downloadAllFriends(uid: uid) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func downloadAllGroups(uid: String) async throws -> [FriendGroup] {
-        try await withCheckedThrowingContinuation { continuation in
-            downloadAllGroups(uid: uid) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func downloadFriends(fromGroupWith people: [String]) async throws -> [Friend] {
-        try await withCheckedThrowingContinuation { continuation in
-            downloadFriends(fromGroupWith: people) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
     @discardableResult
     public func blockUser(uidToBlock: String) async -> Bool {
         await withCheckedContinuation { continuation in
@@ -684,54 +556,6 @@ extension DatabaseManager {
     }
     
     @discardableResult
-    public func updateBlockedUsersList(uid: String) async -> Bool {
-        await withCheckedContinuation { continuation in
-            updateBlockedUsersList(uid: uid) { success in
-                continuation.resume(returning: success)
-            }
-        }
-    }
-    
-    public func createUser(_ user: User) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            createUser(user) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func updateUserName(uid: String, name: String) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            updateUserName(uid: uid, name: name) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func updateUserStatus(uid: String, status: String, substatus: String) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            updateUserStatus(uid: uid, status: status, substatus: substatus) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func softDeleteUserProfile(uid: String) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            softDeleteUserProfile(uid: uid) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func softDeleteFriendReferences(toUID uid: String) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            softDeleteFriendReferences(toUID: uid) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
     public func downloadAllUsers() async throws -> [User] {
         try await withCheckedThrowingContinuation { continuation in
             downloadAllUsers { result in
@@ -780,6 +604,15 @@ extension DatabaseManager {
         }
     }
     
+    /// Adds several people at once. `arrayUnion` already de-duplicates, so this
+    /// is a single write regardless of how many were picked.
+    public func addPeopleToGroup(groupID: String, uids: [String]) async throws {
+        guard !uids.isEmpty else { return }
+        try await db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).updateData([
+            FirestoreKeys.Group.people : FieldValue.arrayUnion(uids)
+        ])
+    }
+
     public func renameGroup(groupID: String, name: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             renameGroup(groupID: groupID, name: name) { result in
@@ -791,14 +624,6 @@ extension DatabaseManager {
     public func removePersonFromGroup(groupID: String, uid: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             removePersonFromGroup(groupID: groupID, uid: uid) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func createBoredRequest(requestID: String, groupID: String, initiatedBy: String, postedTime: Date, expiresAt: Date, activity: String, initiatorUID: String, initiatorSubstatus: String, timeSensitive: Bool) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            createBoredRequest(requestID: requestID, groupID: groupID, initiatedBy: initiatedBy, postedTime: postedTime, expiresAt: expiresAt, activity: activity, initiatorUID: initiatorUID, initiatorSubstatus: initiatorSubstatus, timeSensitive: timeSensitive) { result in
                 continuation.resume(with: result)
             }
         }

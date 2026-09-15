@@ -5,10 +5,11 @@
 
 import SwiftUI
 
+@Observable
 @MainActor
-final class MyFriendsViewModel: ObservableObject {
-    @Published var friends: [User] = []
-    @Published var isLoading = true
+final class MyFriendsViewModel {
+    var friends: [User] = []
+    var isLoading = true
 
     func load() async {
         let myUID = SecureStorage.uid
@@ -43,45 +44,47 @@ struct MyFriendsView: View {
     var onTapRequests: () -> Void = {}
     var onTapAddFriends: () -> Void = {}
 
-    @StateObject private var viewModel = MyFriendsViewModel()
+    @State private var viewModel = MyFriendsViewModel()
 
     var body: some View {
         ZStack(alignment: .top) {
-            Color("backgroundColors").ignoresSafeArea()
+            Color.wtmBackground.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .top) {
-                    Text("my friends")
-                        .font(.custom("SuperBasic-Bold", size: 48))
-                        .foregroundStyle(Color("darkBlueOnLight"))
-                    Spacer()
-                    Button(action: onTapRequests) {
-                        Image(systemName: "paperplane")
-                            .font(.system(size: 28, weight: .regular))
-                            .foregroundStyle(Color("darkBlueOnLight"))
-                            .frame(width: 44, height: 44)
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 36)
+                Text("my friends")
+                    .font(.wtmLargeTitle)
+                    .foregroundStyle(Color.wtmDarkBlue)
+                    .accessibilityAddTraits(.isHeader)
+                    .padding(.horizontal, WTMLayout.sideMargin)
+                    .padding(.top, 8)
 
                 content
-
-                Button(action: onTapAddFriends) {
-                    Text("add friends")
-                        .font(.custom("SuperBasic-Bold", size: 20))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 53)
-                        .background(Color("darkBlueOnLight"))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-                .padding(.horizontal, 53)
-                .padding(.bottom, 24)
             }
         }
         .task {
             await viewModel.load()
+        }
+        .toolbar {
+            // Two separate concerns, so two separate glass groups: reviewing
+            // incoming requests, and adding someone new. The fixed spacer is
+            // what splits them into distinct capsules.
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: onTapRequests) {
+                    Image(systemName: "paperplane")
+                }
+                .plainToolbarSymbol()
+                .accessibilityLabel("friend requests")
+            }
+
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: onTapAddFriends) {
+                    Image(systemName: "plus")
+                }
+                .plainToolbarSymbol()
+                .accessibilityLabel("add friends")
+            }
         }
     }
 
@@ -89,7 +92,7 @@ struct MyFriendsView: View {
     private var content: some View {
         if viewModel.isLoading && viewModel.friends.isEmpty {
             Spacer()
-            HStack { Spacer(); Text("loading...").font(.custom("SuperBasic-Bold", size: 25)).foregroundStyle(Color("secondaryLabelColors")); Spacer() }
+            CenteredMessage(text: "loading...")
             Spacer()
         } else if viewModel.friends.isEmpty {
             Spacer()
@@ -97,93 +100,51 @@ struct MyFriendsView: View {
                 Text("you don't have any friends.")
                 Text("that's embarrassing.")
             }
-            .font(.custom("SuperBasic-Regular", size: 15))
-            .foregroundStyle(Color("secondaryLabelColors"))
+            .font(.wtmSubtitle)
+            .foregroundStyle(Color.wtmSecondaryLabel)
             .frame(maxWidth: .infinity)
             Spacer()
         } else {
             List {
-                ForEach(viewModel.friends, id: \.uid) { user in
-                    Button {
-                        onSelectFriend(user)
-                    } label: {
-                        friendRow(user: user)
+                ForEach(sections) { section in
+                    Section {
+                        ForEach(section.items, id: \.uid) { user in
+                            Button {
+                                onSelectFriend(user)
+                            } label: {
+                                CompactPersonRow(user: user)
+                            }
+                            .buttonStyle(.plain)
+                            .listRowBackground(Color.wtmBackground)
+                            .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
+                        }
+                    } header: {
+                        SectionLetterHeader(letter: section.id)
                     }
-                    .buttonStyle(.plain)
-                    .listRowBackground(Color("backgroundColors"))
-                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                    // Drives the Contacts-style A–Z scrubber.
+                    .sectionIndexLabel(section.id)
                 }
             }
-            .listStyle(.insetGrouped)
-            .listSectionSpacing(.compact)
+            .listStyle(.plain)
+            .listSectionIndexVisibility(.visible)
             .scrollContentBackground(.hidden)
-            .background(Color("backgroundColors"))
+            .background(Color.wtmBackground)
             .refreshable {
                 await viewModel.load()
             }
         }
     }
 
-    @ViewBuilder
-    private func friendRow(user: User) -> some View {
-        HStack(spacing: 12) {
-            statusIcon(for: user)
-                .frame(width: 30, height: 30)
-
-            VStack(alignment: .leading, spacing: 1) {
-                Text(displayName(for: user))
-                    .font(.custom("SuperBasic-Bold", size: 22))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .lineLimit(1)
-                Text(statusLine(for: user))
-                    .font(.custom("SuperBasic-Thin", size: 12))
-                    .foregroundStyle(Color("secondaryLabelColors"))
-                    .lineLimit(1)
-            }
-            Spacer()
-            Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(.gray)
-        }
-        .contentShape(Rectangle())
+    /// Friends bucketed A–Z. The cache already returns them name-sorted.
+    private var sections: [IndexedSection<User>] {
+        alphabeticalSections(viewModel.friends) { $0.name }
     }
 
-    @ViewBuilder
-    private func statusIcon(for user: User) -> some View {
-        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: user.uid)
-        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: user.uid)
+}
 
-        Group {
-            if user.name == "user deleted" {
-                Image(systemName: "person.crop.circle.badge.questionmark")
-                    .foregroundStyle(.gray)
-            } else if blockedYou || blockedMe {
-                Image(systemName: "hand.raised.slash")
-                    .foregroundStyle(.red)
-            } else if user.status == "available" {
-                Image(systemName: "checkmark.seal")
-                    .foregroundStyle(.green)
-            } else if user.status == "busy" {
-                Image(systemName: "exclamationmark.bubble")
-                    .foregroundStyle(Color("darkYellowOnLight"))
-            } else {
-                Image(systemName: "nosign")
-                    .foregroundStyle(.red)
-            }
-        }
-        .font(.system(size: 22, weight: .regular))
-    }
 
-    private func displayName(for user: User) -> String {
-        if user.uid == SecureStorage.uid { return "you" }
-        return user.name.lowercased()
-    }
-
-    private func statusLine(for user: User) -> String {
-        if user.name == "user deleted" { return "no status available" }
-        let blockedYou = ReportingManager.shared.userIsBlocked(theirUID: user.uid)
-        let blockedMe = ReportingManager.shared.userBlockedYou(theirUID: user.uid)
-        if blockedYou || blockedMe { return "blocked" }
-        return user.status
+#Preview("Friends list") {
+    NavigationStack {
+        MyFriendsView()
     }
 }

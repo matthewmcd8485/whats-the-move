@@ -5,10 +5,11 @@
 
 import SwiftUI
 
+@Observable
 @MainActor
-final class FriendGroupsViewModel: ObservableObject {
-    @Published var groups: [FriendGroup] = []
-    @Published var isLoading = true
+final class FriendGroupsViewModel {
+    var groups: [FriendGroup] = []
+    var isLoading = true
 
     func load() async {
         let cached = LocalCacheManager.shared.cachedFriendGroups()
@@ -27,7 +28,7 @@ struct FriendGroupsView: View {
     var onSelectGroup: (FriendGroup) -> Void = { _ in }
     var onCreateGroup: (String) -> Void = { _ in }
 
-    @StateObject private var viewModel = FriendGroupsViewModel()
+    @State private var viewModel = FriendGroupsViewModel()
     @State private var showNameAlert = false
     @State private var showFewFriendsAlert = false
     @State private var showProfanityAlert = false
@@ -35,34 +36,30 @@ struct FriendGroupsView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Color("backgroundColors").ignoresSafeArea()
+            Color.wtmBackground.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
                 Text("friend groups")
-                    .font(.custom("SuperBasic-Bold", size: 48))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .padding(.horizontal, 16)
-                    .padding(.top, 36)
+                    .font(.wtmLargeTitle)
+                    .foregroundStyle(Color.wtmDarkBlue)
+                    .accessibilityAddTraits(.isHeader)
+                    .padding(.horizontal, WTMLayout.sideMargin)
+                    .padding(.top, 8)
 
                 content
-
-                Button {
-                    promptNewGroup()
-                } label: {
-                    Text("new group")
-                        .font(.custom("SuperBasic-Bold", size: 20))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 53)
-                        .background(Color("darkBlueOnLight"))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-                .padding(.horizontal, 53)
-                .padding(.bottom, 24)
             }
         }
         .task {
             await viewModel.load()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: promptNewGroup) {
+                    Image(systemName: "plus")
+                }
+                .plainToolbarSymbol()
+                .accessibilityLabel("new group")
+            }
         }
         .alert("name group", isPresented: $showNameAlert) {
             TextField("ex. the dream team", text: $newGroupName)
@@ -88,7 +85,7 @@ struct FriendGroupsView: View {
     private var content: some View {
         if viewModel.isLoading && viewModel.groups.isEmpty {
             Spacer()
-            HStack { Spacer(); Text("loading...").font(.custom("SuperBasic-Bold", size: 25)).foregroundStyle(Color("secondaryLabelColors")); Spacer() }
+            CenteredMessage(text: "loading...")
             Spacer()
         } else if viewModel.groups.isEmpty {
             Spacer()
@@ -96,51 +93,67 @@ struct FriendGroupsView: View {
                 Text("you don't have any groups yet.")
                 Text("create one below.")
             }
-            .font(.custom("SuperBasic-Regular", size: 15))
-            .foregroundStyle(Color("secondaryLabelColors"))
+            .font(.wtmSubtitle)
+            .foregroundStyle(Color.wtmSecondaryLabel)
             .frame(maxWidth: .infinity)
             Spacer()
         } else {
             List {
-                ForEach(viewModel.groups, id: \.groupID) { group in
-                    Button {
-                        onSelectGroup(group)
-                    } label: {
-                        groupRow(group: group)
+                ForEach(sections) { section in
+                    Section {
+                        ForEach(section.items, id: \.groupID) { group in
+                            Button {
+                                onSelectGroup(group)
+                            } label: {
+                                groupRow(group: group)
+                            }
+                            .buttonStyle(.plain)
+                            .listRowBackground(Color.wtmBackground)
+                            .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
+                        }
+                    } header: {
+                        SectionLetterHeader(letter: section.id)
                     }
-                    .buttonStyle(.plain)
-                    .listRowBackground(Color("backgroundColors"))
-                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                    .sectionIndexLabel(section.id)
                 }
             }
-            .listStyle(.insetGrouped)
-            .listSectionSpacing(.compact)
+            .listStyle(.plain)
+            .listSectionIndexVisibility(.visible)
             .scrollContentBackground(.hidden)
-            .background(Color("backgroundColors"))
+            .background(Color.wtmBackground)
             .refreshable {
                 await viewModel.load()
             }
         }
     }
 
+    private var sections: [IndexedSection<FriendGroup>] {
+        alphabeticalSections(viewModel.groups) { $0.name }
+    }
+
     @ViewBuilder
     private func groupRow(group: FriendGroup) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 1) {
-                Text(group.name.lowercased())
-                    .font(.custom("SuperBasic-Bold", size: 24))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .lineLimit(1)
-                Text(peopleCountText(group: group))
-                    .font(.custom("SuperBasic-Thin", size: 12))
-                    .foregroundStyle(Color("secondaryLabelColors"))
-            }
-            Spacer()
+        HStack(spacing: 10) {
+            Text(group.name.lowercased())
+                .font(.wtmBold(18, relativeTo: .body))
+                .foregroundStyle(Color.wtmDarkBlue)
+                .lineLimit(1)
+
+            Spacer(minLength: 8)
+
+            // Groups have no status glyph, so the member count stays — but it
+            // sits inline rather than on a second line, keeping the row to one.
+            Text(peopleCountText(group: group))
+                .font(.wtmThin(13, relativeTo: .footnote))
+                .foregroundStyle(Color.wtmSecondaryLabel)
+
             Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(.gray)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.tertiary)
         }
-        .contentShape(Rectangle())
+        .frame(minHeight: 38)
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
     }
 
     private func peopleCountText(group: FriendGroup) -> String {

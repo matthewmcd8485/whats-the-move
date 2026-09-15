@@ -10,11 +10,12 @@ enum RecipientTab: Hashable {
     case friends
 }
 
+@Observable
 @MainActor
-final class FriendSelectionViewModel: ObservableObject {
-    @Published var groups: [SelectableGroup] = []
-    @Published var friends: [Friend] = []
-    @Published var isLoading = true
+final class FriendSelectionViewModel {
+    var groups: [SelectableGroup] = []
+    var friends: [Friend] = []
+    var isLoading = true
 
     func load() async {
         guard let uid = SecureStorage.uid else {
@@ -48,10 +49,9 @@ final class FriendSelectionViewModel: ObservableObject {
 
 struct FriendSelectionView: View {
     let mood: NotificationTitle
-    var onBack: () -> Void = {}
     var onSelect: ([SelectableGroup], [Friend], Bool) -> Void = { _, _, _ in }
 
-    @StateObject private var viewModel = FriendSelectionViewModel()
+    @State private var viewModel = FriendSelectionViewModel()
     @State private var activeTab: RecipientTab = .groups
     @State private var selectedGroupIDs: Set<String> = []
     @State private var selectedFriendUIDs: Set<String> = []
@@ -60,18 +60,18 @@ struct FriendSelectionView: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Color("backgroundColors").ignoresSafeArea()
+            Color.wtmBackground.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
                 Text("i'm bored")
-                    .font(.custom("SuperBasic-Bold", size: 48))
-                    .foregroundStyle(Color("darkBlueOnLight"))
+                    .font(.wtmLargeTitle)
+                    .foregroundStyle(Color.wtmDarkBlue)
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
 
                 Text("who would you like to annoy?")
-                    .font(.custom("SuperBasic-Regular", size: 15))
-                    .foregroundStyle(Color("secondaryLabelColors"))
+                    .font(.wtmSubtitle)
+                    .foregroundStyle(Color.wtmSecondaryLabel)
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
 
@@ -85,32 +85,57 @@ struct FriendSelectionView: View {
 
                 if viewModel.isLoading {
                     Spacer()
-                    HStack {
-                        Spacer()
-                        Text("loading...")
-                            .font(.custom("SuperBasic-Bold", size: 25))
-                            .foregroundStyle(Color("secondaryLabelColors"))
-                        Spacer()
-                    }
+                    CenteredMessage(text: "loading...")
                     Spacer()
                 } else {
                     listSection
-                    bottomControls
+                    timeSensitiveRow
                 }
             }
-            .padding(.top, 30)
+            .padding(.top, 8)
 
-            Button(action: onBack) {
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .frame(width: 40, height: 40)
-            }
-            .padding(.leading, 16)
         }
-        .navigationBarHidden(true)
         .task {
             await viewModel.load()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(sendAllButtonLabel, systemImage: "megaphone") {
+                        showSendAllConfirm = true
+                    }
+                    .disabled(!hasItemsForActiveTab)
+                } label: {
+                    Image(systemName: "ellipsis")
+                }
+                .plainToolbarSymbol()
+                .accessibilityLabel("more sending options")
+            }
+
+            // Send is the screen's primary action, so it gets its own glass
+            // group rather than sharing a capsule with the overflow menu.
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+
+            ToolbarItem(placement: .topBarTrailing) {
+                if hasSelection {
+                    // Prominent glass reads as a filled blue button, so "ready
+                    // to send" is obvious at a glance rather than being carried
+                    // by the glyph's colour alone.
+                    Button(action: sendSelection) {
+                        Image(systemName: "paperplane.fill")
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(.wtmDarkBlue)
+                    .accessibilityLabel(sendButtonLabel)
+                } else {
+                    Button(action: sendSelection) {
+                        Image(systemName: "paperplane.fill")
+                    }
+                    .plainToolbarSymbol()
+                    .disabled(true)
+                    .accessibilityLabel("send")
+                }
+            }
         }
         .alert("are you sure?", isPresented: $showSendAllConfirm) {
             Button("nevermind, cancel", role: .cancel) {}
@@ -143,13 +168,13 @@ struct FriendSelectionView: View {
                             isSelected: selectedGroupIDs.contains(selectable.group.groupID),
                             toggle: { toggleGroup(selectable.group.groupID) }
                         )
-                        .listRowBackground(Color("backgroundColors"))
+                        .listRowBackground(Color.wtmBackground)
                     }
                 }
                 .listStyle(.insetGrouped)
                 .listSectionSpacing(.compact)
                 .scrollContentBackground(.hidden)
-                .background(Color("backgroundColors"))
+                .background(Color.wtmBackground)
             }
         case .friends:
             if viewModel.friends.isEmpty {
@@ -163,79 +188,48 @@ struct FriendSelectionView: View {
                             isSelected: selectedFriendUIDs.contains(friend.uid),
                             toggle: { toggleFriend(friend.uid) }
                         )
-                        .listRowBackground(Color("backgroundColors"))
+                        .listRowBackground(Color.wtmBackground)
                     }
                 }
                 .listStyle(.insetGrouped)
                 .listSectionSpacing(.compact)
                 .scrollContentBackground(.hidden)
-                .background(Color("backgroundColors"))
+                .background(Color.wtmBackground)
             }
         }
     }
 
     @ViewBuilder
-    private var bottomControls: some View {
+    private var timeSensitiveRow: some View {
         HStack(spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 24, weight: .regular))
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(.primary)
                 .frame(width: 24)
-            
+
             VStack(alignment: .leading) {
                 Text("this is important")
-                    .font(.custom("SuperBasic-Bold", size: 18))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                
+                    .font(.wtmBold(18, relativeTo: .body))
+                    .foregroundStyle(Color.wtmDarkBlue)
+
                 Text("send this notification as time sensitive")
-                    .font(.custom("SuperBasic-Thin", size: 12))
+                    .font(.wtmThin(12, relativeTo: .caption))
                     .foregroundStyle(.primary)
             }
-            
+
             Spacer()
-            Toggle("", isOn: $timeSensitive)
+            Toggle("time sensitive", isOn: $timeSensitive)
                 .labelsHidden()
-                .tint(Color("darkBlueOnLight"))
+                .tint(.wtmDarkBlue)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
-        .background(Color("groupedCardBackground"))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .padding(.horizontal, 16)
+        .background(Color.wtmGroupedCard)
+        .clipShape(RoundedRectangle(cornerRadius: WTMLayout.cardCornerRadius))
+        .padding(.horizontal, WTMLayout.sideMargin)
         .padding(.top, 16)
-        .padding(.bottom, 12)
-
-        Button {
-            sendSelection()
-        } label: {
-            Text(sendButtonLabel)
-                .font(.custom("SuperBasic-Bold", size: 20))
-                .foregroundStyle(.white)
-                .contentTransition(.numericText())
-                .frame(maxWidth: .infinity)
-                .frame(height: 53)
-                .background(hasSelection ? Color("darkBlueOnLight") : Color("darkBlueOnLight").opacity(0.4))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-        }
-        .disabled(!hasSelection)
-        .padding(.horizontal, 53)
-        .padding(.bottom, 8)
-
-        Button {
-            showSendAllConfirm = true
-        } label: {
-            Text(sendAllButtonLabel)
-                .font(.custom("SuperBasic-Regular", size: 16))
-                .foregroundStyle(Color("darkBlueOnLight"))
-                .contentTransition(.numericText())
-                .animation(.snappy, value: activeTab)
-                .frame(maxWidth: .infinity)
-                .frame(height: 36)
-        }
-        .disabled(!hasItemsForActiveTab)
-        .padding(.horizontal, 53)
-        .padding(.bottom, 24)
+        .padding(.bottom, 16)
     }
 
     @ViewBuilder
@@ -245,7 +239,7 @@ struct FriendSelectionView: View {
             Spacer()
             Text(message)
                 .font(.custom("SuperBasic-Regular", size: 18))
-                .foregroundStyle(Color("secondaryLabelColors"))
+                .foregroundStyle(Color.wtmSecondaryLabel)
             Spacer()
         }
         Spacer()
@@ -258,18 +252,18 @@ struct FriendSelectionView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(label)
                         .font(.custom("SuperBasic-Bold", size: 20))
-                        .foregroundStyle(Color("darkBlueOnLight"))
+                        .foregroundStyle(Color.wtmDarkBlue)
                     if let subtitle, !subtitle.isEmpty {
                         Text(subtitle)
                             .font(.custom("SuperBasic-Regular", size: 13))
-                            .foregroundStyle(Color("secondaryLabelColors"))
+                            .foregroundStyle(Color.wtmSecondaryLabel)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 Spacer()
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22, weight: .regular))
-                    .foregroundStyle(isSelected ? Color("darkBlueOnLight") : Color("secondaryLabelColors"))
+                    .foregroundStyle(isSelected ? Color.wtmDarkBlue : Color.wtmSecondaryLabel)
             }
             .contentShape(Rectangle())
         }
@@ -341,30 +335,3 @@ struct FriendSelectionView: View {
     }
 }
 
-private final class FriendSelectionHostingController: UIHostingController<FriendSelectionView>, UIGestureRecognizerDelegate {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
-    }
-}
-
-extension FriendSelectionView {
-    static func makeHostingController(mood: NotificationTitle) -> UIViewController {
-        let hc = FriendSelectionHostingController(rootView: FriendSelectionView(mood: mood))
-        hc.rootView = FriendSelectionView(
-            mood: mood,
-            onBack: { [weak hc] in
-                hc?.navigationController?.popViewController(animated: true)
-            },
-            onSelect: { [weak hc] groups, friends, timeSensitive in
-                let next = SwooshView.makeHostingController(mood: mood, groups: groups, individuals: friends, timeSensitive: timeSensitive)
-                hc?.navigationController?.pushViewController(next, animated: true)
-            }
-        )
-        return hc
-    }
-}

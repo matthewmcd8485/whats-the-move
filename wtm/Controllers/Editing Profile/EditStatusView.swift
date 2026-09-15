@@ -6,24 +6,19 @@
 import SwiftUI
 
 struct EditStatusView: View {
-    var onBack: () -> Void = {}
     var onSelect: (Status) -> Void = { _ in }
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color("backgroundColors").ignoresSafeArea()
-
+        ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 Text("edit status")
-                    .font(.custom("SuperBasic-Bold", size: 48))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .padding(.horizontal, 23)
-                    .padding(.top, 17)
+                    .font(.wtmLargeTitle)
+                    .foregroundStyle(Color.wtmDarkBlue)
+                    .accessibilityAddTraits(.isHeader)
 
                 Text("what would you like to change your status to?")
-                    .font(.custom("SuperBasic-Regular", size: 15))
-                    .foregroundStyle(Color("secondaryLabelColors"))
-                    .padding(.horizontal, 27)
+                    .font(.wtmSubtitle)
+                    .foregroundStyle(Color.wtmSecondaryLabel)
                     .padding(.top, 8)
 
                 VStack(spacing: 20) {
@@ -33,24 +28,17 @@ struct EditStatusView: View {
                         } label: {
                             statusRow(for: status)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
-                .padding(.horizontal, 16)
                 .padding(.top, 30)
-
-                Spacer(minLength: 0)
             }
-            .padding(.top, 61)
-
-            Button(action: onBack) {
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .frame(width: 40, height: 40)
-            }
-            .padding(.leading, 16)
+            .padding(.horizontal, WTMLayout.sideMargin)
+            .padding(.top, 8)
+            .padding(.bottom, 24)
         }
-        .navigationBarHidden(true)
+        .background(Color.wtmBackground)
+        .scrollBounceBehavior(.basedOnSize)
     }
 
     @ViewBuilder
@@ -64,20 +52,18 @@ struct EditStatusView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(status.displayTitle)
-                        .font(.custom("SuperBasic-Bold", size: 34))
-                        .foregroundStyle(Color("secondaryBlack"))
+                        .font(.wtmBold(34, relativeTo: .title))
                     if let trailing = status.titleTrailing {
                         Text(trailing)
-                            .font(.custom("SuperBasic-Regular", size: 12))
-                            .foregroundStyle(Color("secondaryBlack"))
+                            .font(.wtmRegular(12, relativeTo: .caption))
                     }
                 }
                 Text(status.descriptionText)
-                    .font(.custom("SuperBasic-Regular", size: 15))
-                    .foregroundStyle(Color("secondaryBlack"))
+                    .font(.wtmSubtitle)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
             }
+            .foregroundStyle(Color("secondaryBlack"))
 
             Spacer(minLength: 0)
         }
@@ -86,38 +72,12 @@ struct EditStatusView: View {
         .frame(maxWidth: .infinity, minHeight: 120)
         .background(Color(status.backgroundColorName))
         .clipShape(RoundedRectangle(cornerRadius: 25))
-    }
-}
-
-private final class EditStatusHostingController: UIHostingController<EditStatusView>, UIGestureRecognizerDelegate {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
-    }
-}
-
-extension EditStatusView {
-    static func makeHostingController() -> UIViewController {
-        let hc = EditStatusHostingController(rootView: EditStatusView())
-        hc.rootView = EditStatusView(
-            onBack: { [weak hc] in
-                hc?.navigationController?.popViewController(animated: true)
-            },
-            onSelect: { [weak hc] status in
-                UserDefaults.standard.set(status.rawValue, forKey: "status")
-                let next = SubstatusView.makeHostingController(status: status)
-                hc?.navigationController?.pushViewController(next, animated: true)
-            }
-        )
-        return hc
+        .contentShape(.rect)
     }
 }
 
 #Preview {
-    EditStatusView()
+    NavigationStack {
+        EditStatusView()
+    }
 }
-

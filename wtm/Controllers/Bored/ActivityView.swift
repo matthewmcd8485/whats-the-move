@@ -6,11 +6,7 @@
 import SwiftUI
 
 struct ActivityView: View {
-    var onBack: () -> Void = {}
     var onSelect: (NotificationTitle) -> Void = { _ in }
-
-    private let categories = PickerData.collectionViewData
-    private let images = CategoryImages.categoryImages
 
     private let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -18,104 +14,61 @@ struct ActivityView: View {
     ]
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color("backgroundColors").ignoresSafeArea()
-
-            VStack(alignment: .leading, spacing: 0) {
-                Text("i'm bored")
-                    .font(.custom("SuperBasic-Bold", size: 48))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .padding(.horizontal, 16)
-                    .padding(.top, 17)
-
-                Text("what are you in the mood for?")
-                    .font(.custom("SuperBasic-Regular", size: 15))
-                    .foregroundStyle(Color("secondaryLabelColors"))
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 12) {
-                        ForEach(Array(categories.enumerated()), id: \.offset) { index, label in
-                            Button {
-                                if let mood = NotificationTitle(integer: index) {
-                                    onSelect(mood)
-                                }
-                            } label: {
-                                tile(image: images[index], label: label)
-                            }
-                            .buttonStyle(.plain)
+        ScreenScaffold(
+            title: "i'm bored",
+            subtitle: "what are you in the mood for?",
+            scrolls: false
+        ) {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 12) {
+                    // Driven straight off the enum now, so the labels, images
+                    // and cases can't drift out of alignment.
+                    ForEach(NotificationTitle.allCases) { mood in
+                        Button {
+                            onSelect(mood)
+                        } label: {
+                            tile(mood: mood)
                         }
+                        .buttonStyle(.plain)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
-                    .padding(.bottom, 24)
                 }
+                .padding(.horizontal, WTMLayout.sideMargin)
+                .padding(.top, 16)
+                .padding(.bottom, 24)
             }
-            .padding(.top, 61)
-
-            Button(action: onBack) {
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .frame(width: 40, height: 40)
-            }
-            .padding(.leading, 16)
         }
-        .navigationBarHidden(true)
     }
 
     @ViewBuilder
-    private func tile(image: UIImage?, label: String) -> some View {
-        ZStack(alignment: .bottomLeading) {
-            if let image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-            } else {
-                Color("secondaryLabelColors")
+    private func tile(mood: NotificationTitle) -> some View {
+        // Sized and clipped before the scrim and label go on, so both anchor to
+        // the visible 165pt rather than the overflowing image's bounds.
+        Image(mood.imageName)
+            .resizable()
+            .scaledToFill()
+            .frame(maxWidth: .infinity)
+            .frame(height: 165)
+            .clipped()
+            // An even dim rather than a gradient: the label is centred, so
+            // there's no one edge to darken, and the artwork varies enough in
+            // brightness that a uniform floor is what keeps it readable.
+            .dimmedArtwork()
+            .overlay {
+                Text(mood.label)
+                    .font(.wtmBold(18, relativeTo: .body))
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.7)
+                    .padding(.horizontal, 10)
             }
-
-            LinearGradient(
-                colors: [.clear, .black.opacity(0.55)],
-                startPoint: .center,
-                endPoint: .bottom
-            )
-
-            Text(label)
-                .font(.custom("SuperBasic-Bold", size: 18))
-                .foregroundStyle(.white)
-                .padding(10)
-        }
-        .frame(height: 165)
-        .frame(maxWidth: .infinity)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(mood.label)
     }
 }
 
-private final class ActivityHostingController: UIHostingController<ActivityView>, UIGestureRecognizerDelegate {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
-    }
-}
-
-extension ActivityView {
-    static func makeHostingController() -> UIViewController {
-        let hc = ActivityHostingController(rootView: ActivityView())
-        hc.rootView = ActivityView(
-            onBack: { [weak hc] in
-                hc?.navigationController?.popViewController(animated: true)
-            },
-            onSelect: { [weak hc] mood in
-                let next = FriendSelectionView.makeHostingController(mood: mood)
-                hc?.navigationController?.pushViewController(next, animated: true)
-            }
-        )
-        return hc
+#Preview {
+    NavigationStack {
+        ActivityView()
     }
 }

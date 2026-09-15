@@ -7,8 +7,9 @@ import SwiftUI
 import FirebaseAuth
 
 struct DeleteAccountView: View {
-    var onBack: () -> Void = {}
     var onDeleted: () -> Void = {}
+
+    @Environment(\.dismiss) private var dismiss
 
     @State private var isWorking = false
     @State private var verificationID: String?
@@ -50,20 +51,14 @@ struct DeleteAccountView: View {
                     buttonsFooter
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 61)
+            .padding(.horizontal, WTMLayout.sideMargin)
+            .padding(.top, 8)
             .padding(.bottom, 20)
 
-            Button(action: backTapped) {
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(Color("darkBlueOnLight"))
-                    .frame(width: 40, height: 40)
-            }
-            .padding(.leading, 16)
-            .disabled(isWorking)
         }
-        .navigationBarHidden(true)
+        // The navigation bar's back button is hidden while the deletion is in
+        // flight so the flow can't be abandoned midway through.
+        .navigationBarBackButtonHidden(isWorking)
         .alert("check your messages", isPresented: $showReauthAlert) {
             TextField("ex. 123456", text: $verificationCode)
                 .keyboardType(.numberPad)
@@ -97,7 +92,7 @@ struct DeleteAccountView: View {
 
     private var buttonsFooter: some View {
         VStack(spacing: 16) {
-            Button(action: backTapped) {
+            Button { dismiss() } label: {
                 Text("oh my bad, cancel")
                     .font(.custom("SuperBasic-Bold", size: 20))
                     .foregroundStyle(.white)
@@ -119,11 +114,6 @@ struct DeleteAccountView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
         }
-    }
-
-    private func backTapped() {
-        guard !isWorking else { return }
-        onBack()
     }
 
     private func startDelete() {
@@ -171,84 +161,46 @@ struct DeleteAccountView: View {
 
     private func removeFirestoreData() {
         guard let uid = SecureStorage.uid else {
-            print("No UID found")
-            DispatchQueue.main.async { isWorking = false }
+            fail("we couldn't find your account.", nil)
             return
         }
 
-        DatabaseManager.shared.softDeleteUserProfile(uid: uid) { result in
-            if case .failure(let error) = result {
-                print("Error deleting user's Firestore profile: \(error)")
-                DispatchQueue.main.async {
-                    isWorking = false
-                    errorMessage = "we couldn't delete your profile. please try again."
-                    showErrorAlert = true
-                }
+        // Each stage keeps its own message so the user is told what actually
+        // failed, but the flow is now linear instead of three nested callbacks.
+        Task { @MainActor in
+            do {
+                try await DatabaseManager.shared.softDeleteUserProfile(uid: uid)
+            } catch {
+                fail("we couldn't delete your profile. please try again.", error)
                 return
             }
-            print("Firestore profile cleared!")
 
-            DatabaseManager.shared.softDeleteFriendReferences(toUID: uid) { result in
-                if case .failure(let error) = result {
-                    print("Error renaming friend references: \(error)")
-                    DispatchQueue.main.async {
-                        isWorking = false
-                        errorMessage = "we couldn't fully clean up your data. please try again."
-                        showErrorAlert = true
-                    }
-                    return
-                }
+            do {
+                try await DatabaseManager.shared.softDeleteFriendReferences(toUID: uid)
+            } catch {
+                fail("we couldn't fully clean up your data. please try again.", error)
+                return
+            }
 
-                print("Data cleared!")
-                Auth.auth().currentUser?.delete { error in
-                    DispatchQueue.main.async {
-                        if let error = error {
-                            print("Error deleting Auth user: \(error)")
-                            isWorking = false
-                            errorMessage = "we couldn't delete your account. please try again."
-                            showErrorAlert = true
-                        } else {
-                            onDeleted()
-                        }
-                    }
-                }
+            do {
+                try await Auth.auth().currentUser?.delete()
+                onDeleted()
+            } catch {
+                fail("we couldn't delete your account. please try again.", error)
             }
         }
     }
-}
 
-private final class DeleteAccountHostingController: UIHostingController<DeleteAccountView>, UIGestureRecognizerDelegate {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
+    private func fail(_ message: String, _ error: Error?) {
+        if let error {
+            Log.auth.error("Account deletion failed: \(error.localizedDescription, privacy: .public)")
+        }
+        isWorking = false
+        errorMessage = message
+        showErrorAlert = true
     }
 }
 
-extension DeleteAccountView {
-    static func makeHostingController() -> UIViewController {
-        let hc = DeleteAccountHostingController(rootView: DeleteAccountView())
-        hc.rootView = DeleteAccountView(
-            onBack: { [weak hc] in
-                hc?.navigationController?.popViewController(animated: true)
-            },
-            onDeleted: { [weak hc] in
-                guard let hc else { return }
-                hc.navigationController?.viewControllers = [hc]
-                hc.tabBarController?.viewControllers = [hc]
-                UserDefaults.resetDefaults()
-                UserDefaults.standard.set(true, forKey: "launchedBefore")
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(identifier: "loadingViewController") as LoadingViewController
-                hc.navigationController?.pushViewController(vc, animated: true)
-            }
-        )
-        return hc
-    }
-}
 
 #Preview {
     NavigationStack {

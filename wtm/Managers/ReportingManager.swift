@@ -50,18 +50,20 @@ final class ReportingManager: @unchecked Sendable {
     }
     
     // Adds an external user's account to a "Reported Users" collection on Firestore
-    public func reportUser(uid: String, name: String, date: String, completion: @escaping (Bool) -> Void) {
-        firestore.collection(FirestoreKeys.Collection.reportedUsers).document("\(uid)_\(date)").setData([
-            FirestoreKeys.ReportedUser.userIdentifier : uid,
-            FirestoreKeys.ReportedUser.reportedDate : date,
-            FirestoreKeys.ReportedUser.userName : name
-        ], merge: false, completion: { error in
-            guard error == nil else {
-                Log.database.error("Error reporting user: \(error!.localizedDescription, privacy: .public)")
-                completion(false)
-                return
-            }
-            completion(true)
-        })
+    public func reportUser(uid: String, name: String, date: String) async -> Bool {
+        do {
+            try await firestore
+                .collection(FirestoreKeys.Collection.reportedUsers)
+                .document("\(uid)_\(date)")
+                .setData([
+                    FirestoreKeys.ReportedUser.userIdentifier : uid,
+                    FirestoreKeys.ReportedUser.reportedDate : date,
+                    FirestoreKeys.ReportedUser.userName : name
+                ], merge: false)
+            return true
+        } catch {
+            Log.database.error("Error reporting user: \(error.localizedDescription, privacy: .public)")
+            return false
+        }
     }
 }

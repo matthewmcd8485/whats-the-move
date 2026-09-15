@@ -10,14 +10,11 @@ import FirebaseCore
 import FirebaseMessaging
 import UserNotifications
 
-// AppDelegate is implicitly @MainActor via UIApplicationDelegate, while
-// MessagingDelegate and UNUserNotificationCenterDelegate are nonisolated Obj-C
-// protocols. `@preconcurrency` on the conformances tells the compiler these
-// callbacks do arrive on the main thread.
-@main
-class AppDelegate: UIResponder, UIApplicationDelegate, @preconcurrency MessagingDelegate {
+// Attached to the SwiftUI App with `UIApplicationDelegateAdaptor` rather than
+// being the entry point itself — Firebase Messaging and the notification
+// categories still need a UIApplicationDelegate to hang off.
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
-    var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -142,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, @preconcurrency Messaging
     }
 }
 
-extension AppDelegate: @preconcurrency UNUserNotificationCenterDelegate {
+extension AppDelegate: UNUserNotificationCenterDelegate {
     
     // Receive displayed notifications for iOS 10 devices.
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

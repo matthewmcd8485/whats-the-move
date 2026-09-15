@@ -36,7 +36,7 @@ struct HomeScreenView: View {
                 .position(x: proxy.size.width / 2, y: proxy.size.height / 2 + 55)
             }
         }
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear { checkForNewRelease() }
         .alert("no friends yet", isPresented: $showNoRecipientsAlert) {
             Button("okay", role: .cancel) {}
@@ -89,36 +89,3 @@ struct HomeScreenView: View {
     }
 }
 
-final class HomeScreenHostingController: UIHostingController<HomeScreenView> {
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder, rootView: HomeScreenView())
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        rootView = HomeScreenView(
-            onBoredTapped: { [weak self] in
-                guard let self else { return }
-                let next = ActivityView.makeHostingController()
-                self.navigationController?.pushViewController(next, animated: true)
-            }
-        )
-        UIApplication.resetBadgeCount()
-        navigationController?.viewControllers = [self]
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        UIApplication.resetBadgeCount()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-}

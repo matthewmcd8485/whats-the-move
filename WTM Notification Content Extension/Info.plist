@@ -29,12 +29,12 @@
 				<string>CustomPush</string>
 			</array>
 			<key>UNNotificationExtensionDefaultContentHidden</key>
-			<string>YES</string>
+			<false/>
 			<key>UNNotificationExtensionInitialContentSizeRatio</key>
-			<integer>0</integer>
+			<real>1.0</real>
 		</dict>
-		<key>NSExtensionMainStoryboard</key>
-		<string>MainInterface</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>$(PRODUCT_MODULE_NAME).NotificationViewController</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.usernotifications.content-extension</string>
 	</dict>

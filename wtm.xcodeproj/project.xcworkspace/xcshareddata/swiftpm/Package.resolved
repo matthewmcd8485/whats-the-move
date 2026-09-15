@@ -1,5 +1,5 @@
 {
-  "originHash" : "06cff17efa20a715b41c5889d003a1dedc195bc555f7e7203769746407822af8",
+  "originHash" : "cf5e6e2f17f7b5479d106d565ca80d5904828535237dfab096c08dc10ac52cec",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "bbe8b69694d7873315fd3a4ad41efe043e1c07c5",
         "version" : "1.2024072200.0"
-      }
-    },
-    {
-      "identity" : "anyformatkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/luximetr/AnyFormatKit.git",
-      "state" : {
-        "revision" : "ae3a965164005b07f81d6aa066520d7ad14ea54e",
-        "version" : "2.5.2"
       }
     },
     {
@@ -134,15 +125,6 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
-      }
-    },
-    {
-      "identity" : "sdwebimage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SDWebImage/SDWebImage",
-      "state" : {
-        "revision" : "2de3a496eaf6df9a1312862adcfd54acd73c39c0",
-        "version" : "5.21.7"
       }
     }
   ],

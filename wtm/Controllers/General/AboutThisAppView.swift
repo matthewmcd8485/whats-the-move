@@ -12,8 +12,6 @@ struct AboutThisAppView: View {
     private static let tipProductID = "com.matthew.wtm.tipjar"
     private static let appleID = "1574130925"
 
-    var onBack: () -> Void = {}
-
     @State private var tipProduct: Product?
     @State private var didTip = false
 
@@ -22,9 +20,7 @@ struct AboutThisAppView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color("lightBlueOnLight").ignoresSafeArea()
-
+        ScrollView {
             VStack(spacing: 24) {
                 VStack(spacing: 8) {
                     Text("wtm?")
@@ -79,19 +75,12 @@ struct AboutThisAppView: View {
             }
             .multilineTextAlignment(.center)
             .padding(.horizontal, 16)
-            .padding(.top, 56)
+            .padding(.top, 8)
             .padding(.bottom, 20)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            Button(action: onBack) {
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(Color("secondaryWhite"))
-                    .frame(width: 40, height: 40)
-            }
-            .padding(.leading, 16)
+            .frame(maxWidth: .infinity)
         }
-        .navigationBarHidden(true)
+        .background(Color.wtmLightBlue)
+        .scrollBounceBehavior(.basedOnSize)
         .task {
             await loadTipProduct()
         }
@@ -137,23 +126,8 @@ struct AboutThisAppView: View {
     }
 }
 
-private final class AboutThisAppHostingController: UIHostingController<AboutThisAppView>, UIGestureRecognizerDelegate {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
-    }
-}
-
-extension AboutThisAppView {
-    static func makeHostingController() -> UIViewController {
-        let hc = AboutThisAppHostingController(rootView: AboutThisAppView())
-        hc.rootView = AboutThisAppView(onBack: { [weak hc] in
-            hc?.navigationController?.popViewController(animated: true)
-        })
-        return hc
+#Preview {
+    NavigationStack {
+        AboutThisAppView()
     }
 }
