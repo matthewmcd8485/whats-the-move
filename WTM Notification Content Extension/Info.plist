@@ -24,14 +24,28 @@
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
+			<!-- Deliberately NOT "CustomPush".
+
+			     A notification content extension *replaces* iOS's own rendering
+			     of an image attachment in the long look, and all this one ever
+			     drew was a plain image pinned to the edges — which is exactly
+			     what the system does for free. So it contributed nothing but a
+			     failure mode: whenever it couldn't load the image, you got a
+			     large blank panel where the artwork should have been, instead
+			     of the artwork iOS would have drawn itself.
+
+			     Claiming a category that nothing ever sends leaves this target
+			     inert and hands the long look back to the system. The target
+			     can be deleted from the project outright — this key is only
+			     the lever that's reachable without Xcode. -->
 			<key>UNNotificationExtensionCategory</key>
 			<array>
-				<string>CustomPush</string>
+				<string>wtm.unusedContentExtension</string>
 			</array>
 			<key>UNNotificationExtensionDefaultContentHidden</key>
 			<false/>
 			<key>UNNotificationExtensionInitialContentSizeRatio</key>
-			<real>1.0</real>
+			<real>0.75</real>
 		</dict>
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).NotificationViewController</string>

@@ -22,9 +22,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-        
+
+        // Without this, nothing below ever runs: the response buttons were
+        // registered but `didReceive` was never called, so tapping one only
+        // opened the app and dropped the answer on the floor.
+        UNUserNotificationCenter.current().delegate = self
+
         registerNotificationCategories()
-        
+
         if UserDefaults.standard.string(forKey: "profileImageURL") == nil {
             UserDefaults.standard.set("No profile image yet", forKey: "profileImageURL")
         }
@@ -54,13 +59,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     }
     
     // MARK: - Notifications
+    // The APNs device token arrives here, asynchronously, some time after
+    // `registerForRemoteNotifications()` was called. Firebase's app-delegate
+    // proxy sets `Messaging.apnsToken` from it — and until that happens it
+    // declines to mint an FCM token at all, so this is the earliest moment one
+    // can be resolved. Whoever asked before now got nothing.
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let token = deviceToken.hexString // Defined in the Data extension file
-        print("\n\nAPNS Device Token: \(token)\n\n")
+        Log.push.info("APNs device token registered: \(deviceToken.hexString, privacy: .private)")
+
+        guard let uid = SecureStorage.uid,
+              UserDefaults.standard.bool(forKey: "loggedIn") else { return }
+        Task { await PushManager.writeToken(uid: uid) }
     }
-    
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Failed to register for notifications: \(error)")
+        // Expected on a simulator without a paired push environment; on device
+        // it means no notification will ever arrive.
+        Log.push.error("couldn't register with APNs: \(error.localizedDescription, privacy: .public)")
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
@@ -104,13 +119,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         completionHandler(UIBackgroundFetchResult.newData)
     }
     
+    // Fires at every app start and whenever Firebase mints a new token — after
+    // a restore, an app update, or the `deleteToken()` on sign-out. The user
+    // document has to follow it rather than only being written at launch, or a
+    // rotation leaves the account unreachable until the next cold start.
+    //
+    // This used to post the token to a NotificationCenter name that nothing
+    // observed, so a rotation was silently dropped.
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        //print("Firebase registration token: \(String(describing: fcmToken))")
-        
-        let dataDict:[String: String] = ["token": fcmToken ?? ""]
-        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        // TODO: If necessary send token to application server.
-        // Note: This callback is fired at each app startup and whenever a new token is generated.
+        guard let uid = SecureStorage.uid,
+              UserDefaults.standard.bool(forKey: "loggedIn") else { return }
+
+        // Re-resolving rather than trusting the token handed in here, so
+        // there's one path that decides what the document should say — and it
+        // clears the field instead when notifications aren't authorized.
+        Task { await PushManager.refreshRegistration(uid: uid) }
     }
     
     // Identifiers for the actions on the "someone is bored" push. Each action
@@ -121,16 +144,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         static let category = "CustomPush"
         static let available = "wtm.boredResponse.available"
         static let busy = "wtm.boredResponse.busy"
-        static let doNotDisturb = "wtm.boredResponse.doNotDisturb"
+        static let notAvailable = "wtm.boredResponse.notAvailable"
+        static let reply = "wtm.boredResponse.reply"
+
+        /// The category each one-tap button answers with.
+        static func category(forActionIdentifier identifier: String) -> BoredResponseCategory? {
+            switch identifier {
+            case available: .available
+            case busy: .busy
+            case notAvailable: .notAvailable
+            default: nil
+            }
+        }
     }
 
     private func registerNotificationCategories() {
         let availableAction = UNNotificationAction(identifier: BoredPushAction.available, title: "count me in!", options: .foreground)
         let busyAction = UNNotificationAction(identifier: BoredPushAction.busy, title: "might be busy today", options: .foreground)
-        let dndAction = UNNotificationAction(identifier: BoredPushAction.doNotDisturb, title: "stop talking to me", options: .foreground)
+        let notAvailableAction = UNNotificationAction(identifier: BoredPushAction.notAvailable, title: "stop talking to me", options: .foreground)
+        // The one action that doesn't open the app. Typing a message is the
+        // point of a quick reply, so it's answered in place; the three buttons
+        // above open the request so you can see where your answer landed.
+        let replyAction = UNTextInputNotificationAction(
+            identifier: BoredPushAction.reply,
+            title: "custom",
+            options: [],
+            textInputButtonTitle: "send",
+            textInputPlaceholder: "say something"
+        )
         let someoneIsBoredCategory = UNNotificationCategory(
             identifier: BoredPushAction.category,
-            actions: [availableAction, busyAction, dndAction],
+            actions: [availableAction, busyAction, notAvailableAction, replyAction],
             intentIdentifiers: [],
             hiddenPreviewsBodyPlaceholder: "",
             options: .customDismissAction
@@ -159,38 +203,96 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        
-        // ...
-        
-        // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
-        
-        // Print full message.
-        print(userInfo)
-        
-        defer {
-            completionHandler()
-        }
+        let target = Self.boredRequestIdentifiers(from: userInfo)
 
-        // Identify the action by matching its identifier. Now that the three
-        // response buttons carry distinct identifiers they can be told apart
-        // here; a plain tap on the notification still arrives as the default
-        // action identifier.
+        // Identify the action by matching its identifier. A plain tap on the
+        // notification arrives as the default action identifier.
         switch response.actionIdentifier {
         case UNNotificationDefaultActionIdentifier:
-            Log.push.info("Notification body tapped")
-            // TODO: deep-link into the open request.
-        case BoredPushAction.available:
-            Log.push.info("Bored push answered: available")
-            // TODO: write the chosen response back to Firestore.
-        case BoredPushAction.busy:
-            Log.push.info("Bored push answered: busy")
-            // TODO: write the chosen response back to Firestore.
-        case BoredPushAction.doNotDisturb:
-            Log.push.info("Bored push answered: do not disturb")
-            // TODO: write the chosen response back to Firestore.
+            // A tap opens the request without answering it.
+            if let target {
+                DeepLinkRouter.shared.open(groupID: target.groupID, requestID: target.requestID)
+            }
+            completionHandler()
+
+        case BoredPushAction.reply:
+            let typed = (response as? UNTextInputNotificationResponse)?
+                .userText
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            guard let target, !typed.isEmpty else {
+                completionHandler()
+                return
+            }
+            // A typed message says nothing about whether you're free, so it
+            // goes in uncategorized rather than being assumed to mean "yes".
+            // The app may have been woken purely to run this, so the write has
+            // to finish before we report back or the system can suspend us
+            // mid-flight.
+            Log.push.info("Bored push answered with a custom message")
+            let choice = BoredResponseChoice(
+                status: BoredResponseCategory.uncategorized.rawValue,
+                substatus: typed
+            )
+            Task {
+                await Self.submit(choice, to: target)
+                completionHandler()
+            }
+
         default:
-            break
+            guard let category = BoredPushAction.category(forActionIdentifier: response.actionIdentifier),
+                  let target else {
+                completionHandler()
+                return
+            }
+            Log.push.info("Bored push answered: \(category.rawValue, privacy: .public)")
+            let choice = BoredResponseChoice(
+                status: category.rawValue,
+                substatus: category.notificationActionMessage
+            )
+            // Deep-link immediately and carry the choice along rather than
+            // waiting on Firestore: offline, `setData` doesn't acknowledge
+            // until the write syncs, and the person is already looking at the
+            // request by then.
+            DeepLinkRouter.shared.open(
+                groupID: target.groupID,
+                requestID: target.requestID,
+                chosenResponse: choice
+            )
+            Task {
+                await Self.submit(choice, to: target)
+                completionHandler()
+            }
+        }
+    }
+
+    /// The request a push belongs to. The Cloud Function puts both identifiers
+    /// in the FCM data dictionary, which arrives at the top level of `userInfo`.
+    private static func boredRequestIdentifiers(
+        from userInfo: [AnyHashable: Any]
+    ) -> (groupID: String, requestID: String)? {
+        guard let groupID = userInfo["groupId"] as? String, !groupID.isEmpty,
+              let requestID = userInfo["requestId"] as? String, !requestID.isEmpty else {
+            Log.push.info("push carried no request identifiers, so there's nothing to open")
+            return nil
+        }
+        return (groupID, requestID)
+    }
+
+    private static func submit(
+        _ choice: BoredResponseChoice,
+        to target: (groupID: String, requestID: String)
+    ) async {
+        guard let uid = SecureStorage.uid else { return }
+        do {
+            try await DatabaseManager.shared.updateBoredRequestResponse(
+                groupID: target.groupID,
+                requestID: target.requestID,
+                uid: uid,
+                status: choice.status,
+                substatus: choice.substatus
+            )
+        } catch {
+            Log.push.error("couldn't save the response from the notification: \(error.localizedDescription, privacy: .public)")
         }
     }
 }

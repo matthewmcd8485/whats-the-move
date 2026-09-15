@@ -162,6 +162,16 @@ final class OnboardingModel {
 
         cacheProfile(user)
         await hydrateAccount(uid: signIn.uid, profileImageURL: user.profileImageURL)
+
+        // An existing account on a fresh install has never seen the system
+        // prompt, so show it directly here. The in-app "can we annoy you" ask
+        // isn't for these people — that one exists for someone who declined
+        // during their original sign-up and never went back to fix it.
+        //
+        // Nothing appears for an account that already answered; this just
+        // re-registers the device and refreshes the token.
+        await PushManager.requestAuthorization(uid: signIn.uid)
+
         return false
     }
 
@@ -175,7 +185,9 @@ final class OnboardingModel {
         UserDefaults.standard.set(user.joinedTime, forKey: "joinedTime")
         UserDefaults.standard.set(user.explicit, forKey: "explicit")
         UserDefaults.standard.set(true, forKey: "loggedIn")
-        SecureStorage.fcmToken = user.fcmToken
+        // Deliberately not copying `user.fcmToken` into SecureStorage: it's
+        // whatever install last wrote to this account, which on a reinstall or
+        // a second device isn't this one. `PushManager` resolves the real one.
     }
 
     /// Warms everything the home screen expects to already be present. These
@@ -251,17 +263,12 @@ final class OnboardingModel {
 
     // MARK: - Finishing up
 
-    func requestNotificationPermission() async {
-        let center = UNUserNotificationCenter.current()
-        do {
-            let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
-            guard granted else { return }
-            UIApplication.shared.registerForRemoteNotifications()
-            let token = try await Messaging.messaging().token()
-            SecureStorage.fcmToken = token
-        } catch {
-            Log.push.error("onboarding — notification permission: \(error.localizedDescription, privacy: .public)")
-        }
+    /// Reports whether permission was granted, so the step can say which.
+    ///
+    /// No uid to pass: the user document doesn't exist until `createAccount`,
+    /// so the token is resolved into SecureStorage for that to write.
+    func requestNotificationPermission() async -> Bool {
+        await PushManager.requestAuthorization(uid: nil)
     }
 
     func createAccount() async throws {
@@ -296,6 +303,13 @@ final class OnboardingModel {
         UserDefaults.standard.set(newUser.joinedTime, forKey: "joinedTime")
         UserDefaults.standard.set(profileImageURL, forKey: "profileImageURL")
         UserDefaults.standard.set(true, forKey: "loggedIn")
+
+        // Normalises the token field now that there's a document to write to.
+        // `newUser` above carried whatever SecureStorage had at the time, which
+        // is nothing at all if the notification step was skipped — and the
+        // placeholder it used instead isn't one the push fan-out knows to
+        // ignore, so it would be handed to FCM as a real token.
+        await PushManager.refreshRegistration(uid: uid)
 
         // Best-effort: a failed topic subscription shouldn't fail sign-up.
         do {

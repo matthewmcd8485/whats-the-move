@@ -214,7 +214,10 @@ struct FinishingUpStep: View {
 
     @Environment(OnboardingModel.self) private var model
     @State private var showPictureEditor = false
-    @State private var notificationsRequested = false
+    /// `nil` until asked, then whether permission was granted. A refusal isn't
+    /// the end of it — the app offers again later — but the step shouldn't
+    /// claim notifications are on when they aren't.
+    @State private var notificationsGranted: Bool?
 
     var body: some View {
         OnboardingScaffold(
@@ -226,20 +229,20 @@ struct FinishingUpStep: View {
                 optionalStep(
                     title: "add a profile picture",
                     detail: "add a profile picture so we can all see how lame you look.",
-                    isDone: false
+                    isComplete: false
                 ) {
                     showPictureEditor = true
                 }
 
                 optionalStep(
-                    title: notificationsRequested ? "notifications requested" : "enable notifications",
+                    title: notificationsTitle,
                     detail: "enable notifications so your friends can annoy you when they're bored.",
-                    isDone: notificationsRequested
+                    isComplete: notificationsGranted == true,
+                    // iOS won't show its prompt a second time, so tapping again
+                    // after a refusal would do nothing at all.
+                    isDisabled: notificationsGranted == false
                 ) {
-                    Task {
-                        await model.requestNotificationPermission()
-                        notificationsRequested = true
-                    }
+                    Task { notificationsGranted = await model.requestNotificationPermission() }
                 }
             }
             .padding(.top, 8)
@@ -251,11 +254,20 @@ struct FinishingUpStep: View {
         }
     }
 
+    private var notificationsTitle: String {
+        switch notificationsGranted {
+        case .some(true): "notifications enabled"
+        case .some(false): "notifications are off"
+        case .none: "enable notifications"
+        }
+    }
+
     @ViewBuilder
     private func optionalStep(
         title: String,
         detail: String,
-        isDone: Bool,
+        isComplete: Bool,
+        isDisabled: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
         VStack(spacing: 8) {
@@ -272,7 +284,7 @@ struct FinishingUpStep: View {
                     // The tick sits in an overlay so it doesn't pull the
                     // centred title off-centre.
                     .overlay(alignment: .trailing) {
-                        if isDone {
+                        if isComplete {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.system(size: 22))
                                 .foregroundStyle(Color.wtmDarkBlue)
@@ -283,7 +295,7 @@ struct FinishingUpStep: View {
                     .contentShape(.rect)
             }
             .buttonStyle(.plain)
-            .disabled(isDone)
+            .disabled(isComplete || isDisabled)
 
             Text(detail)
                 .font(.wtmSubtitle)

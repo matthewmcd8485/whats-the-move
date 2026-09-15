@@ -28,6 +28,9 @@
 		C9119E312FD27B4C0089ACA1 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E302FD27B4C0089ACA1 /* FirebaseRemoteConfig */; };
 		C9119E332FD27B4C0089ACA1 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E322FD27B4C0089ACA1 /* FirebaseStorage */; };
 		C9119E352FD27B4C0089ACA1 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = C9119E342FD27B4C0089ACA1 /* FirebaseStorageCombine-Community */; };
+		C91DE9643059F2EE0084EA09 /* DeepLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91DE9633059F2EE0084EA09 /* DeepLinkRouter.swift */; };
+		C91DE9663059F6A60084EA09 /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91DE9653059F6A60084EA09 /* PushManager.swift */; };
+		C91DE9683059FD530084EA09 /* BoredResponseCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91DE9673059FD530084EA09 /* BoredResponseCategory.swift */; };
 		C975E24E3058EEB1002C84A8 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = C975E24D3058EEB1002C84A8 /* DesignTokens.swift */; };
 		C975E2503058EEB5002C84A8 /* SharedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C975E24F3058EEB5002C84A8 /* SharedViews.swift */; };
 		C975E2523058EEB9002C84A8 /* OnboardingScaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = C975E2513058EEB9002C84A8 /* OnboardingScaffold.swift */; };
@@ -164,6 +167,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C91DE9633059F2EE0084EA09 /* DeepLinkRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouter.swift; sourceTree = "<group>"; };
+		C91DE9653059F6A60084EA09 /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
+		C91DE9673059FD530084EA09 /* BoredResponseCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredResponseCategory.swift; sourceTree = "<group>"; };
 		C975E24D3058EEB1002C84A8 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		C975E24F3058EEB5002C84A8 /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
 		C975E2513058EEB9002C84A8 /* OnboardingScaffold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScaffold.swift; sourceTree = "<group>"; };
@@ -476,6 +482,7 @@
 				C9F4173E2FD3245D004B1F1C /* NotificationTitle.swift */,
 				C9F4173F2FD3245D004B1F1C /* StorageErrors.swift */,
 				C9F417412FD3245D004B1F1C /* UIColorInputError.swift */,
+				C91DE9673059FD530084EA09 /* BoredResponseCategory.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -516,6 +523,8 @@
 				C9F417582FD3245D004B1F1C /* ReportingManager.swift */,
 				C9F417592FD3245D004B1F1C /* StorageManager.swift */,
 				C9CD504A2FD61CEB003DE6A4 /* LocalCacheManager.swift */,
+				C91DE9633059F2EE0084EA09 /* DeepLinkRouter.swift */,
+				C91DE9653059F6A60084EA09 /* PushManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -927,6 +936,7 @@
 				C9CD50372FD3A868003DE6A4 /* SubstatusView.swift in Sources */,
 				C9CD50382FD3A868003DE6A4 /* EditStatusView.swift in Sources */,
 				C975E2643058EEE1002C84A8 /* ImportContactsView.swift in Sources */,
+				C91DE9683059FD530084EA09 /* BoredResponseCategory.swift in Sources */,
 				C9CD502C2FD38D24003DE6A4 /* SecureStorage.swift in Sources */,
 				C9F44AF12FD3245D004B1F1C /* AppDelegate.swift in Sources */,
 				C9F44B082FD3245D004B1F1C /* Notifications.swift in Sources */,
@@ -944,6 +954,8 @@
 				C975E24E3058EEB1002C84A8 /* DesignTokens.swift in Sources */,
 				C9F44CA22FD3245D004B1F1C /* ProfanityManager.swift in Sources */,
 				C975E2583058EEC6002C84A8 /* OnboardingFlowView.swift in Sources */,
+				C91DE9663059F6A60084EA09 /* PushManager.swift in Sources */,
+				C91DE9643059F2EE0084EA09 /* DeepLinkRouter.swift in Sources */,
 				C9F44CE42FD3245D004B1F1C /* NotificationTitle.swift in Sources */,
 				C9F44D4E2FD3245D004B1F1C /* UserDefaults.swift in Sources */,
 				C9F44D4F2FD3245D004B1F1C /* UIColorInputError.swift in Sources */,
@@ -1140,7 +1152,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				EXCLUDED_ARCHS = "";
@@ -1172,7 +1184,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_NO_COMMON_BLOCKS = NO;
@@ -1276,7 +1288,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1301,7 +1313,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1326,7 +1338,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1351,7 +1363,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (

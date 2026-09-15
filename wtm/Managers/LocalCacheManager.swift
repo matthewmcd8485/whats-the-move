@@ -134,6 +134,30 @@ final class LocalCacheManager {
             .sorted { $0.name.sortsBefore($1.name) }
     }
 
+    /// Display name for a single uid, or `nil` if they aren't cached under a
+    /// real name.
+    ///
+    /// Direct requests need this: the request document records only the
+    /// *sender's* name, so when you're the sender the person on the other end
+    /// has to be resolved from the group's uids. A direct group is always with
+    /// a friend, so the friend cache is the right place to look.
+    /// Memoised because request cards resolve a name from inside `body`, so an
+    /// un-memoised fetch would run per row per redraw. Dropped on every `save`,
+    /// which is what a refresh that could have renamed someone ends with.
+    private var nameMemo: [String: String] = [:]
+
+    func cachedName(forUID uid: String) -> String? {
+        if let memoised = nameMemo[uid] { return memoised }
+
+        let descriptor = FetchDescriptor<CachedFriend>(predicate: #Predicate { $0.uid == uid })
+        guard let name = (try? context.fetch(descriptor))?.first?.name,
+              !name.isEmpty,
+              name != "user deleted" else { return nil }
+
+        nameMemo[uid] = name
+        return name
+    }
+
     func cachedFriendsCount() -> Int {
         let descriptor = FetchDescriptor<CachedFriend>()
         let results = (try? context.fetch(descriptor)) ?? []
@@ -207,6 +231,7 @@ final class LocalCacheManager {
     }
 
     private func save() {
+        nameMemo.removeAll()
         do { try context.save() } catch {
             print("cache save failed: \(error)")
         }

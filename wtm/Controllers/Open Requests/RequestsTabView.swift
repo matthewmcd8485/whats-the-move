@@ -18,7 +18,10 @@ import FirebaseFirestore
 /// numbers only. Keying off the request id and looking the pair back up avoids
 /// putting that oddity on a navigation path.
 enum RequestsTabRoute: Hashable {
-    case detail(requestID: String)
+    /// `notifiedResponse` is set only when a notification's response button got
+    /// here first, so the detail screen can show that answer before Firestore
+    /// has confirmed it.
+    case detail(requestID: String, notifiedResponse: BoredResponseChoice? = nil)
     case friendDetail(uid: String, name: String)
     case verify(phoneNumber: String)
 }
@@ -28,6 +31,7 @@ enum RequestsTabRoute: Hashable {
 struct RequestsTabView: View {
     @State private var model = OpenRequestsModel()
     @State private var path: [RequestsTabRoute] = []
+    @Environment(DeepLinkRouter.self) private var deepLinks
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -40,16 +44,43 @@ struct RequestsTabView: View {
             }
         }
         .tint(.wtmDarkBlue)
+        .task(id: deepLinks.boredRequest) { await openNotifiedRequest() }
+    }
+
+    /// Opens the request a notification pointed at.
+    ///
+    /// The list may not have loaded yet — tapping a push launches the app
+    /// straight into this — so fetch before concluding the request isn't there.
+    private func openNotifiedRequest() async {
+        guard let target = deepLinks.boredRequest else { return }
+
+        if !model.items.contains(where: { $0.id == target.requestID }) {
+            await model.load()
+        }
+
+        // Found or not, the link has been acted on. Leaving it set would push
+        // the same request again on every return to this tab.
+        deepLinks.clearBoredRequest()
+
+        guard model.items.contains(where: { $0.id == target.requestID }) else {
+            Log.push.info("the request a notification pointed at is no longer open")
+            return
+        }
+
+        // Replaces the stack rather than appending: a second push shouldn't
+        // stack requests on top of each other.
+        path = [.detail(requestID: target.requestID, notifiedResponse: target.chosenResponse)]
     }
 
     @ViewBuilder
     private func destination(for route: RequestsTabRoute) -> some View {
         switch route {
-        case .detail(let requestID):
+        case .detail(let requestID, let notifiedResponse):
             if let item = model.items.first(where: { $0.id == requestID }) {
                 RequestDetailView(
                     group: item.group,
                     request: item.request,
+                    notifiedResponse: notifiedResponse,
                     onOpenFriend: { path.append(.friendDetail(uid: $0.uid, name: $0.name)) },
                     onOpenStranger: { path.append(.verify(phoneNumber: $0.phoneNumber)) }
                 )
@@ -153,6 +184,70 @@ struct OpenRequestsView: View {
     }
 }
 
+/// How a request is titled, which works differently for a direct one.
+///
+/// A direct group's stored `name` isn't anything a person chose — it's the
+/// literal "direct" — and the request document records only the *sender's*
+/// name. So a direct request read as your own name on the ones you sent, and as
+/// "direct" anywhere the group name was used. Both ends should name the person
+/// on the *other* end of it, with a charm saying which way it went.
+@MainActor
+struct RequestPresentation {
+    let title: String
+    /// "direct to you" / "direct to them". `nil` for a group request, which
+    /// needs no explaining.
+    let directionCharm: String?
+    /// The line under the title: who wants what.
+    let detail: String
+
+    init(group: FriendGroup, request: BoredRequest) {
+        guard group.isDirectGroup else {
+            title = group.name
+            directionCharm = nil
+            detail = "\(request.initiatedBy) \(request.activity)"
+            return
+        }
+
+        detail = request.activity
+
+        // Only the sender's *name* is stored on the request, so "did I send
+        // this?" has to be a name comparison. Inside a two-person group that
+        // would only misfire if both people shared a name.
+        let myName = UserDefaults.standard.string(forKey: "name") ?? ""
+        let iSentIt = !myName.isEmpty
+            && request.initiatedBy.caseInsensitiveCompare(myName) == .orderedSame
+
+        guard iSentIt else {
+            title = request.initiatedBy
+            directionCharm = "direct to you"
+            return
+        }
+
+        // I sent it, so the other member of the pair is who it's addressed to.
+        let otherUID = (group.people ?? []).first { $0 != SecureStorage.uid }
+        title = otherUID.flatMap { LocalCacheManager.shared.cachedName(forUID: $0) } ?? "your friend"
+        directionCharm = "direct to them"
+    }
+}
+
+/// A small pill under a title on the artwork, e.g. which way a direct request
+/// was sent.
+struct RequestCharm: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.wtmBold(11, relativeTo: .caption2))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(.white.opacity(0.22), in: .capsule)
+            .overlay {
+                Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 0.5)
+            }
+    }
+}
+
 /// The artwork card `BoredRequestTableViewCell` used to draw.
 struct RequestCardView: View {
     let group: FriendGroup
@@ -162,16 +257,8 @@ struct RequestCardView: View {
         NotificationTitle(activity: request.activity)
     }
 
-    private var headline: String {
-        group.isDirectGroup
-            ? request.initiatedBy
-            : group.name
-    }
-
-    private var detail: String {
-        group.isDirectGroup
-            ? request.activity
-            : "\(request.initiatedBy) \(request.activity)"
+    private var presentation: RequestPresentation {
+        RequestPresentation(group: group, request: request)
     }
 
     var body: some View {
@@ -202,15 +289,21 @@ struct RequestCardView: View {
                 )
             }
             .overlay(alignment: .topLeading) {
-                Text(headline.lowercased())
-                    .font(.wtmBold(24, relativeTo: .title2))
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-                    .padding(14)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(presentation.title.lowercased())
+                        .font(.wtmBold(24, relativeTo: .title2))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+
+                    if let charm = presentation.directionCharm {
+                        RequestCharm(text: charm)
+                    }
+                }
+                .padding(14)
             }
             .overlay(alignment: .bottomLeading) {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(detail.lowercased())
+                    Text(presentation.detail.lowercased())
                         .font(.wtmRegular(15, relativeTo: .subheadline))
                     Text("expires at \(request.expiresAt.toString(dateFormat: "h:mm a"))")
                         .font(.wtmThin(13, relativeTo: .footnote))
@@ -235,7 +328,11 @@ final class RequestDetailModel {
 
     private let db = Firestore.firestore()
 
-    func load(group: FriendGroup, request: BoredRequest) async {
+    func load(
+        group: FriendGroup,
+        request: BoredRequest,
+        notifiedResponse: BoredResponseChoice? = nil
+    ) async {
         defer { isLoading = false }
         let uids = group.people ?? []
         guard !uids.isEmpty else { return }
@@ -264,6 +361,21 @@ final class RequestDetailModel {
         }
 
         await applyResponses(to: users, group: group, request: request)
+
+        // An answer given from the notification won't have reached Firestore by
+        // the time this read comes back, so show what was actually chosen
+        // rather than the "no response" the document still says.
+        if let notifiedResponse {
+            apply(notifiedResponse)
+        }
+    }
+
+    /// Writes a response into your own row without going near the network.
+    private func apply(_ choice: BoredResponseChoice) {
+        guard let uid = SecureStorage.uid,
+              let index = people.firstIndex(where: { $0.user.uid == uid }) else { return }
+        people[index].responseStatus = choice.status
+        people[index].responseSubstatus = choice.substatus
     }
 
     private func applyResponses(to users: [User], group: FriendGroup, request: BoredRequest) async {
@@ -283,8 +395,8 @@ final class RequestDetailModel {
             people = users
                 .sorted { $0.name.sortsBefore($1.name) }
                 .map { user in
-                    let status = document.get(FirestoreKeys.BoredRequest.availabilityField(forUID: user.uid)) as? String ?? "no response"
-                    let substatus = document.get(FirestoreKeys.BoredRequest.substatusField(forUID: user.uid)) as? String ?? "no response"
+                    let status = document.get(FirestoreKeys.BoredRequest.availabilityField(forUID: user.uid)) as? String ?? BoredResponseCategory.noResponse
+                    let substatus = document.get(FirestoreKeys.BoredRequest.substatusField(forUID: user.uid)) as? String ?? BoredResponseCategory.noResponse
                     return BoredRequestUser(user: user, responseStatus: status, responseSubstatus: substatus)
                 }
         } catch {
@@ -304,10 +416,7 @@ final class RequestDetailModel {
                 substatus: substatus
             )
             // Reflect it locally so the list updates without a refetch.
-            if let index = people.firstIndex(where: { $0.user.uid == uid }) {
-                people[index].responseStatus = status
-                people[index].responseSubstatus = substatus
-            }
+            apply(BoredResponseChoice(status: status, substatus: substatus))
         } catch {
             Log.database.error("error updating response: \(error.localizedDescription, privacy: .public)")
         }
@@ -317,18 +426,35 @@ final class RequestDetailModel {
 struct RequestDetailView: View {
     let group: FriendGroup
     let request: BoredRequest
+    /// The answer already given from a notification's response button, if this
+    /// screen was opened by one.
+    var notifiedResponse: BoredResponseChoice?
     var onOpenFriend: (User) -> Void = { _ in }
     var onOpenStranger: (User) -> Void = { _ in }
+
+    /// Which response editor is open, one level deeper than this screen.
+    enum ResponseEdit: Hashable {
+        /// The canned messages for a category.
+        case presets(BoredResponseCategory)
+        /// Pick a category and write your own message.
+        case custom
+    }
 
     @Environment(\.dismiss) private var dismiss
     @State private var model = RequestDetailModel()
     @State private var showStatusChoice = false
-    @State private var pendingStatus: String?
+    @State private var responseEdit: ResponseEdit?
+    /// So arriving back from the editor doesn't re-open it.
+    @State private var didFollowNotifiedResponse = false
     @State private var notice: (title: String, message: String)?
     @State private var showNotice = false
 
     private var activity: NotificationTitle {
         NotificationTitle(activity: request.activity)
+    }
+
+    private var presentation: RequestPresentation {
+        RequestPresentation(group: group, request: request)
     }
 
     var body: some View {
@@ -361,18 +487,12 @@ struct RequestDetailView: View {
             Text("are you free today?")
         }
         .navigationDestination(
-            isPresented: Binding(get: { pendingStatus != nil }, set: { if !$0 { pendingStatus = nil } })
+            isPresented: Binding(get: { responseEdit != nil }, set: { if !$0 { responseEdit = nil } })
         ) {
-            if let status = pendingStatus {
-                ChangeResponseView(status: status) { substatus in
-                    Task {
-                        await model.submit(status: status, substatus: substatus, group: group, request: request)
-                        pendingStatus = nil
-                    }
-                }
-            }
+            responseEditor
         }
-        .task { await model.load(group: group, request: request) }
+        .task { await model.load(group: group, request: request, notifiedResponse: notifiedResponse) }
+        .onAppear(perform: followNotifiedResponse)
         .alert("error loading request", isPresented: Bindable(model).failed) {
             Button("okay") { dismiss() }
         } message: {
@@ -385,13 +505,57 @@ struct RequestDetailView: View {
         }
     }
 
-    /// The three response choices, shared by the toolbar menu and the dialog
-    /// that the "you" row opens.
+    /// The response choices, shared by the toolbar menu and the dialog that the
+    /// "you" row opens.
     @ViewBuilder
     private var responseOptions: some View {
-        Button("yeah, i'm free", systemImage: "checkmark.circle") { pendingStatus = "available" }
-        Button("mmm, maybe?", systemImage: "exclamationmark.circle") { pendingStatus = "busy" }
-        Button("no, i'm not free", systemImage: "nosign") { pendingStatus = "not available" }
+        ForEach(BoredResponseCategory.presetCategories) { category in
+            Button(category.menuLabel, systemImage: category.iconName) {
+                responseEdit = .presets(category)
+            }
+        }
+        Button("custom...", systemImage: "square.and.pencil") { responseEdit = .custom }
+    }
+
+    @ViewBuilder
+    private var responseEditor: some View {
+        switch responseEdit {
+        case .presets(let category):
+            ChangeResponseView(category: category) { substatus in
+                submit(category: category, substatus: substatus)
+            }
+        case .custom:
+            CustomResponseView { category, substatus in
+                submit(category: category, substatus: substatus)
+            }
+        case nil:
+            EmptyView()
+        }
+    }
+
+    private func submit(category: BoredResponseCategory, substatus: String) {
+        Task {
+            await model.submit(
+                status: category.rawValue,
+                substatus: substatus,
+                group: group,
+                request: request
+            )
+            responseEdit = nil
+        }
+    }
+
+    /// A notification's response button already answered the category, so land
+    /// on that category's message list — one level deeper than the request —
+    /// so the reply can be refined in a single tap.
+    private func followNotifiedResponse() {
+        guard !didFollowNotifiedResponse,
+              let notifiedResponse,
+              let category = BoredResponseCategory(rawValue: notifiedResponse.status),
+              BoredResponseCategory.presetCategories.contains(category) else { return }
+
+        didFollowNotifiedResponse = true
+        responseEdit = .presets(category)
     }
 
     /// Artwork banner with the group name, activity and expiry, fading into the
@@ -416,9 +580,15 @@ struct RequestDetailView: View {
             .overlay(alignment: .bottom) { pageFade }
             .overlay(alignment: .bottomLeading) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text((group.isDirectGroup ? request.initiatedBy : group.name).lowercased())
+                    Text(presentation.title.lowercased())
                         .font(.wtmBold(34, relativeTo: .largeTitle))
-                    Text((group.isDirectGroup ? request.activity : "\(request.initiatedBy) \(request.activity)").lowercased())
+
+                    if let charm = presentation.directionCharm {
+                        RequestCharm(text: charm)
+                            .padding(.bottom, 2)
+                    }
+
+                    Text(presentation.detail.lowercased())
                         .font(.wtmRegular(18, relativeTo: .body))
                     Text("this request expires at \(request.expiresAt.toString(dateFormat: "h:mm a"))")
                         .font(.wtmThin(13, relativeTo: .footnote))
@@ -530,20 +700,9 @@ struct RequestDetailView: View {
 struct ResponseRowView: View {
     let person: BoredRequestUser
 
-    private var icon: (name: String, color: Color) {
-        switch person.responseStatus {
-        case "available": ("checkmark.circle", .green)
-        case "busy": ("exclamationmark.circle", .wtmDarkYellow)
-        case "not available": ("nosign", .red)
-        default: ("questionmark.circle", .gray)
-        }
-    }
-
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: icon.name)
-                .font(.system(size: 24, weight: .regular))
-                .foregroundStyle(icon.color)
+            BoredResponseSymbol(category: BoredResponseCategory(rawValue: person.responseStatus), size: 24)
                 .frame(width: 30)
 
             VStack(alignment: .leading, spacing: 1) {
@@ -568,46 +727,14 @@ struct ResponseRowView: View {
 // MARK: - Change response
 
 struct ChangeResponseView: View {
-    let status: String
+    let category: BoredResponseCategory
     let onPick: (String) -> Void
 
     @Environment(\.dismiss) private var dismiss
 
-    private var presentation: (title: String, icon: String, color: Color, options: [String]) {
-        switch status {
-        case "available":
-            ("you are available", "checkmark.circle", .green, [
-                "lmk what time", "sounds good", "i'll be there!", "i'll drive",
-                "on my way!", "ok!", "so excited!", "can't wait to see you all", "joe"
-            ])
-        case "busy":
-            ("you are busy", "exclamationmark.circle", .wtmDarkYellow, [
-                "already have plans", "maybe later?", "tomorrow would work better",
-                "don't know what's happening", "maybe when i get off work",
-                "gotta ask my parents", "won't have a car today", "ask me again in an hour", "joe"
-            ])
-        default:
-            ("you are not available", "nosign", .red, [
-                "already have plans today", "i'm not in town", "i don't like you",
-                "i'm not free today", "call me when i care", "leave me alone",
-                "at work all day", "got dragged into some other stuff", "joe"
-            ])
-        }
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 12) {
-                Image(systemName: presentation.icon)
-                    .font(.system(size: 40, weight: .regular))
-                    .foregroundStyle(presentation.color)
-                Text(presentation.title)
-                    .font(.wtmBold(28, relativeTo: .title))
-                    .foregroundStyle(Color.wtmDarkBlue)
-                    .accessibilityAddTraits(.isHeader)
-            }
-            .padding(.horizontal, WTMLayout.sideMargin)
-            .padding(.top, 8)
+            ResponseCategoryHeading(category: category)
 
             Text("pick a message to go with your response.")
                 .font(.wtmSubtitle)
@@ -615,7 +742,7 @@ struct ChangeResponseView: View {
                 .padding(.horizontal, WTMLayout.sideMargin)
                 .padding(.top, 8)
 
-            List(presentation.options, id: \.self) { option in
+            List(category.presetMessages, id: \.self) { option in
                 Button {
                     onPick(option)
                     dismiss()
@@ -642,6 +769,201 @@ struct ChangeResponseView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.wtmBackground)
+    }
+}
+
+/// A response category's glyph.
+///
+/// One view for every place a category is drawn — the response list, both
+/// editor headings and the category picker — so the rendering mode can't drift
+/// between them. Hierarchical, so each glyph reads as one tinted object with
+/// depth in it rather than a flat stamp.
+struct BoredResponseSymbol: View {
+    /// `nil` for someone who hasn't answered, which isn't a category.
+    let category: BoredResponseCategory?
+    var size: CGFloat = 24
+
+    var body: some View {
+        Image(systemName: category?.iconName ?? "questionmark.circle")
+            .font(.system(size: size, weight: .regular))
+            .symbolRenderingMode(.hierarchical)
+            .foregroundStyle(category?.color ?? Color.gray)
+    }
+}
+
+/// The icon-and-title heading both response editors share.
+struct ResponseCategoryHeading: View {
+    let category: BoredResponseCategory
+
+    var body: some View {
+        HStack(spacing: 12) {
+            BoredResponseSymbol(category: category, size: 40)
+                .contentTransition(.symbolEffect(.replace))
+            Text(category.headline)
+                .font(.wtmBold(28, relativeTo: .title))
+                .foregroundStyle(Color.wtmDarkBlue)
+                // Rolls over rather than cross-fading, so the wording turns
+                // over in step with the symbol swapping beside it.
+                .contentTransition(.numericText())
+                .accessibilityAddTraits(.isHeader)
+        }
+        .padding(.horizontal, WTMLayout.sideMargin)
+        .padding(.top, 8)
+        // Both halves change together when the category does, so the animation
+        // belongs here rather than on whichever screen is driving it.
+        .animation(.snappy(duration: 0.25), value: category)
+    }
+}
+
+// MARK: - Custom response
+
+/// Pick a category — including the uncategorised purple one — and write your
+/// own message instead of taking one off the canned list.
+struct CustomResponseView: View {
+    /// Called with the chosen category and the trimmed message.
+    let onSend: (BoredResponseCategory, String) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var category: BoredResponseCategory = .uncategorized
+    @State private var message = ""
+    @State private var showProfanityWarning = false
+    @FocusState private var isWriting: Bool
+
+    /// Short because it has to survive a notification banner, where anything
+    /// longer is truncated mid-word anyway.
+    private static let characterLimit = 50
+
+    private var trimmedMessage: String {
+        message.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    var body: some View {
+        ZStack {
+            // Bottom layer, so a tap on any empty part of the screen puts the
+            // keyboard away.
+            Color.wtmBackground
+                .ignoresSafeArea()
+                .contentShape(.rect)
+                .onTapGesture { isWriting = false }
+
+            VStack(alignment: .leading, spacing: 0) {
+                ResponseCategoryHeading(category: category)
+
+                Text("say whatever you want, then pick how free you are.")
+                    .font(.wtmSubtitle)
+                    .foregroundStyle(Color.wtmSecondaryLabel)
+                    .padding(.horizontal, WTMLayout.sideMargin)
+                    .padding(.top, 8)
+
+                categoryPicker
+                    .padding(.horizontal, WTMLayout.sideMargin)
+                    .padding(.top, 20)
+
+                messageField
+                    .padding(.horizontal, WTMLayout.sideMargin)
+                    .padding(.top, 20)
+
+                PrimaryActionButton(title: "send it") { send() }
+                    .padding(.horizontal, WTMLayout.sideMargin)
+                    .padding(.top, 20)
+                    .opacity(trimmedMessage.isEmpty ? 0.4 : 1)
+                    .disabled(trimmedMessage.isEmpty)
+
+                Spacer()
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .alert("ok, potty mouth", isPresented: $showProfanityWarning) {
+            Button("fine", role: .cancel) {}
+        } message: {
+            Text("there are some less-than-ideal words in there.\n\nyour friends get this as a notification, so keep it clean — or turn on explicit mode in settings.")
+        }
+        .onAppear { isWriting = true }
+    }
+
+    private var categoryPicker: some View {
+        HStack(spacing: 8) {
+            ForEach(BoredResponseCategory.allCases) { option in
+                Button {
+                    category = option
+                } label: {
+                    VStack(spacing: 6) {
+                        BoredResponseSymbol(category: option, size: 24)
+                        Text(option.shortLabel)
+                            .font(.wtmRegular(12, relativeTo: .caption))
+                            .foregroundStyle(Color.wtmSecondaryLabel)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background {
+                        RoundedRectangle(cornerRadius: WTMLayout.cornerRadius)
+                            .fill(category == option ? option.color.opacity(0.18) : Color.wtmGroupedCard)
+                    }
+                    .overlay {
+                        RoundedRectangle(cornerRadius: WTMLayout.cornerRadius)
+                            .strokeBorder(category == option ? option.color : .clear, lineWidth: 2)
+                    }
+                    .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(option.shortLabel)
+                .accessibilityAddTraits(category == option ? [.isButton, .isSelected] : .isButton)
+            }
+        }
+        .animation(.snappy(duration: 0.2), value: category)
+    }
+
+    private var messageField: some View {
+        VStack(alignment: .trailing, spacing: 6) {
+            TextField("say something", text: $message, axis: .vertical)
+                .font(.wtmRegular(18, relativeTo: .body))
+                .foregroundStyle(Color.wtmDarkBlue)
+                .tint(Color.wtmDarkBlue)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .lineLimit(1...3)
+                .focused($isWriting)
+                .submitLabel(.done)
+                .onSubmit { send() }
+                .padding(14)
+                .background(Color.wtmGroupedCard, in: RoundedRectangle(cornerRadius: WTMLayout.cornerRadius))
+                .onChange(of: message) { _, newValue in
+                    // Trimmed as you type rather than refused on send: the cap
+                    // is about what fits in a banner, and silently losing the
+                    // end of a sentence at submit time is worse than seeing it
+                    // stop.
+                    if newValue.count > Self.characterLimit {
+                        message = String(newValue.prefix(Self.characterLimit))
+                    }
+                }
+
+            Text("\(message.count)/\(Self.characterLimit)")
+                .font(.wtmFootnote)
+                .foregroundStyle(
+                    message.count >= Self.characterLimit ? Color.wtmDarkRed : Color.wtmSecondaryLabel
+                )
+                .monospacedDigit()
+        }
+    }
+
+    private func send() {
+        let text = trimmedMessage
+        guard !text.isEmpty else { return }
+
+        // Explicit mode is exactly the switch for opting out of this, so it's
+        // the one thing that skips the check. Everyone else's message is
+        // filtered, because it goes out to the whole group as a push.
+        if !UserDefaults.standard.bool(forKey: "explicit"),
+           ProfanityManager.shared.checkForProfanity(in: text) {
+            showProfanityWarning = true
+            return
+        }
+
+        isWriting = false
+        onSend(category, text)
+        dismiss()
     }
 }
 

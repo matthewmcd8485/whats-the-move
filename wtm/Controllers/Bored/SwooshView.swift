@@ -60,10 +60,20 @@ struct SwooshView: View {
                         .rotationEffect(.degrees(-90))
                         .frame(width: 240, height: 240)
 
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 100, weight: .bold))
-                        .foregroundStyle(Color("tertiaryLabelColors"))
-                        .opacity(didFinish ? 1 : 0)
+                    // Drawn on stroke-by-stroke once the ring has filled.
+                    //
+                    // Gated on `if` with an insertion transition rather than
+                    // `.symbolEffect(.drawOn, isActive:)`: with `isActive` the
+                    // tick was visible for the whole ring animation and drew
+                    // *off* at the end — exactly backwards. The symbol only
+                    // existing once we're done makes the direction impossible
+                    // to get wrong.
+                    if didFinish {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 100, weight: .bold))
+                            .foregroundStyle(Color("tertiaryLabelColors"))
+                            .transition(.symbolEffect(.drawOn))
+                    }
                 }
 
                 Spacer()
@@ -200,9 +210,9 @@ struct SwooshView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             titleText = "done!"
             subtitleText = "your boredom might be cured"
-            withAnimation(.easeInOut(duration: 0.5)) {
-                didFinish = true
-            }
+            // The transition needs an animation in scope to run; the draw-on
+            // effect supplies its own stroke timing within it.
+            withAnimation { didFinish = true }
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {

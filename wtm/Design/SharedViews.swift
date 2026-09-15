@@ -211,6 +211,7 @@ struct StatusCard: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 70, height: 70)
+                .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(Color(status.iconColorName))
 
             VStack(alignment: .leading, spacing: 2) {
@@ -455,20 +456,31 @@ struct CompactPersonRow: View {
             } else if isBlocked {
                 Image(systemName: "hand.raised.slash")
                     .foregroundStyle(.red)
-            } else {
-                let status = Status(stored: user.status)
+            } else if let status = Status(loaded: user.status) {
                 Image(systemName: status.iconName)
                     .foregroundStyle(Color(status.iconColorName))
+            } else {
+                // A profile that hasn't arrived yet. Previously this fell
+                // through `Status(stored:)` onto do-not-disturb, so every list
+                // flashed a red "not available" on every load before settling.
+                Image(systemName: "circle")
+                    .foregroundStyle(.gray)
             }
         }
         .font(.system(size: 19, weight: .regular))
+        .symbolRenderingMode(.hierarchical)
+        // Swaps the placeholder for the real glyph as the status lands, rather
+        // than having it pop in.
+        .contentTransition(.symbolEffect(.replace))
+        .animation(.easeInOut(duration: 0.25), value: user.status)
     }
 
     private var accessibilityDescription: String {
         let name = user.uid == SecureStorage.uid ? "you" : user.name.lowercased()
         if user.name == "user deleted" { return "\(name), no status available" }
         if isBlocked { return "\(name), blocked" }
-        return "\(name), \(Status(stored: user.status).rawValue)"
+        guard let status = Status(loaded: user.status) else { return "\(name), loading status" }
+        return "\(name), \(status.rawValue)"
     }
 }
 
@@ -513,6 +525,17 @@ extension Status {
     /// chains behaved.
     init(stored: String) {
         self = Status(rawValue: stored) ?? .doNotDisturb
+    }
+
+    /// The stored status, or `nil` when there isn't one to show yet.
+    ///
+    /// Use this anywhere a missing status has a sensible neutral rendering.
+    /// `init(stored:)` folds everything unrecognised onto do-not-disturb, which
+    /// is a fair reading of a value that's present but unexpected — but an
+    /// empty string only means the profile hasn't loaded, and drawing that as
+    /// "not available" is an assertion about someone that isn't true.
+    init?(loaded stored: String) {
+        self.init(rawValue: stored.trimmingCharacters(in: .whitespaces))
     }
 }
 
