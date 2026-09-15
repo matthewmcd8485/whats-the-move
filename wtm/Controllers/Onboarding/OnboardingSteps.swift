@@ -24,9 +24,11 @@ struct WelcomeStep: View {
             titleColor: .wtmDarkBlue,
             actionColor: .white
         ) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(spacing: 4) {
                 // The storyboard used a line separator inside one label; two
                 // Text views read the same and wrap properly when scaled.
+                Spacer()
+                
                 Text("solve your boredom.")
                 Text("annoy your friends.")
             }

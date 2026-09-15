@@ -27,7 +27,13 @@ struct FriendGroup: Codable {
         isDirect = nil
     }
 
-    var isDirectGroup: Bool { isDirect == true }
+    /// The flag is the source of truth, but the id is a fallback: a direct
+    /// group's id is derived from the uid pair (see
+    /// `DatabaseManager.directGroupID`), so a document written before `Direct`
+    /// existed is still recognizable.
+    var isDirectGroup: Bool {
+        isDirect == true || groupID.hasPrefix("direct-")
+    }
 
     enum CodingKeys: String, CodingKey {
         case name = "Name"

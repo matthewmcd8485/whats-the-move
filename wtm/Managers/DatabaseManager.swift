@@ -403,7 +403,16 @@ final class DatabaseManager: @unchecked Sendable {
             let groups: [FriendGroup] = snapshot.documents.compactMap { document in
                 do {
                     let group = try document.data(as: FriendGroup.self)
-                    return FriendGroup(name: group.name.lowercased(), groupID: group.groupID, people: group.people)
+                    // Rebuilt only to lowercase the name, so `isDirect` has to
+                    // be carried over: dropping it made every direct group look
+                    // like an ordinary one, which showed its placeholder name
+                    // ("direct") instead of the person on the other end.
+                    return FriendGroup(
+                        name: group.name.lowercased(),
+                        groupID: group.groupID,
+                        people: group.people,
+                        isDirect: group.isDirect
+                    )
                 } catch {
                     Log.database.error("Error decoding FriendGroup from Firestore: \(error.localizedDescription, privacy: .public)")
                     return nil
