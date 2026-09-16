@@ -129,13 +129,11 @@ struct ImportContactsView: View {
     private var content: some View {
         if model.isLoading {
             CenteredMessage(text: "loading...", color: .wtmDarkBlue)
-            Spacer()
         } else if model.matches.isEmpty {
             CenteredMessage(
                 text: "we couldn't find any users in your contacts list.\n\ndon't worry, though. we won't judge you for having no friends.",
                 font: .wtmRegular(15, relativeTo: .subheadline)
             )
-            Spacer()
         } else {
             List(model.matches) { match in
                 Button {

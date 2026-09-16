@@ -31,6 +31,8 @@
 		C91DE9643059F2EE0084EA09 /* DeepLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91DE9633059F2EE0084EA09 /* DeepLinkRouter.swift */; };
 		C91DE9663059F6A60084EA09 /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91DE9653059F6A60084EA09 /* PushManager.swift */; };
 		C91DE9683059FD530084EA09 /* BoredResponseCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91DE9673059FD530084EA09 /* BoredResponseCategory.swift */; };
+		C94B40BE305ABE0F0054E34F /* BoredRequestDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94B40BD305ABE0F0054E34F /* BoredRequestDuration.swift */; };
+		C94B40C0305AC1D60054E34F /* ExtendRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94B40BF305AC1D60054E34F /* ExtendRequestView.swift */; };
 		C975E24E3058EEB1002C84A8 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = C975E24D3058EEB1002C84A8 /* DesignTokens.swift */; };
 		C975E2503058EEB5002C84A8 /* SharedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C975E24F3058EEB5002C84A8 /* SharedViews.swift */; };
 		C975E2523058EEB9002C84A8 /* OnboardingScaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = C975E2513058EEB9002C84A8 /* OnboardingScaffold.swift */; };
@@ -170,6 +172,8 @@
 		C91DE9633059F2EE0084EA09 /* DeepLinkRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouter.swift; sourceTree = "<group>"; };
 		C91DE9653059F6A60084EA09 /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
 		C91DE9673059FD530084EA09 /* BoredResponseCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredResponseCategory.swift; sourceTree = "<group>"; };
+		C94B40BD305ABE0F0054E34F /* BoredRequestDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredRequestDuration.swift; sourceTree = "<group>"; };
+		C94B40BF305AC1D60054E34F /* ExtendRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendRequestView.swift; sourceTree = "<group>"; };
 		C975E24D3058EEB1002C84A8 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		C975E24F3058EEB5002C84A8 /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
 		C975E2513058EEB9002C84A8 /* OnboardingScaffold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScaffold.swift; sourceTree = "<group>"; };
@@ -447,6 +451,7 @@
 			isa = PBXGroup;
 			children = (
 				C975E2673058EEEA002C84A8 /* RequestsTabView.swift */,
+				C94B40BF305AC1D60054E34F /* ExtendRequestView.swift */,
 			);
 			path = "Open Requests";
 			sourceTree = "<group>";
@@ -483,6 +488,7 @@
 				C9F4173F2FD3245D004B1F1C /* StorageErrors.swift */,
 				C9F417412FD3245D004B1F1C /* UIColorInputError.swift */,
 				C91DE9673059FD530084EA09 /* BoredResponseCategory.swift */,
+				C94B40BD305ABE0F0054E34F /* BoredRequestDuration.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -915,6 +921,7 @@
 				C9F4459F2FD3245D004B1F1C /* PhoneContact.swift in Sources */,
 				C975E26A3058EEEE002C84A8 /* HomeTabView.swift in Sources */,
 				C9F446DC2FD3245D004B1F1C /* BoredRequestUser.swift in Sources */,
+				C94B40C0305AC1D60054E34F /* ExtendRequestView.swift in Sources */,
 				C975E2603058EED7002C84A8 /* PictureEditView.swift in Sources */,
 				C9F447072FD3245D004B1F1C /* UIColor.swift in Sources */,
 				C9CD50322FD39B1E003DE6A4 /* AboutThisAppView.swift in Sources */,
@@ -929,6 +936,7 @@
 				C9F448332FD3245D004B1F1C /* SelectableGroup.swift in Sources */,
 				C9F448C72FD3245D004B1F1C /* BoredRequest.swift in Sources */,
 				C9CD503C2FD4CE8F003DE6A4 /* SettingsView.swift in Sources */,
+				C94B40BE305ABE0F0054E34F /* BoredRequestDuration.swift in Sources */,
 				C9CD50452FD4FE7F003DE6A4 /* FriendSelectionView.swift in Sources */,
 				C9CD504F2FD61E96003DE6A4 /* FriendGroupsView.swift in Sources */,
 				C975E25A3058EECA002C84A8 /* OnboardingSteps.swift in Sources */,
@@ -1152,7 +1160,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				EXCLUDED_ARCHS = "";
@@ -1184,7 +1192,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = wtm/wtm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = wtm/Assets.xcassets;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_NO_COMMON_BLOCKS = NO;
@@ -1288,7 +1296,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1313,7 +1321,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				INFOPLIST_FILE = "WTM Notification Service Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1338,7 +1346,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1363,7 +1371,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				INFOPLIST_FILE = "WTM Notification Content Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (

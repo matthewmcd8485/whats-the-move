@@ -263,6 +263,10 @@ struct MyProfileView: View {
             VStack(spacing: 6) {
                 Image(systemName: icon)
                     .font(.system(size: 42, weight: .regular))
+                    // Hierarchical, so each tile reads as one tinted object
+                    // with depth in it rather than a flat stamp — the same
+                    // treatment the response glyphs get.
+                    .symbolRenderingMode(.hierarchical)
                     // These sit on the plain background rather than on a dark
                     // blue card, so they keep the bright blue in dark mode
                     // instead of following the palette's light/dark swap.

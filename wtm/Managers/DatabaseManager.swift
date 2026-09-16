@@ -127,6 +127,7 @@ final class DatabaseManager: @unchecked Sendable {
         try await db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).document(requestID).setData([
             FirestoreKeys.BoredRequest.requestIdentifier : requestID,
             FirestoreKeys.BoredRequest.initiatedBy : initiatedBy,
+            FirestoreKeys.BoredRequest.initiatorIdentifier : uid,
             FirestoreKeys.BoredRequest.postedTime : postedTime,
             FirestoreKeys.BoredRequest.expiresAt : expiresAt,
             FirestoreKeys.BoredRequest.activity : activity,
@@ -138,7 +139,13 @@ final class DatabaseManager: @unchecked Sendable {
         ], merge: false)
     }
     
-    public func downloadBoredRequests(forGroupIDs groupIDs: [String], notExpiredSince expiredCutoff: Timestamp, completion: @escaping (Result<[BoredRequest], Error>) -> Void) {
+    /// Every request in the given groups that hasn't expired yet.
+    ///
+    /// Filtered on expiry rather than posted time. Requests used to get a flat
+    /// two hours, so "posted within two hours" was the same question; now that
+    /// the sender picks the length and can extend it afterwards, a request's
+    /// age says nothing about whether it's still open.
+    public func downloadBoredRequests(forGroupIDs groupIDs: [String], expiringAfter cutoff: Timestamp, completion: @escaping (Result<[BoredRequest], Error>) -> Void) {
         guard !groupIDs.isEmpty else {
             completion(.success([]))
             return
@@ -149,7 +156,7 @@ final class DatabaseManager: @unchecked Sendable {
         
         for groupID in groupIDs {
             group.enter()
-            db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).whereField(FirestoreKeys.BoredRequest.postedTime, isGreaterThanOrEqualTo: expiredCutoff).getDocuments() { querySnapshot, error in
+            db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).whereField(FirestoreKeys.BoredRequest.expiresAt, isGreaterThan: cutoff).getDocuments() { querySnapshot, error in
                 defer { group.leave() }
                 
                 if let error = error {
@@ -176,6 +183,9 @@ final class DatabaseManager: @unchecked Sendable {
                         postedTime: postedTimestamp.dateValue(),
                         expiresAt: expiresTimestamp.dateValue(),
                         initiatedBy: initiatedBy,
+                        // Optional, unlike the rest: requests written before
+                        // this field existed are still perfectly readable.
+                        initiatorUID: document.get(FirestoreKeys.BoredRequest.initiatorIdentifier) as? String,
                         people: [BoredRequestUser]()
                     )
                     allRequests.append(request)
@@ -189,6 +199,21 @@ final class DatabaseManager: @unchecked Sendable {
         }
     }
     
+    /// Moves when a request expires — forward to now to end it, or back to
+    /// give it longer.
+    ///
+    /// Merged rather than deleted even when ending it: the responses already
+    /// given live on the same document, and a delete would make it vanish from
+    /// under anyone who has the request open. Everyone's list filters on
+    /// expiry, so moving the date is enough to take it off theirs too.
+    public func setBoredRequestExpiry(groupID: String, requestID: String, to expiresAt: Date) async throws {
+        try await db.collection(FirestoreKeys.Collection.friendGroups)
+            .document(groupID)
+            .collection(FirestoreKeys.Collection.boredRequests)
+            .document(requestID)
+            .setData([FirestoreKeys.BoredRequest.expiresAt : expiresAt], merge: true)
+    }
+
     public func updateBoredRequestResponse(groupID: String, requestID: String, uid: String, status: String, substatus: String, completion: @escaping (Result<Void, Error>) -> Void) {
         db.collection(FirestoreKeys.Collection.friendGroups).document(groupID).collection(FirestoreKeys.Collection.boredRequests).document(requestID).setData([
             FirestoreKeys.BoredRequest.availabilityField(forUID: uid) : status,
@@ -354,6 +379,28 @@ final class DatabaseManager: @unchecked Sendable {
         })
     }
     
+    /// Ends a friendship from both sides.
+    ///
+    /// `acceptFriendRequest` writes a document into *each* person's `friends`
+    /// subcollection, so deleting only your own copy would leave you still on
+    /// their list — and still a valid recipient for their bored requests.
+    ///
+    /// Groups the two of you share are deliberately left alone, which is how
+    /// blocking already behaves.
+    public func removeFriend(myUID: String, friendUID: String) async throws {
+        let users = db.collection(FirestoreKeys.Collection.users)
+
+        try await users.document(myUID)
+            .collection(FirestoreKeys.Collection.friends)
+            .document(friendUID)
+            .delete()
+
+        try await users.document(friendUID)
+            .collection(FirestoreKeys.Collection.friends)
+            .document(myUID)
+            .delete()
+    }
+
     // MARK: - Download All Users
     public func downloadAllUsers(completion: @escaping (Result<[User], Error>) -> Void) {
         db.collection(FirestoreKeys.Collection.users).getDocuments { querySnapshot, error in
@@ -638,9 +685,9 @@ extension DatabaseManager {
         }
     }
     
-    public func downloadBoredRequests(forGroupIDs groupIDs: [String], notExpiredSince expiredCutoff: Timestamp) async throws -> [BoredRequest] {
+    public func downloadBoredRequests(forGroupIDs groupIDs: [String], expiringAfter cutoff: Timestamp) async throws -> [BoredRequest] {
         try await withCheckedThrowingContinuation { continuation in
-            downloadBoredRequests(forGroupIDs: groupIDs, notExpiredSince: expiredCutoff) { result in
+            downloadBoredRequests(forGroupIDs: groupIDs, expiringAfter: cutoff) { result in
                 continuation.resume(with: result)
             }
         }

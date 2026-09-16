@@ -34,7 +34,7 @@ struct SendRequest: Hashable {
     let mood: NotificationTitle
     let groups: [SelectableGroup]
     let individuals: [Friend]
-    let timeSensitive: Bool
+    let options: BoredSendOptions
 
     static func == (lhs: SendRequest, rhs: SendRequest) -> Bool { lhs.id == rhs.id }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
@@ -61,12 +61,12 @@ struct HomeTabView: View {
         case .activity:
             ActivityView(onSelect: { path.append(.recipients($0)) })
         case .recipients(let mood):
-            FriendSelectionView(mood: mood) { groups, friends, timeSensitive in
+            FriendSelectionView(mood: mood) { groups, friends, options in
                 path.append(.sending(SendRequest(
                     mood: mood,
                     groups: groups,
                     individuals: friends,
-                    timeSensitive: timeSensitive
+                    options: options
                 )))
             }
         case .sending(let request):
@@ -74,7 +74,7 @@ struct HomeTabView: View {
                 mood: request.mood,
                 groups: request.groups,
                 individuals: request.individuals,
-                timeSensitive: request.timeSensitive,
+                options: request.options,
                 sendID: request.id,
                 onFinished: { path.removeAll() }
             )

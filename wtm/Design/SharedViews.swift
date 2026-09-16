@@ -81,9 +81,16 @@ struct CenteredMessage: View {
             .foregroundStyle(color)
             .multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity)
             .padding(.horizontal, 32)
-            .padding(.vertical, 40)
+            // Takes whatever space is left and centres in it, rather than
+            // sitting at the top of it. Callers used to follow this with a
+            // lone `Spacer()`, which parked the message just under the
+            // heading with the whole page empty beneath it.
+            //
+            // The minimum is for the couple of places this sits inside a
+            // ScrollView, where "fill the space" resolves to the text's own
+            // height and there'd be nothing to centre within.
+            .frame(maxWidth: .infinity, minHeight: 120, maxHeight: .infinity)
     }
 }
 

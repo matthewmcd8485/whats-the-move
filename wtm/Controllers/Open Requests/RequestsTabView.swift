@@ -82,7 +82,14 @@ struct RequestsTabView: View {
                     request: item.request,
                     notifiedResponse: notifiedResponse,
                     onOpenFriend: { path.append(.friendDetail(uid: $0.uid, name: $0.name)) },
-                    onOpenStranger: { path.append(.verify(phoneNumber: $0.phoneNumber)) }
+                    onOpenStranger: { path.append(.verify(phoneNumber: $0.phoneNumber)) },
+                    // Popped before the item goes, so this destination isn't
+                    // rebuilt against a request that no longer exists.
+                    onExpired: {
+                        path.removeAll()
+                        model.remove(requestID: requestID)
+                    },
+                    onExtended: { model.updateExpiry(requestID: requestID, to: $0) }
                 )
             }
         case .friendDetail(let uid, let name):
@@ -101,7 +108,7 @@ final class OpenRequestsModel {
     /// A request paired with the group it belongs to.
     struct Item: Identifiable {
         let group: FriendGroup
-        let request: BoredRequest
+        var request: BoredRequest
         var id: String { request.requestID }
     }
 
@@ -116,11 +123,9 @@ final class OpenRequestsModel {
             let groups = try await DatabaseManager.shared.downloadAllGroups(uid: uid)
             UserDefaults.standard.set(groups.map(\.groupID), forKey: "groupsUID")
 
-            // Requests older than two hours have expired.
-            let cutoff = Timestamp(date: Date(timeIntervalSinceNow: -7200))
             let requests = try await DatabaseManager.shared.downloadBoredRequests(
                 forGroupIDs: groups.map(\.groupID),
-                notExpiredSince: cutoff
+                expiringAfter: Timestamp(date: Date())
             )
 
             // Index the groups so pairing is a lookup rather than the old
@@ -131,6 +136,11 @@ final class OpenRequestsModel {
             )
 
             items = requests
+                // The query already excludes expired requests, but Firestore
+                // will serve this read from its cache when the network is
+                // unreachable — and a cached answer was filtered against
+                // whatever "now" meant when it was cached.
+                .filter { !$0.hasExpired }
                 .compactMap { request in
                     groupsByID[request.groupID].map { Item(group: $0, request: request) }
                 }
@@ -138,6 +148,19 @@ final class OpenRequestsModel {
         } catch {
             Log.database.error("error loading bored requests: \(error.localizedDescription, privacy: .public)")
         }
+    }
+
+    /// Drops a request the sender has just ended, so the list reflects it
+    /// without waiting on a refetch.
+    func remove(requestID: String) {
+        items.removeAll { $0.id == requestID }
+    }
+
+    /// Records a request's new expiry after the sender extends it, so the card
+    /// and the request's own header show the new time straight away.
+    func updateExpiry(requestID: String, to newExpiry: Date) {
+        guard let index = items.firstIndex(where: { $0.id == requestID }) else { return }
+        items[index].request.expiresAt = newExpiry
     }
 }
 
@@ -157,13 +180,11 @@ struct OpenRequestsView: View {
     private var content: some View {
         if model.isLoading {
             CenteredMessage(text: "loading...", color: .wtmDarkBlue)
-            Spacer()
         } else if model.items.isEmpty {
             CenteredMessage(
                 text: "no one is bored right now.\n\nenjoy the peace and quiet, i guess.",
                 font: .wtmRegular(18, relativeTo: .body)
             )
-            Spacer()
         } else {
             ScrollView {
                 LazyVStack(spacing: 12) {
@@ -199,8 +220,13 @@ struct RequestPresentation {
     let directionCharm: String?
     /// The line under the title: who wants what.
     let detail: String
+    /// Whether you sent this one, which decides both which way a direct
+    /// request reads and whether the expire button is yours to press.
+    let isMine: Bool
 
     init(group: FriendGroup, request: BoredRequest) {
+        isMine = request.isMine
+
         guard group.isDirectGroup else {
             title = group.name
             directionCharm = nil
@@ -208,20 +234,19 @@ struct RequestPresentation {
             return
         }
 
-        detail = request.activity
-
-        // Only the sender's *name* is stored on the request, so "did I send
-        // this?" has to be a name comparison. Inside a two-person group that
-        // would only misfire if both people shared a name.
-        let myName = UserDefaults.standard.string(forKey: "name") ?? ""
-        let iSentIt = !myName.isEmpty
-            && request.initiatedBy.caseInsensitiveCompare(myName) == .orderedSame
-
-        guard iSentIt else {
+        guard isMine else {
+            // The title is already the sender's name, so repeating it in the
+            // line beneath would just read "jane doe / jane doe is hungry".
+            detail = request.activity
             title = request.initiatedBy
             directionCharm = "direct to you"
             return
         }
+
+        // On one you sent, the title is the person it went *to* — which left
+        // the activity with no subject at all ("is hungry"). Naming yourself
+        // here matches how a group request reads.
+        detail = "\(request.initiatedBy) \(request.activity)"
 
         // I sent it, so the other member of the pair is who it's addressed to.
         let otherUID = (group.people ?? []).first { $0 != SecureStorage.uid }
@@ -431,6 +456,11 @@ struct RequestDetailView: View {
     var notifiedResponse: BoredResponseChoice?
     var onOpenFriend: (User) -> Void = { _ in }
     var onOpenStranger: (User) -> Void = { _ in }
+    /// Called once the request has been ended, so the list behind this screen
+    /// can drop it.
+    var onExpired: () -> Void = {}
+    /// Called with the new expiry once the request has been given longer.
+    var onExtended: (Date) -> Void = { _ in }
 
     /// Which response editor is open, one level deeper than this screen.
     enum ResponseEdit: Hashable {
@@ -448,6 +478,11 @@ struct RequestDetailView: View {
     @State private var didFollowNotifiedResponse = false
     @State private var notice: (title: String, message: String)?
     @State private var showNotice = false
+    @State private var showEndConfirm = false
+    @State private var showExtend = false
+    /// Keeps a second tap from firing a second write while the first is still
+    /// in flight, and from pressing the button after ending has succeeded.
+    @State private var isChangingExpiry = false
 
     private var activity: NotificationTitle {
         NotificationTitle(activity: request.activity)
@@ -477,6 +512,26 @@ struct RequestDetailView: View {
                 .plainToolbarSymbol()
                 .accessibilityLabel("reply")
             }
+
+            // Only the sender's to change, and declared after the reply button
+            // so adding it doesn't shift reply out from under the thumb.
+            if presentation.isMine {
+                // Its own glass group rather than sharing reply's capsule:
+                // these actions change the request itself, not your answer to
+                // it, and one of them ends it for everybody.
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        expiryOptions
+                    } label: {
+                        Image(systemName: "timer")
+                    }
+                    .plainToolbarSymbol()
+                    .disabled(isChangingExpiry)
+                    .accessibilityLabel("change when this expires")
+                }
+            }
         }
         // Still here for the other way in — tapping your own row, which can't
         // open a Menu programmatically.
@@ -502,6 +557,40 @@ struct RequestDetailView: View {
             Button("okay", role: .cancel) {}
         } message: {
             Text(notice?.message ?? "")
+        }
+        // Extending is harmless and happens straight off the menu; ending it
+        // takes the request off everyone else's list too, so it asks first.
+        .alert("end this request?", isPresented: $showEndConfirm) {
+            Button("nevermind", role: .cancel) {}
+            Button("end it", role: .destructive) { endNow() }
+        } message: {
+            Text("this expires it right now and takes it off everyone's list.\n\nthere's no undoing it.")
+        }
+        .sheet(isPresented: $showExtend) {
+            ExtendRequestView(currentExpiry: request.expiresAt) { newExpiry in
+                setExpiry(to: newExpiry, isEnding: false)
+            }
+        }
+    }
+
+    /// The expiry actions, in the order they're most likely to be wanted:
+    /// giving a request longer, then calling it off.
+    @ViewBuilder
+    private var expiryOptions: some View {
+        Button("extend", systemImage: "clock.arrow.trianglehead.clockwise.rotate.90.path.dotted") {
+            showExtend = true
+        }
+
+        // Its own section, so the destructive one doesn't sit flush against
+        // the additive one.
+        Section {
+            Button("end it now", systemImage: "clock.badge.xmark", role: .destructive) {
+                showEndConfirm = true
+            }
+            // The destructive role reddens the title but leaves the glyph on
+            // whatever tint it inherits, which is what had it coming through
+            // blue next to red text.
+            .tint(Color.wtmDarkRed)
         }
     }
 
@@ -647,7 +736,6 @@ struct RequestDetailView: View {
     private var list: some View {
         if model.isLoading {
             CenteredMessage(text: "loading...", color: .wtmDarkBlue)
-            Spacer()
         } else {
             List(model.people, id: \.user.uid) { person in
                 Button {
@@ -693,6 +781,37 @@ struct RequestDetailView: View {
     private func notify(_ title: String, _ message: String) {
         notice = (title, message)
         showNotice = true
+    }
+
+    private func endNow() {
+        setExpiry(to: Date(), isEnding: true)
+    }
+
+    private func setExpiry(to newExpiry: Date, isEnding: Bool) {
+        guard !isChangingExpiry else { return }
+        isChangingExpiry = true
+
+        Task {
+            do {
+                try await DatabaseManager.shared.setBoredRequestExpiry(
+                    groupID: group.groupID,
+                    requestID: request.requestID,
+                    to: newExpiry
+                )
+                // Ending it pops this screen, so the flag deliberately stays
+                // set — there's nothing left here to press.
+                guard !isEnding else { return onExpired() }
+                isChangingExpiry = false
+                onExtended(newExpiry)
+            } catch {
+                Log.database.error("error changing bored request expiry: \(error.localizedDescription, privacy: .public)")
+                isChangingExpiry = false
+                notify(
+                    isEnding ? "couldn't end it" : "couldn't extend it",
+                    "there was a problem changing when this request expires. please try again."
+                )
+            }
+        }
     }
 }
 

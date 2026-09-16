@@ -5,6 +5,53 @@
 
 import SwiftUI
 
+/// What the friends list is narrowed to.
+///
+/// A status isn't stored for a friend whose profile hasn't been fetched yet, so
+/// filtering on one hides them until it lands — which is the honest answer to
+/// "who's available", and why `everyone` stays the default.
+enum FriendStatusFilter: String, CaseIterable, Identifiable {
+    case all
+    case available
+    case busy
+    case doNotDisturb
+
+    var id: String { rawValue }
+
+    /// The status this keeps, or `nil` for no filtering at all.
+    var status: Status? {
+        switch self {
+        case .all: nil
+        case .available: .available
+        case .busy: .busy
+        case .doNotDisturb: .doNotDisturb
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .all: "everyone"
+        case .available: "available"
+        case .busy: "busy"
+        case .doNotDisturb: "stfu!"
+        }
+    }
+
+    var iconName: String {
+        status?.iconName ?? "person.2"
+    }
+
+    /// What to say when nothing matches.
+    var emptyMessage: String {
+        switch self {
+        case .all: "you don't have any friends.\n\nthat's embarrassing."
+        case .available: "none of your friends are available right now."
+        case .busy: "all of your friends have better things to do."
+        case .doNotDisturb: "nobody is telling you to go away right now.\n\nenjoy it."
+        }
+    }
+}
+
 @Observable
 @MainActor
 final class MyFriendsViewModel {
@@ -37,6 +84,35 @@ final class MyFriendsViewModel {
                 && !ReportingManager.shared.userBlockedYou(theirUID: user.uid)
         }
     }
+
+    /// Unfriends someone from both sides, then takes them out of everything
+    /// local that still names them. Returns false if the write failed.
+    func remove(_ user: User) async -> Bool {
+        guard let myUID = SecureStorage.uid else { return false }
+
+        do {
+            try await DatabaseManager.shared.removeFriend(myUID: myUID, friendUID: user.uid)
+        } catch {
+            Log.database.error("error removing friend: \(error.localizedDescription, privacy: .public)")
+            return false
+        }
+
+        friends.removeAll { $0.uid == user.uid }
+
+        // The send flow reads this list straight out of UserDefaults, so
+        // leaving them in it would keep offering them as a recipient.
+        var cachedUIDs = UserDefaults.standard.stringArray(forKey: "friendsUID") ?? []
+        cachedUIDs.removeAll { $0 == user.uid }
+        UserDefaults.standard.set(cachedUIDs, forKey: "friendsUID")
+
+        // Re-reading from the server is what prunes them out of the local
+        // cache; the server no longer lists them, so the refresh drops them.
+        await LocalCacheManager.shared.refreshFromNetwork(myUID: myUID)
+        friends = filteredFriends(LocalCacheManager.shared.cachedFriendUsers(excluding: myUID))
+        UserDefaults.standard.set(LocalCacheManager.shared.cachedFriendsCount(), forKey: "friendsCount")
+
+        return true
+    }
 }
 
 struct MyFriendsView: View {
@@ -45,6 +121,9 @@ struct MyFriendsView: View {
     var onTapAddFriends: () -> Void = {}
 
     @State private var viewModel = MyFriendsViewModel()
+    @State private var statusFilter: FriendStatusFilter = .all
+    @State private var friendPendingRemoval: User?
+    @State private var showRemovalFailure = false
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -65,9 +144,32 @@ struct MyFriendsView: View {
             await viewModel.load()
         }
         .toolbar {
-            // Two separate concerns, so two separate glass groups: reviewing
-            // incoming requests, and adding someone new. The fixed spacer is
-            // what splits them into distinct capsules.
+            // Three separate concerns, so three separate glass groups:
+            // narrowing what's on screen, reviewing incoming requests, and
+            // adding someone new. The fixed spacers split them into distinct
+            // capsules. Filtering comes first — it scopes the list rather than
+            // taking you somewhere else.
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Picker("show", selection: $statusFilter) {
+                        ForEach(FriendStatusFilter.allCases) { option in
+                            Label(option.label, systemImage: option.iconName)
+                                .tag(option)
+                        }
+                    }
+                } label: {
+                    // Filled while a filter is on, so it's clear the list is
+                    // showing a subset rather than everyone you know.
+                    Image(systemName: statusFilter == .all
+                          ? "line.3.horizontal.decrease"
+                          : "line.3.horizontal.decrease.circle.fill")
+                }
+                .plainToolbarSymbol()
+                .accessibilityLabel("filter by status")
+            }
+
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: onTapRequests) {
                     Image(systemName: "paperplane")
@@ -86,24 +188,40 @@ struct MyFriendsView: View {
                 .accessibilityLabel("add friends")
             }
         }
+        .confirmationDialog(
+            "remove friend",
+            isPresented: Binding(
+                get: { friendPendingRemoval != nil },
+                set: { if !$0 { friendPendingRemoval = nil } }
+            ),
+            titleVisibility: .visible,
+            presenting: friendPendingRemoval
+        ) { friend in
+            Button("remove", role: .destructive) { remove(friend) }
+            Button("oops, cancel", role: .cancel) {}
+        } message: { friend in
+            Text("remove \(friend.name.lowercased()) as a friend?\n\nany groups you're both in will NOT be deleted.\n\nyou'll have to add each other again.")
+        }
+        .alert("couldn't remove friend", isPresented: $showRemovalFailure) {
+            Button("okay", role: .cancel) {}
+        } message: {
+            Text("something went wrong. please try again.")
+        }
+    }
+
+    private func remove(_ friend: User) {
+        Task {
+            let removed = await viewModel.remove(friend)
+            if !removed { showRemovalFailure = true }
+        }
     }
 
     @ViewBuilder
     private var content: some View {
         if viewModel.isLoading && viewModel.friends.isEmpty {
-            Spacer()
             CenteredMessage(text: "loading...")
-            Spacer()
-        } else if viewModel.friends.isEmpty {
-            Spacer()
-            VStack(spacing: 8) {
-                Text("you don't have any friends.")
-                Text("that's embarrassing.")
-            }
-            .font(.wtmSubtitle)
-            .foregroundStyle(Color.wtmSecondaryLabel)
-            .frame(maxWidth: .infinity)
-            Spacer()
+        } else if visibleFriends.isEmpty {
+            CenteredMessage(text: statusFilter.emptyMessage, font: .wtmSubtitle)
         } else {
             List {
                 ForEach(sections) { section in
@@ -117,6 +235,16 @@ struct MyFriendsView: View {
                             .buttonStyle(.plain)
                             .listRowBackground(Color.wtmBackground)
                             .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
+                            // The rows are a single line with their own
+                            // spacing; hairlines between them just added
+                            // noise to a list that's already sectioned A–Z.
+                            .listRowSeparator(.hidden)
+                            .swipeActions(edge: .trailing) {
+                                Button("remove", systemImage: "person.badge.minus", role: .destructive) {
+                                    friendPendingRemoval = user
+                                }
+                                .tint(Color.wtmDarkRed)
+                            }
                         }
                     } header: {
                         SectionLetterHeader(letter: section.id)
@@ -135,9 +263,15 @@ struct MyFriendsView: View {
         }
     }
 
+    /// The friends the current filter lets through.
+    private var visibleFriends: [User] {
+        guard let status = statusFilter.status else { return viewModel.friends }
+        return viewModel.friends.filter { Status(loaded: $0.status) == status }
+    }
+
     /// Friends bucketed A–Z. The cache already returns them name-sorted.
     private var sections: [IndexedSection<User>] {
-        alphabeticalSections(viewModel.friends) { $0.name }
+        alphabeticalSections(visibleFriends) { $0.name }
     }
 
 }

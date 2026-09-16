@@ -39,7 +39,7 @@ struct FriendGroupsView: View {
             Color.wtmBackground.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
-                Text("friend groups")
+                Text("groups")
                     .font(.wtmLargeTitle)
                     .foregroundStyle(Color.wtmDarkBlue)
                     .accessibilityAddTraits(.isHeader)
@@ -84,19 +84,12 @@ struct FriendGroupsView: View {
     @ViewBuilder
     private var content: some View {
         if viewModel.isLoading && viewModel.groups.isEmpty {
-            Spacer()
             CenteredMessage(text: "loading...")
-            Spacer()
         } else if viewModel.groups.isEmpty {
-            Spacer()
-            VStack(spacing: 8) {
-                Text("you don't have any groups yet.")
-                Text("create one below.")
-            }
-            .font(.wtmSubtitle)
-            .foregroundStyle(Color.wtmSecondaryLabel)
-            .frame(maxWidth: .infinity)
-            Spacer()
+            CenteredMessage(
+                text: "you don't have any groups yet.\n\ncreate one below.",
+                font: .wtmSubtitle
+            )
         } else {
             List {
                 ForEach(sections) { section in
@@ -110,6 +103,9 @@ struct FriendGroupsView: View {
                             .buttonStyle(.plain)
                             .listRowBackground(Color.wtmBackground)
                             .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
+                            // Matches the friends list: single-line rows in an
+                            // A–Z sectioned list don't need hairlines as well.
+                            .listRowSeparator(.hidden)
                         }
                     } header: {
                         SectionLetterHeader(letter: section.id)

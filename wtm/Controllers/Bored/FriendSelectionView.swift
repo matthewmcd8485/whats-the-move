@@ -10,6 +10,15 @@ enum RecipientTab: Hashable {
     case friends
 }
 
+/// The sending options collected at the bottom of the recipient picker.
+///
+/// Bundled rather than handed over as a loose `Bool` and duration, which are
+/// easy to pass in the wrong order at the call site.
+struct BoredSendOptions {
+    var timeSensitive = false
+    var duration: BoredRequestDuration = .default
+}
+
 @Observable
 @MainActor
 final class FriendSelectionViewModel {
@@ -49,31 +58,35 @@ final class FriendSelectionViewModel {
 
 struct FriendSelectionView: View {
     let mood: NotificationTitle
-    var onSelect: ([SelectableGroup], [Friend], Bool) -> Void = { _, _, _ in }
+    var onSelect: ([SelectableGroup], [Friend], BoredSendOptions) -> Void = { _, _, _ in }
 
     @State private var viewModel = FriendSelectionViewModel()
     @State private var activeTab: RecipientTab = .groups
     @State private var selectedGroupIDs: Set<String> = []
     @State private var selectedFriendUIDs: Set<String> = []
     @State private var showSendAllConfirm = false
-    @State private var timeSensitive = false
+    @State private var options = BoredSendOptions()
 
     var body: some View {
         ZStack(alignment: .topLeading) {
             Color.wtmBackground.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
+                // 35pt rather than the 48pt the rest of the app uses. This
+                // screen has to fit a heading, a tab switcher, the recipient
+                // list and the send options, and the list is the part people
+                // came here for — the title is repeating what the previous
+                // screen already said.
                 Text("i'm bored")
-                    .font(.wtmLargeTitle)
+                    .font(.wtmScreenTitle)
                     .foregroundStyle(Color.wtmDarkBlue)
                     .padding(.horizontal, 16)
-                    .padding(.top, 8)
 
                 Text("who would you like to annoy?")
                     .font(.wtmSubtitle)
                     .foregroundStyle(Color.wtmSecondaryLabel)
                     .padding(.horizontal, 16)
-                    .padding(.top, 8)
+                    .padding(.top, 4)
 
                 Picker("recipient type", selection: $activeTab) {
                     Text("groups").tag(RecipientTab.groups)
@@ -81,15 +94,13 @@ struct FriendSelectionView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal, 16)
-                .padding(.top, 12)
+                .padding(.top, 10)
 
                 if viewModel.isLoading {
-                    Spacer()
                     CenteredMessage(text: "loading...")
-                    Spacer()
                 } else {
                     listSection
-                    timeSensitiveRow
+                    sendOptionsCard
                 }
             }
             .padding(.top, 8)
@@ -143,9 +154,9 @@ struct FriendSelectionView: View {
                 UserDefaults.standard.setValue(Date(), forKey: "sendToAllDate")
                 switch activeTab {
                 case .groups:
-                    onSelect(viewModel.groups, [], timeSensitive)
+                    onSelect(viewModel.groups, [], options)
                 case .friends:
-                    onSelect([], viewModel.friends, timeSensitive)
+                    onSelect([], viewModel.friends, options)
                 }
             }
         } message: {
@@ -202,37 +213,106 @@ struct FriendSelectionView: View {
         }
     }
 
+    /// The expiry stops, as a slider position. Derived rather than held in its
+    /// own `@State` so the chosen duration stays the single source of truth —
+    /// the slider snaps to whole steps, so the round trip loses nothing.
+    private var durationStop: Binding<Double> {
+        Binding(
+            get: { options.duration.stop },
+            set: { options.duration = BoredRequestDuration(stop: $0) }
+        )
+    }
+
+    /// Expiry and time-sensitivity, sharing one card.
+    ///
+    /// These were two stacked cards with a full descriptive line each, which
+    /// between them took about a third of the screen and squeezed the
+    /// recipient list into a letterbox. One card with a divider — and controls
+    /// left to speak for themselves — hands the list back about two rows.
     @ViewBuilder
-    private var timeSensitiveRow: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 24, weight: .regular))
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(.primary)
-                .frame(width: 24)
-
-            VStack(alignment: .leading) {
-                Text("this is important")
-                    .font(.wtmBold(18, relativeTo: .body))
-                    .foregroundStyle(Color.wtmDarkBlue)
-
-                Text("send this notification as time sensitive")
-                    .font(.wtmThin(12, relativeTo: .caption))
-                    .foregroundStyle(.primary)
-            }
-
-            Spacer()
-            Toggle("time sensitive", isOn: $timeSensitive)
-                .labelsHidden()
-                .tint(.wtmDarkBlue)
+    private var sendOptionsCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            expirationControl
+            Divider()
+            timeSensitiveControl
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
         .background(Color.wtmGroupedCard)
         .clipShape(RoundedRectangle(cornerRadius: WTMLayout.cardCornerRadius))
         .padding(.horizontal, WTMLayout.sideMargin)
-        .padding(.top, 16)
-        .padding(.bottom, 16)
+        .padding(.top, 12)
+        .padding(.bottom, 12)
+    }
+
+    /// No explanatory line under this one: "expires in — 2 hours" with a
+    /// slider beneath it is already the whole story.
+    private var expirationControl: some View {
+        VStack(spacing: 2) {
+            HStack(spacing: 12) {
+                Image(systemName: "clock.badge.exclamationmark")
+                    .font(.system(size: 20, weight: .regular))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(Color.wtmDarkBlue)
+                    .frame(width: 24)
+
+                Text("expires in")
+                    .font(.wtmBold(18, relativeTo: .body))
+                    .foregroundStyle(Color.wtmDarkBlue)
+
+                Spacer()
+
+                Text(options.duration.label)
+                    .font(.wtmBold(18, relativeTo: .body))
+                    .foregroundStyle(Color.wtmDarkBlue)
+                    .lineLimit(1)
+                    // Rolls over as the thumb passes each stop rather than
+                    // cross-fading, so it reads as one value being dialled.
+                    .contentTransition(.numericText())
+                    .animation(.snappy(duration: 0.2), value: options.duration)
+            }
+
+            // Ticks mark the stops, so it's clear the thumb only lands on a
+            // few places rather than anywhere along the track.
+            Slider(
+                value: durationStop,
+                in: BoredRequestDuration.stopRange,
+                step: 1,
+                label: { Text("expires in") },
+                tick: { SliderTick($0) }
+            )
+            .labelsHidden()
+            .tint(.wtmDarkBlue)
+            // Indented to the text beside the icon, not the icon itself.
+            .padding(.leading, 36)
+        }
+    }
+
+    private var timeSensitiveControl: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 20, weight: .regular))
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(Color.wtmDarkBlue)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text("this is important")
+                    .font(.wtmBold(18, relativeTo: .body))
+                    .foregroundStyle(Color.wtmDarkBlue)
+
+                // Shortened so it stays on one line beside the toggle; it was
+                // wrapping to two and taking the card with it.
+                Text("send as time sensitive")
+                    .font(.wtmThin(12, relativeTo: .caption))
+                    .foregroundStyle(.primary)
+            }
+
+            Spacer()
+            Toggle("time sensitive", isOn: $options.timeSensitive)
+                .labelsHidden()
+                .tint(.wtmDarkBlue)
+        }
     }
 
     @ViewBuilder
@@ -334,7 +414,7 @@ struct FriendSelectionView: View {
         let chosenGroups = viewModel.groups.filter { selectedGroupIDs.contains($0.group.groupID) }
         let chosenFriends = viewModel.friends.filter { selectedFriendUIDs.contains($0.uid) }
         guard !chosenGroups.isEmpty || !chosenFriends.isEmpty else { return }
-        onSelect(chosenGroups, chosenFriends, timeSensitive)
+        onSelect(chosenGroups, chosenFriends, options)
     }
 }
 

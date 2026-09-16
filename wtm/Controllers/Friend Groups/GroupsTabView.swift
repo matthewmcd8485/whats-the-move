@@ -273,7 +273,6 @@ struct GroupDetailView: View {
     private var content: some View {
         if model.isLoading {
             CenteredMessage(text: "loading...", color: .wtmDarkBlue)
-            Spacer()
         } else {
             Text(model.peopleSummary)
                 .font(.wtmThin(15, relativeTo: .subheadline))
@@ -297,6 +296,10 @@ struct GroupDetailView: View {
                         Button("remove", systemImage: "person.badge.minus", role: .destructive) {
                             memberPendingRemoval = member
                         }
+                        // The destructive role alone leaves the swipe button
+                        // on the navigation stack's blue tint, which reads as
+                        // an ordinary action rather than a removal.
+                        .tint(Color.wtmDarkRed)
                     }
                 }
             }
@@ -416,13 +419,11 @@ struct AddPeopleView: View {
     private var content: some View {
         if isLoading {
             CenteredMessage(text: "loading...", color: .wtmDarkBlue)
-            Spacer()
         } else if friends.isEmpty {
             CenteredMessage(
                 text: "you don't have any friends to add.\n\nmaybe go make some first?",
                 font: .wtmRegular(15, relativeTo: .subheadline)
             )
-            Spacer()
         } else {
             List(friends, id: \.uid) { friend in
                 let isPresent = existingUIDs.contains(friend.uid)

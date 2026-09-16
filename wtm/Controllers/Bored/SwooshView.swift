@@ -10,7 +10,7 @@ struct SwooshView: View {
     let mood: NotificationTitle
     let groups: [SelectableGroup]
     let individuals: [Friend]
-    let timeSensitive: Bool
+    let options: BoredSendOptions
     /// Identifies this one send. Request IDs are derived from it so running the
     /// flow twice overwrites the same documents instead of creating a second
     /// set — the Cloud Function triggers on create, so a repeat write doesn't
@@ -137,7 +137,7 @@ struct SwooshView: View {
         for selectableGroup in groups {
             let requestID = requestID(forGroup: selectableGroup.group.groupID)
             let postedTime = Date()
-            let expiresAt = Date(timeIntervalSinceNow: 7200)
+            let expiresAt = Date(timeIntervalSinceNow: options.duration.seconds)
             do {
                 try await databaseManager.createBoredRequest(
                     requestID: requestID,
@@ -148,7 +148,7 @@ struct SwooshView: View {
                     activity: mood.rawValue,
                     initiatorUID: uid,
                     initiatorSubstatus: "i'll be there!",
-                    timeSensitive: timeSensitive,
+                    timeSensitive: options.timeSensitive,
                     imageURL: imageURL
                 )
                 didCreateRequest = true
@@ -167,7 +167,7 @@ struct SwooshView: View {
                 let groupID = try await databaseManager.ensureDirectGroup(myUID: uid, friendUID: friend.uid)
                 let requestID = requestID(forGroup: groupID)
                 let postedTime = Date()
-                let expiresAt = Date(timeIntervalSinceNow: 7200)
+                let expiresAt = Date(timeIntervalSinceNow: options.duration.seconds)
                 try await databaseManager.createBoredRequest(
                     requestID: requestID,
                     groupID: groupID,
@@ -177,7 +177,7 @@ struct SwooshView: View {
                     activity: mood.rawValue,
                     initiatorUID: uid,
                     initiatorSubstatus: "i'll be there!",
-                    timeSensitive: timeSensitive,
+                    timeSensitive: options.timeSensitive,
                     imageURL: imageURL
                 )
                 didCreateRequest = true

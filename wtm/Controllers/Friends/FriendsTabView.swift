@@ -150,13 +150,11 @@ struct RequestsView: View {
     private var content: some View {
         if model.isLoading {
             CenteredMessage(text: "loading...", color: .wtmDarkBlue)
-            Spacer()
         } else if model.requests.isEmpty {
             CenteredMessage(
                 text: "no pending requests.\n\nlooks like no one wants to be your friend.\n\ntragic.",
                 font: .wtmRegular(18, relativeTo: .body)
             )
-            Spacer()
         } else {
             List(model.requests, id: \.uid) { request in
                 Button {
@@ -468,6 +466,15 @@ private struct PersonDetailLayout<Footer: View>: View {
                         Text(user.phoneNumber)
                             .font(.wtmRegular(18, relativeTo: .body))
                             .foregroundStyle(Color.wtmSecondaryLabel)
+
+                        // Only on profiles fetched whole — the cached copies
+                        // the friends list renders from don't carry it, and a
+                        // bare "joined" with nothing after it reads as a bug.
+                        if !user.joinedTime.isEmpty {
+                            Text("joined \(user.joinedTime.lowercased())")
+                                .font(.wtmThin(15, relativeTo: .subheadline))
+                                .foregroundStyle(Color.wtmTertiaryLabel)
+                        }
                     }
                     .multilineTextAlignment(.center)
 

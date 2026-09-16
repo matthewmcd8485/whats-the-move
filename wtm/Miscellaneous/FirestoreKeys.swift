@@ -48,6 +48,10 @@ enum FirestoreKeys {
         static let requestIdentifier = "Request Identifier"
         static let groupIdentifier = "Group Identifier"
         static let initiatedBy = "Initiated By"
+        /// The sender's uid. Only their *name* used to be recorded, which
+        /// can't tell whose request it is when two people in a group share a
+        /// name. Absent on requests written by builds before this existed.
+        static let initiatorIdentifier = "Initiator Identifier"
         static let postedTime = "Posted Time"
         static let expiresAt = "Expires At"
         static let activity = "Activity"
