@@ -1,7 +1,7 @@
 /**
  * wtm? — Firebase Cloud Functions
  *
- * Two push fan-outs, both on `friend groups/{groupId}/bored requests/{requestId}`:
+ * Two push fan-outs, both on `bored requests/{requestId}`:
  *
  * - `fanOutBoredRequest` (document create) — someone is bored. Goes to every
  *   group member except the initiator, carries the activity artwork, and offers
@@ -17,18 +17,35 @@
  *
  * Both skip blocked pairs (either direction), anyone whose Status is
  * "do not disturb", and dead device tokens — which get cleared as they're found.
+ *
+ * Requests used to live at `friend groups/{groupId}/bored requests/{requestId}`,
+ * which meant the app could only ask "what's open for me" one group at a time —
+ * one query per group, including every 1:1 "direct" group it had ever created.
+ * They're now top-level and carry their own `Recipients` array, so that became
+ * a single `array-contains` query. The group id is still on the document, which
+ * is how the response push still finds the group's name.
+ *
+ * Also here:
+ *
+ * - `findUsersByPhone` (callable) — matches phone numbers against accounts
+ *   server-side. The app used to download the entire `users` collection and
+ *   match locally, which read every account in the database on every contact
+ *   import; the security rules now refuse to enumerate `users` at all.
  */
 
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const { getMessaging } = require("firebase-admin/messaging");
 const { onDocumentCreated, onDocumentUpdated } = require("firebase-functions/v2/firestore");
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { logger } = require("firebase-functions/v2");
 
 initializeApp();
 
 const REGION = "us-central1";
-const REQUEST_DOCUMENT = "friend groups/{groupId}/bored requests/{requestId}";
+
+/** Firestore caps `in` and `array-contains-any` filters at 30 values. */
+const IN_FILTER_LIMIT = 30;
 
 // Firestore collection / field names — keep in sync with FirestoreKeys.swift
 const COLLECTIONS = {
@@ -38,13 +55,24 @@ const COLLECTIONS = {
   blockedUsers: "blocked users",
 };
 
+// Requests are top-level now, so this is a one-segment path rather than the
+// `friend groups/{groupId}/bored requests/{requestId}` it used to be — which
+// is why the handlers read the group id off the document instead of the
+// wildcards.
+const REQUEST_DOCUMENT = `${COLLECTIONS.boredRequests}/{requestId}`;
+
 const REQUEST_FIELDS = {
   requestIdentifier: "Request Identifier",
   groupIdentifier: "Group Identifier",
   initiatedBy: "Initiated By",
+  initiatorIdentifier: "Initiator Identifier",
   activity: "Activity",
   timeSensitive: "Time Sensitive",
   imageURL: "Image URL",
+  // Everyone the request was addressed to, the initiator included. Frozen at
+  // send time: someone added to the group afterwards wasn't invited to this
+  // one, and shouldn't have it appear after the fact.
+  recipients: "Recipients",
   availabilitySuffix: " Availability",
   substatusSuffix: " Substatus",
 };
@@ -53,6 +81,16 @@ const USER_FIELDS = {
   fcmToken: "FCM Token",
   status: "Status",
   name: "Name",
+  userIdentifier: "User Identifier",
+  phoneNumber: "Phone Number",
+  // Last 10 digits of the phone number, which is the part that identifies a
+  // subscriber regardless of how the country code was written. Stored so
+  // contact matching can be a query instead of a scan.
+  phoneKey: "Phone Key",
+  profileImageURL: "Profile Image URL",
+  substatus: "Substatus",
+  joined: "Joined",
+  explicit: "Explicit",
 };
 
 const GROUP_FIELDS = {
@@ -81,17 +119,23 @@ const RESPONSE_TITLES = {
 // MARK: - Shared recipient resolution
 
 /**
- * Everyone in `groupId` who should receive a push about something `actorUID`
- * did: group members minus the actor, minus blocked pairs in either direction,
- * minus anyone on "do not disturb", minus empty or placeholder tokens.
+ * Everyone who should receive a push about something `actorUID` did: the
+ * request's recipients minus the actor, minus blocked pairs in either
+ * direction, minus anyone on "do not disturb", minus empty or placeholder
+ * tokens.
+ *
+ * `people` comes from the request's own `Recipients` array now rather than from
+ * the group document, so the set pushed to is exactly the set the request was
+ * addressed to. The group is still fetched, because the response push labels
+ * itself with the group's name.
  *
  * Returns `{ tokens, tokenToUID, groupDoc }`.
  */
-async function resolveRecipients(db, groupId, actorUID) {
+async function resolveRecipients(db, groupId, actorUID, people) {
   const groupDoc = await db.collection(COLLECTIONS.friendGroups).doc(groupId).get();
-  const people = groupDoc.get(GROUP_FIELDS.people) || [];
-  if (people.length === 0) {
-    logger.info("Group has no people", { groupId });
+
+  if (!Array.isArray(people) || people.length === 0) {
+    logger.info("Request has no recipients", { groupId });
     return { tokens: [], tokenToUID: new Map(), groupDoc };
   }
 
@@ -200,10 +244,17 @@ async function clearStaleTokens(db, response, tokens, tokenToUID) {
 }
 
 /**
- * The initiator's UID isn't stored as its own field — it's the prefix of the
- * only `<uid> Availability` key written at create time.
+ * Who sent the request.
+ *
+ * `Initiator Identifier` is written on every request the current app creates.
+ * The fallback reads it back off the only `<uid> Availability` key present at
+ * create time, which is how this worked before the field existed — kept so a
+ * request written by an older build still fans out.
  */
 function initiatorUIDFrom(data) {
+  const stored = data[REQUEST_FIELDS.initiatorIdentifier];
+  if (typeof stored === "string" && stored.length > 0) return stored;
+
   for (const key of Object.keys(data)) {
     if (key.endsWith(REQUEST_FIELDS.availabilitySuffix)) {
       return key.slice(0, -REQUEST_FIELDS.availabilitySuffix.length);
@@ -224,8 +275,14 @@ exports.fanOutBoredRequest = onDocumentCreated(
     }
 
     const data = snap.data();
-    const groupId = event.params.groupId;
     const requestId = event.params.requestId;
+    // The group is a field on the request now that requests aren't nested
+    // inside one.
+    const groupId = data[REQUEST_FIELDS.groupIdentifier];
+    if (!groupId) {
+      logger.warn("Request has no group identifier", { requestId });
+      return;
+    }
 
     const activity = data[REQUEST_FIELDS.activity];
     const initiatorName = data[REQUEST_FIELDS.initiatedBy];
@@ -250,7 +307,12 @@ exports.fanOutBoredRequest = onDocumentCreated(
     }
 
     const db = getFirestore();
-    const { tokens, tokenToUID } = await resolveRecipients(db, groupId, initiatorUID);
+    const { tokens, tokenToUID } = await resolveRecipients(
+      db,
+      groupId,
+      initiatorUID,
+      data[REQUEST_FIELDS.recipients],
+    );
 
     if (tokens.length === 0) {
       logger.info("No deliverable tokens", { requestId, groupId });
@@ -349,8 +411,12 @@ exports.fanOutBoredResponse = onDocumentUpdated(
       return;
     }
 
-    const groupId = event.params.groupId;
     const requestId = event.params.requestId;
+    const groupId = after[REQUEST_FIELDS.groupIdentifier];
+    if (!groupId) {
+      logger.warn("Request has no group identifier", { requestId });
+      return;
+    }
 
     const responderUID = changedResponderUID(before, after);
     if (!responderUID) {
@@ -374,7 +440,12 @@ exports.fanOutBoredResponse = onDocumentUpdated(
       return;
     }
 
-    const { tokens, tokenToUID, groupDoc } = await resolveRecipients(db, groupId, responderUID);
+    const { tokens, tokenToUID, groupDoc } = await resolveRecipients(
+      db,
+      groupId,
+      responderUID,
+      after[REQUEST_FIELDS.recipients],
+    );
     if (tokens.length === 0) {
       logger.info("No deliverable tokens for response", { requestId, groupId });
       return;
@@ -448,3 +519,106 @@ exports.fanOutBoredResponse = onDocumentUpdated(
     await clearStaleTokens(db, response, tokens, tokenToUID);
   },
 );
+
+// MARK: - Contact matching
+
+/**
+ * Last 10 digits, which is the part that identifies a subscriber regardless of
+ * how the country code was written. Mirrors `matchKey` in the app so that
+ * "+16308706109", "16308706109" and "6308706109" all collide on one value.
+ */
+function phoneKey(raw) {
+  if (typeof raw !== "string") return "";
+  return raw.replace(/\D/g, "").slice(-10);
+}
+
+/** The subset of a user document that's safe to hand another account. */
+function publicProfile(doc) {
+  return {
+    // Named to match `User`'s CodingKeys so the app decodes the result
+    // directly rather than needing a parallel type.
+    "Name": doc.get(USER_FIELDS.name) || "",
+    "Phone Number": doc.get(USER_FIELDS.phoneNumber) || "",
+    "User Identifier": doc.get(USER_FIELDS.userIdentifier) || doc.id,
+    // Deliberately blank. The token is this account's push credential and no
+    // business of whoever is searching; the app only needs its own, which it
+    // keeps in the Keychain.
+    "FCM Token": "",
+    "Status": doc.get(USER_FIELDS.status) || "",
+    "Substatus": doc.get(USER_FIELDS.substatus) || "",
+    "Profile Image URL": doc.get(USER_FIELDS.profileImageURL) || "",
+    "Joined": doc.get(USER_FIELDS.joined) || "",
+    "Explicit": doc.get(USER_FIELDS.explicit) === true,
+  };
+}
+
+/**
+ * Matches phone numbers against accounts and returns only the ones that hit.
+ *
+ * This backs both the contact importer, which sends every number in the
+ * address book, and the add-friend screen, which sends one. Previously the
+ * first of those read the entire `users` collection to the device and matched
+ * locally — billed per account in the database, per import — and the second ran
+ * a client-side query over the same collection. The security rules now deny
+ * `list` on `users`, so this is the only way in.
+ *
+ * Takes `{ phoneNumbers: string[] }` in any format and returns
+ * `{ matches: [{ phoneKey, profile }] }`, keyed so the caller can pair a result
+ * back to the contact it came from.
+ */
+exports.findUsersByPhone = onCall({ region: REGION }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Sign in first.");
+  }
+
+  const raw = request.data && request.data.phoneNumbers;
+  if (!Array.isArray(raw)) {
+    throw new HttpsError("invalid-argument", "phoneNumbers must be an array.");
+  }
+
+  // A full address book is a legitimate request, but it shouldn't be unbounded:
+  // each batch of 30 is a query, so this caps one call's cost.
+  const MAX_NUMBERS = 3000;
+  if (raw.length > MAX_NUMBERS) {
+    throw new HttpsError("invalid-argument", `At most ${MAX_NUMBERS} numbers per call.`);
+  }
+
+  const keys = [...new Set(raw.map(phoneKey).filter((key) => key.length === 10))];
+  if (keys.length === 0) {
+    return { matches: [] };
+  }
+
+  const db = getFirestore();
+  const chunks = [];
+  for (let i = 0; i < keys.length; i += IN_FILTER_LIMIT) {
+    chunks.push(keys.slice(i, i + IN_FILTER_LIMIT));
+  }
+
+  const snapshots = await Promise.all(
+    chunks.map((chunk) =>
+      db.collection(COLLECTIONS.users).where(USER_FIELDS.phoneKey, "in", chunk).get(),
+    ),
+  );
+
+  const matches = [];
+  const seen = new Set();
+  for (const snapshot of snapshots) {
+    for (const doc of snapshot.docs) {
+      const key = doc.get(USER_FIELDS.phoneKey);
+      if (typeof key !== "string" || seen.has(key)) continue;
+      // A soft-deleted account is a tombstone, not someone to offer as a
+      // friend.
+      if (doc.get(USER_FIELDS.name) === "user deleted") continue;
+      seen.add(key);
+      matches.push({ phoneKey: key, profile: publicProfile(doc) });
+    }
+  }
+
+  logger.info("Phone match complete", {
+    requested: keys.length,
+    queries: chunks.length,
+    matched: matches.length,
+  });
+
+  return { matches };
+});

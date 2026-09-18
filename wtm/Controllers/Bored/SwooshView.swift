@@ -32,7 +32,6 @@ struct SwooshView: View {
     @State private var subtitleText = "entering the matrix..."
 
     private let databaseManager = DatabaseManager.shared
-    private let storageManager = StorageManager.shared
 
     var body: some View {
         ZStack {
@@ -125,7 +124,7 @@ struct SwooshView: View {
         // notification without having to reach into Storage itself.
         let imageURL: String
         do {
-            imageURL = try await storageManager.downloadImageURL(imageName: mood.rawValue, collection: "mood images")
+            imageURL = try await StaticImageURLCache.shared.url(imageName: mood.rawValue, collection: "mood images")
         } catch {
             print("error retrieving image URL: \(error)")
             fail(title: "couldn't send", message: "there was a problem sending your bored request. please try again.")
@@ -142,6 +141,10 @@ struct SwooshView: View {
                 try await databaseManager.createBoredRequest(
                     requestID: requestID,
                     groupID: selectableGroup.group.groupID,
+                    // Frozen here rather than resolved from the group when the
+                    // request is read, so someone added to the group later
+                    // doesn't find a request they weren't sent.
+                    recipients: selectableGroup.group.people ?? [],
                     initiatedBy: name,
                     postedTime: postedTime,
                     expiresAt: expiresAt,
@@ -171,6 +174,7 @@ struct SwooshView: View {
                 try await databaseManager.createBoredRequest(
                     requestID: requestID,
                     groupID: groupID,
+                    recipients: [uid, friend.uid],
                     initiatedBy: name,
                     postedTime: postedTime,
                     expiresAt: expiresAt,

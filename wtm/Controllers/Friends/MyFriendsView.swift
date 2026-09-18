@@ -72,7 +72,6 @@ final class MyFriendsViewModel {
         if let uid = myUID {
             await LocalCacheManager.shared.refreshFromNetwork(myUID: uid)
             await LocalCacheManager.shared.refreshFriendStatuses(myUID: uid)
-            UserDefaults.standard.set(LocalCacheManager.shared.cachedFriendsCount(), forKey: "friendsCount")
         }
         friends = filteredFriends(LocalCacheManager.shared.cachedFriendUsers(excluding: myUID))
         isLoading = false
@@ -99,17 +98,11 @@ final class MyFriendsViewModel {
 
         friends.removeAll { $0.uid == user.uid }
 
-        // The send flow reads this list straight out of UserDefaults, so
-        // leaving them in it would keep offering them as a recipient.
-        var cachedUIDs = UserDefaults.standard.stringArray(forKey: "friendsUID") ?? []
-        cachedUIDs.removeAll { $0 == user.uid }
-        UserDefaults.standard.set(cachedUIDs, forKey: "friendsUID")
-
         // Re-reading from the server is what prunes them out of the local
-        // cache; the server no longer lists them, so the refresh drops them.
+        // cache; the server no longer lists them, so the refresh drops them —
+        // which is also what stops the send flow offering them as a recipient.
         await LocalCacheManager.shared.refreshFromNetwork(myUID: myUID)
         friends = filteredFriends(LocalCacheManager.shared.cachedFriendUsers(excluding: myUID))
-        UserDefaults.standard.set(LocalCacheManager.shared.cachedFriendsCount(), forKey: "friendsCount")
 
         return true
     }

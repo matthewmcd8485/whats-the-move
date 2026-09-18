@@ -22,6 +22,13 @@ enum FirestoreKeys {
     enum User {
         static let name = "Name"
         static let phoneNumber = "Phone Number"
+        /// Last 10 digits of the phone number — the part that identifies a
+        /// subscriber however the country code was written.
+        ///
+        /// Stored alongside the number so the `findUsersByPhone` function can
+        /// match contacts with a query. Matching used to happen on the device,
+        /// against every account in the database.
+        static let phoneKey = "Phone Key"
         static let userIdentifier = "User Identifier"
         static let fcmToken = "FCM Token"
         static let status = "Status"
@@ -29,6 +36,12 @@ enum FirestoreKeys {
         static let profileImageURL = "Profile Image URL"
         static let joined = "Joined"
         static let explicit = "Explicit"
+
+        /// Last 10 digits of `raw`. Mirrors `phoneKey` in `functions/index.js`;
+        /// the two have to agree or contact matching silently finds nothing.
+        static func phoneKey(from raw: String) -> String {
+            String(raw.filter(\.isNumber).suffix(10))
+        }
     }
     
     enum Group {
@@ -47,6 +60,17 @@ enum FirestoreKeys {
     enum BoredRequest {
         static let requestIdentifier = "Request Identifier"
         static let groupIdentifier = "Group Identifier"
+        /// Everyone the request went to, the sender included.
+        ///
+        /// Requests are a top-level collection now, so this array is what
+        /// makes "every open request for me" a single `arrayContains` query.
+        /// Nested under a group, the same question needed one query per group
+        /// — and the direct groups that back 1:1 requests accumulate one per
+        /// friend you've ever pinged, so that count only ever grew.
+        ///
+        /// Frozen at send time: someone added to the group afterwards wasn't
+        /// invited to this request and shouldn't see it appear late.
+        static let recipients = "Recipients"
         static let initiatedBy = "Initiated By"
         /// The sender's uid. Only their *name* used to be recorded, which
         /// can't tell whose request it is when two people in a group share a
@@ -74,5 +98,10 @@ enum FirestoreKeys {
         static let userIdentifier = "User Identifier"
         static let userName = "User Name"
         static let reportedDate = "Reported Date"
+        /// Who filed the report. A report used to record only who it was
+        /// against, which left no way to tell one person reporting someone
+        /// from ten people reporting them — and no way for the rules to stop
+        /// an account filing reports in someone else's name.
+        static let reportingUserIdentifier = "Reporting User Identifier"
     }
 }

@@ -158,9 +158,7 @@ struct FriendGroupsView: View {
     }
 
     private func promptNewGroup() {
-        let friendsCount = UserDefaults.standard.integer(forKey: "friendsCount")
-        let cachedFriendsCount = LocalCacheManager.shared.cachedFriendsCount()
-        if max(friendsCount, cachedFriendsCount) < 2 {
+        if LocalCacheManager.shared.cachedFriendsCount() < 2 {
             showFewFriendsAlert = true
             return
         }

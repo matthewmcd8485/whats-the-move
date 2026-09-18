@@ -120,13 +120,19 @@ final class OpenRequestsModel {
         guard let uid = SecureStorage.uid else { return }
 
         do {
-            let groups = try await DatabaseManager.shared.downloadAllGroups(uid: uid)
-            UserDefaults.standard.set(groups.map(\.groupID), forKey: "groupsUID")
-
-            let requests = try await DatabaseManager.shared.downloadBoredRequests(
-                forGroupIDs: groups.map(\.groupID),
+            // Two queries regardless of how many groups there are. Requests
+            // used to be fetched one group at a time — and because every 1:1
+            // request creates a lasting two-person "direct" group, that count
+            // grew by one per friend ever pinged. The groups are still loaded,
+            // because a request is titled and captioned from the group it
+            // belongs to.
+            async let groupsFetch = DatabaseManager.shared.downloadAllGroups(uid: uid)
+            async let requestsFetch = DatabaseManager.shared.downloadBoredRequests(
+                forUID: uid,
                 expiringAfter: Timestamp(date: Date())
             )
+
+            let (groups, requests) = try await (groupsFetch, requestsFetch)
 
             // Index the groups so pairing is a lookup rather than the old
             // nested loop over both collections.
@@ -351,8 +357,6 @@ final class RequestDetailModel {
     var isLoading = true
     var failed = false
 
-    private let db = Firestore.firestore()
-
     func load(
         group: FriendGroup,
         request: BoredRequest,
@@ -362,30 +366,17 @@ final class RequestDetailModel {
         let uids = group.people ?? []
         guard !uids.isEmpty else { return }
 
-        // Fetch every member concurrently instead of the old serial loop that
-        // only kicked off the response query on the last callback.
-        let users = await withTaskGroup(of: User?.self) { tasks in
-            for uid in uids {
-                tasks.addTask {
-                    try? await DatabaseManager.shared.downloadUser(
-                        where: FirestoreKeys.User.userIdentifier,
-                        isEqualTo: uid
-                    )
-                }
-            }
-            var collected: [User] = []
-            for await user in tasks {
-                if let user { collected.append(user) }
-            }
-            return collected
-        }
+        // Reads every member concurrently by document id. One shared helper
+        // rather than a task group spelled out here, and one that can't return
+        // two documents for the same person.
+        let users = await DatabaseManager.shared.downloadUsers(uids: uids)
 
         guard !users.isEmpty else {
             failed = true
             return
         }
 
-        await applyResponses(to: users, group: group, request: request)
+        await applyResponses(to: users, request: request)
 
         // An answer given from the notification won't have reached Firestore by
         // the time this read comes back, so show what was actually chosen
@@ -403,25 +394,19 @@ final class RequestDetailModel {
         people[index].responseSubstatus = choice.substatus
     }
 
-    private func applyResponses(to users: [User], group: FriendGroup, request: BoredRequest) async {
+    /// A direct document read, where this was a query on `Request Identifier`
+    /// — whose value is the document's own id.
+    private func applyResponses(to users: [User], request: BoredRequest) async {
         do {
-            let snapshot = try await db
-                .collection(FirestoreKeys.Collection.friendGroups)
-                .document(group.groupID)
-                .collection(FirestoreKeys.Collection.boredRequests)
-                .whereField(FirestoreKeys.BoredRequest.requestIdentifier, isEqualTo: request.requestID)
-                .getDocuments()
-
-            guard let document = snapshot.documents.first else {
-                failed = true
-                return
-            }
+            let data = try await DatabaseManager.shared.downloadBoredRequestResponses(
+                requestID: request.requestID
+            )
 
             people = users
                 .sorted { $0.name.sortsBefore($1.name) }
                 .map { user in
-                    let status = document.get(FirestoreKeys.BoredRequest.availabilityField(forUID: user.uid)) as? String ?? BoredResponseCategory.noResponse
-                    let substatus = document.get(FirestoreKeys.BoredRequest.substatusField(forUID: user.uid)) as? String ?? BoredResponseCategory.noResponse
+                    let status = data[FirestoreKeys.BoredRequest.availabilityField(forUID: user.uid)] as? String ?? BoredResponseCategory.noResponse
+                    let substatus = data[FirestoreKeys.BoredRequest.substatusField(forUID: user.uid)] as? String ?? BoredResponseCategory.noResponse
                     return BoredRequestUser(user: user, responseStatus: status, responseSubstatus: substatus)
                 }
         } catch {
@@ -434,7 +419,6 @@ final class RequestDetailModel {
         guard let uid = SecureStorage.uid else { return }
         do {
             try await DatabaseManager.shared.updateBoredRequestResponse(
-                groupID: group.groupID,
                 requestID: request.requestID,
                 uid: uid,
                 status: status,
@@ -770,8 +754,7 @@ struct RequestDetailView: View {
             return notify("user blocked", "either you blocked this person, or they blocked you.\n\nquit it with these toxic friends!")
         }
 
-        let friends = UserDefaults.standard.stringArray(forKey: "friendsUID") ?? []
-        if friends.contains(user.uid) {
+        if LocalCacheManager.shared.isCachedFriend(uid: user.uid) {
             onOpenFriend(user)
         } else {
             onOpenStranger(user)
@@ -794,7 +777,6 @@ struct RequestDetailView: View {
         Task {
             do {
                 try await DatabaseManager.shared.setBoredRequestExpiry(
-                    groupID: group.groupID,
                     requestID: request.requestID,
                     to: newExpiry
                 )

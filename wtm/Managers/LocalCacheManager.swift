@@ -164,6 +164,43 @@ final class LocalCacheManager {
         return results.filter { $0.name != "user deleted" }.count
     }
 
+    /// Whether `uid` is someone the signed-in user is friends with.
+    ///
+    /// This and `hasAnyRecipients` replace the parallel `friendsUID` /
+    /// `groupsUID` arrays that used to be kept in UserDefaults. Those were a
+    /// second copy of what this store already holds, written from seven
+    /// different places, and they drifted — `FriendGroupsView` had to take the
+    /// larger of the two friend counts because neither could be trusted on its
+    /// own.
+    func isCachedFriend(uid: String) -> Bool {
+        let descriptor = FetchDescriptor<CachedFriend>(predicate: #Predicate { $0.uid == uid })
+        guard let name = (try? context.fetch(descriptor))?.first?.name else { return false }
+        return name != "user deleted"
+    }
+
+    /// Whether there's anyone at all to send a bored request to.
+    ///
+    /// Counts only the groups the picker actually offers. Direct groups are
+    /// excluded because they're synthesized rather than made by anyone, they
+    /// outlive the friendship that created them — removing a friend
+    /// deliberately leaves shared groups alone — and `cachedSelectableGroups`
+    /// filters them out. Counting them meant someone whose only group was a
+    /// leftover direct one got an empty picker instead of being told they have
+    /// no friends yet.
+    func hasAnyRecipients() -> Bool {
+        cachedFriendsCount() > 0 || !cachedFriendGroups().isEmpty
+    }
+
+    /// Name + uid for everyone in the friend cache.
+    ///
+    /// Used as the fallback seed for group member names when the friends
+    /// fetch itself failed, so a groups-only refresh still labels the members
+    /// it already knows about instead of re-fetching all of them.
+    private func cachedFriendNamePairs() -> [Friend] {
+        let results = (try? context.fetch(FetchDescriptor<CachedFriend>())) ?? []
+        return results.map { Friend(name: $0.name, uid: $0.uid) }
+    }
+
     // MARK: - Writes
     private func upsertFriend(uid: String, name: String) {
         let descriptor = FetchDescriptor<CachedFriend>(predicate: #Predicate { $0.uid == uid })
@@ -268,17 +305,38 @@ final class LocalCacheManager {
             let keep = Set(groups.map(\.groupID))
             pruneGroups(keeping: keep)
 
-            // For each non-direct group, also load member names so list rows
-            // can show subtitles without an extra fetch.
+            // Member names back the group rows' subtitles. Most members are
+            // people the signed-in user is friends with, and the friends pass
+            // just named all of those, so only the rest — friends-of-friends
+            // in a shared group — need fetching, and they're fetched once for
+            // the whole refresh. Before this, every group re-fetched all of
+            // its own members, so a launch cost groups x members reads.
+            //
+            // Seeded from what the network returned rather than from the
+            // context, so this doesn't depend on the upserts above being
+            // visible to a fetch before `save()`.
+            var namesByUID = Dictionary(
+                (friendsOpt ?? cachedFriendNamePairs()).map { ($0.uid, $0.name) },
+                uniquingKeysWith: { first, _ in first }
+            )
+
+            let needed = Set(
+                groups
+                    .filter { !$0.isDirectGroup }
+                    .flatMap { $0.people ?? [] }
+            ).subtracting(namesByUID.keys)
+
+            if !needed.isEmpty {
+                for user in await db.downloadUsers(uids: Array(needed)) {
+                    namesByUID[user.uid] = user.name
+                }
+            }
+
             for group in groups {
                 let people = group.people ?? []
-                var memberNames = Array(repeating: "", count: people.count)
-                if !group.isDirectGroup, !people.isEmpty {
-                    if let members = try? await db.downloadFriends(fromGroupWith: people) {
-                        let byUID = Dictionary(uniqueKeysWithValues: members.map { ($0.uid, $0.name) })
-                        memberNames = people.map { byUID[$0] ?? "" }
-                    }
-                }
+                let memberNames = group.isDirectGroup
+                    ? Array(repeating: "", count: people.count)
+                    : people.map { namesByUID[$0] ?? "" }
                 upsertGroup(
                     groupID: group.groupID,
                     name: group.name,
@@ -292,30 +350,18 @@ final class LocalCacheManager {
         save()
     }
 
-    // Fetches the full User document for each cached friend in parallel and
-    // hydrates status / profileImageURL / phoneNumber. Called from the friends
-    // tab so MyFriendsView can show statuses straight from cache next time.
+    // Fetches the full User document for every cached friend and hydrates
+    // status / profileImageURL / phoneNumber. Called from the friends tab so
+    // MyFriendsView can show statuses straight from cache next time.
+    //
+    // Batched: this used to run one query per friend.
     func refreshFriendStatuses(myUID: String) async {
-        let db = DatabaseManager.shared
         let descriptor = FetchDescriptor<CachedFriend>()
         let uids = ((try? context.fetch(descriptor)) ?? []).map(\.uid)
         guard !uids.isEmpty else { return }
 
-        await withTaskGroup(of: User?.self) { group in
-            for uid in uids {
-                group.addTask {
-                    do {
-                        return try await db.downloadUser(where: "User Identifier", isEqualTo: uid)
-                    } catch {
-                        return nil
-                    }
-                }
-            }
-            for await user in group {
-                if let user, user.uid != myUID {
-                    upsertFullFriend(user)
-                }
-            }
+        for user in await DatabaseManager.shared.downloadUsers(uids: uids) where user.uid != myUID {
+            upsertFullFriend(user)
         }
 
         save()

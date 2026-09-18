@@ -85,26 +85,9 @@ final class GroupDetailModel {
             let uids = group.people ?? []
             guard !uids.isEmpty else { return }
 
-            // One query per member, run concurrently rather than the old
-            // serial loop that reloaded the table after every response.
-            let fetched = await withTaskGroup(of: User?.self) { tasks in
-                for uid in uids {
-                    tasks.addTask {
-                        try? await DatabaseManager.shared.downloadUser(
-                            where: FirestoreKeys.User.userIdentifier,
-                            isEqualTo: uid
-                        )
-                    }
-                }
-                var collected: [User] = []
-                for await user in tasks {
-                    if let user { collected.append(user) }
-                }
-                return collected
-            }
-
-            members = fetched
-                .filterDuplicates { $0.uid == $1.uid }
+            // Reads every member concurrently by document id, de-duplicated
+            // in the helper rather than here.
+            members = await DatabaseManager.shared.downloadUsers(uids: uids)
                 .sorted { $0.name.sortsBefore($1.name) }
 
             if members.isEmpty { failed = true }
@@ -153,9 +136,9 @@ final class GroupDetailModel {
         guard let group, let uid = SecureStorage.uid else { return false }
         do {
             try await DatabaseManager.shared.removePersonFromGroup(groupID: group.groupID, uid: uid)
-            var cached = UserDefaults.standard.stringArray(forKey: "groupsUID") ?? []
-            cached.removeAll { $0 == group.groupID }
-            UserDefaults.standard.set(cached, forKey: "groupsUID")
+            // The refresh is what drops the group locally: the server no
+            // longer lists this user among its people, so it prunes out.
+            await LocalCacheManager.shared.refreshFromNetwork(myUID: uid)
             return true
         } catch {
             Log.database.error("error leaving group: \(error.localizedDescription, privacy: .public)")
@@ -331,8 +314,7 @@ struct GroupDetailView: View {
             return notify("user blocked", "either you blocked this person, or they blocked you.\n\nquit it with these toxic friends!")
         }
 
-        let friends = UserDefaults.standard.stringArray(forKey: "friendsUID") ?? []
-        if friends.contains(member.uid) {
+        if LocalCacheManager.shared.isCachedFriend(uid: member.uid) {
             onOpenFriend(member)
         } else {
             onOpenStranger(member)

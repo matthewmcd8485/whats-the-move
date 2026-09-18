@@ -1,23 +1,18 @@
 {
   "indexes": [
     {
-      "collectionGroup": "friends",
-      "queryScope": "COLLECTION_GROUP",
+      "collectionGroup": "bored requests",
+      "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "users",
-          "order": "ASCENDING"
+          "fieldPath": "Recipients",
+          "arrayConfig": "CONTAINS"
         },
         {
-          "fieldPath": "friends",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "__name__",
+          "fieldPath": "`Expires At`",
           "order": "ASCENDING"
         }
-      ],
-      "density": "SPARSE_ALL"
+      ]
     }
   ],
   "fieldOverrides": [

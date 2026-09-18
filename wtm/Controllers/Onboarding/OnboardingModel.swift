@@ -153,10 +153,7 @@ final class OnboardingModel {
         // Returning user: pull their profile. If there's no document the account
         // exists in Auth but never finished onboarding, so send them through
         // the profile steps.
-        guard let user = try? await database.downloadUser(
-            where: FirestoreKeys.User.userIdentifier,
-            isEqualTo: signIn.uid
-        ) else {
+        guard let user = try? await database.downloadUser(uid: signIn.uid) else {
             return true
         }
 
@@ -200,34 +197,16 @@ final class OnboardingModel {
             _ = await database.updateBlockedUsersList(uid: uid)
         }()
 
-        async let friends: [String] = {
-            do {
-                return try await database.downloadAllFriends(uid: uid).map(\.uid)
-            } catch {
-                Log.database.error("onboarding — friends: \(error.localizedDescription, privacy: .public)")
-                return []
-            }
-        }()
-
-        async let groups: [String] = {
-            do {
-                return try await database.downloadAllGroups(uid: uid).map(\.groupID)
-            } catch {
-                Log.database.error("onboarding — groups: \(error.localizedDescription, privacy: .public)")
-                return []
-            }
-        }()
+        // Warms the SwiftData cache, which is where the signed-in screens read
+        // friends and groups from. This used to fetch both collections here
+        // only to mirror their uids into UserDefaults, leaving the cache cold —
+        // so the first friends or groups screen after signing in had to fetch
+        // them all over again.
+        async let cache: Void = LocalCacheManager.shared.refreshFromNetwork(myUID: uid)
 
         async let image: Void = Self.downloadProfileImage(uid: uid, profileImageURL: profileImageURL)
 
-        let (_, friendUIDs, groupIDs, _) = await (blocked, friends, groups, image)
-
-        if !friendUIDs.isEmpty {
-            UserDefaults.standard.set(friendUIDs, forKey: "friendsUID")
-        }
-        if !groupIDs.isEmpty {
-            UserDefaults.standard.set(groupIDs, forKey: "groupsUID")
-        }
+        _ = await (blocked, cache, image)
     }
 
     private static func downloadProfileImage(uid: String, profileImageURL: String) async {

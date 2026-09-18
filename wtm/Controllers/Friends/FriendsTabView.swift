@@ -99,13 +99,10 @@ final class RequestsModel {
                 friendUID: request.uid,
                 friendName: request.name
             )
-            // Keep the cached friend list in step so the send flow sees the
-            // new friend without waiting for a refresh.
-            var cached = UserDefaults.standard.stringArray(forKey: "friendsUID") ?? []
-            if !cached.contains(request.uid) {
-                cached.append(request.uid)
-                UserDefaults.standard.set(cached, forKey: "friendsUID")
-            }
+            // Pull the new friendship into the local cache so the send flow
+            // and the friends list see it without waiting for the next
+            // screen's refresh.
+            await LocalCacheManager.shared.refreshFromNetwork(myUID: myUID)
             requests.removeAll { $0.uid == request.uid }
         } catch {
             Log.database.error("error accepting friend request: \(error.localizedDescription, privacy: .public)")
@@ -262,10 +259,11 @@ final class FriendVerifyModel {
     func search(phoneNumber: String) async {
         defer { isLoading = false }
         do {
-            let found = try await DatabaseManager.shared.downloadUser(
-                where: FirestoreKeys.User.phoneNumber,
-                isEqualTo: phoneNumber
-            )
+            // Goes through the `findUsersByPhone` function: the rules no
+            // longer let the client query `users`, and this search matches on
+            // the last 10 digits, so "+1..." and a bare number both find the
+            // same account rather than only an exact string match.
+            let found = try await DatabaseManager.shared.findUser(phoneNumber: phoneNumber)
             guard !found.name.isEmpty else {
                 blockingMessage = ("user not found", "there were no matches given the phone number provided.")
                 return
@@ -294,8 +292,7 @@ final class FriendVerifyModel {
             return ("error adding friend", "don't worry.\nwe don't know what happened either.")
         }
 
-        let existing = UserDefaults.standard.stringArray(forKey: "friendsUID") ?? []
-        guard !existing.contains(user.uid) else {
+        guard !LocalCacheManager.shared.isCachedFriend(uid: user.uid) else {
             return ("already friends", "you can't send a friend request to someone you're already friends with.\n\nmaybe if you used the app how it was intended then you wouldn't be stuck here doing stupid stuff like trying to create duplicate friends.")
         }
 
@@ -422,10 +419,7 @@ struct FriendDetailView: View {
         }
 
         do {
-            let found = try await DatabaseManager.shared.downloadUser(
-                where: FirestoreKeys.User.userIdentifier,
-                isEqualTo: uid
-            )
+            let found = try await DatabaseManager.shared.downloadUser(uid: uid)
             guard !found.name.isEmpty else {
                 fail("friend not found", "we appear to be stuck inside a white void where your friends don't exist.\n\nor maybe it's just real life?")
                 return

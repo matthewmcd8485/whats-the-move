@@ -49,30 +49,40 @@ final class ImportContactsModel {
 
         guard !contacts.isEmpty else { return }
 
-        let users: [User]
+        // The matching happens server-side now. This used to download every
+        // account in the database and compare locally, which cost a read per
+        // account per import; the `findUsersByPhone` function returns only the
+        // numbers that actually belong to someone.
+        let myKey = Self.matchKey(SecureStorage.phoneNumber ?? "")
+        let numbers = Array(Set(contacts.map(\.digits))).filter {
+            let key = Self.matchKey($0)
+            return key.count == 10 && key != myKey
+        }
+
+        guard !numbers.isEmpty else { return }
+
+        let accountsByKey: [String: User]
         do {
-            users = try await DatabaseManager.shared.downloadAllUsers()
+            let found = try await DatabaseManager.shared.findUsers(phoneNumbers: numbers)
+            accountsByKey = Dictionary(
+                found.map { ($0.phoneKey, $0.profile) },
+                uniquingKeysWith: { first, _ in first }
+            )
         } catch {
-            Log.database.error("error downloading users for contact match: \(error.localizedDescription, privacy: .public)")
+            Log.database.error("error matching contacts: \(error.localizedDescription, privacy: .public)")
             failed = true
             return
         }
 
-        // Index accounts by their last 10 digits so "+16308706109",
-        // "16308706109" and "6308706109" all collide on the same key.
-        let accountsByKey = Dictionary(
-            users.map { (Self.matchKey($0.phoneNumber), $0) },
-            uniquingKeysWith: { first, _ in first }
-        )
-
-        let myKey = Self.matchKey(SecureStorage.phoneNumber ?? "")
+        // Walked in contact order rather than over the results, so each match
+        // is labelled with the name from the person's own address book instead
+        // of whatever the account calls itself.
         var seen = Set<String>()
         var found: [Match] = []
 
         for contact in contacts {
             let key = Self.matchKey(contact.digits)
-            guard !key.isEmpty, key != myKey,
-                  let account = accountsByKey[key],
+            guard let account = accountsByKey[key],
                   seen.insert(key).inserted
             else { continue }
             found.append(Match(id: account.uid, name: contact.name, phoneNumber: account.phoneNumber))
@@ -83,6 +93,10 @@ final class ImportContactsModel {
 
     /// Last 10 digits, which is the part that identifies a subscriber
     /// regardless of how the country code was written.
+    ///
+    /// Mirrors `phoneKey` in `functions/index.js` and
+    /// `FirestoreKeys.User.phoneKey(from:)`; the function returns results keyed
+    /// this way, so the three have to agree.
     private static func matchKey(_ raw: String) -> String {
         let digits = raw.filter(\.isNumber)
         return String(digits.suffix(10))

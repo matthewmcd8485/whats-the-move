@@ -44,65 +44,14 @@ final class StorageManager: @unchecked Sendable {
         })
     }
     
-    // MARK: - Upload Message Images
-    public func uploadMessagePhoto(with data: Data, fileName: String, completion: @escaping UploadPictureCompletion) {
-        storage.child("message_images/\(fileName)").putData(data, metadata: nil, completion: { [weak self] metadata, error in
-            guard error == nil else {
-                Log.storage.error("Failed to upload picture data to firebase")
-                completion(.failure(StorageErrors.failedToUpload))
-                return
-            }
-            self?.storage.child("message_images/\(fileName)").downloadURL(completion: { url, error in
-                guard let url = url else {
-                    Log.storage.error("Failed to get download URL")
-                    completion(.failure(StorageErrors.failedToGetDownloadURL))
-                    return
-                }
-                
-                let urlString = url.absoluteString
-                print("Download URL returned: \(urlString)")
-                completion(.success(urlString))
-            })
-        })
-    }
-    
-    // MARK: - Upload Video URLs
-    public func uploadMessageVideo(with fileURL: URL, fileName: String, completion: @escaping UploadPictureCompletion) {
-        storage.child("message_videos/\(fileName)").putFile(from: fileURL, metadata: nil, completion: { [weak self] metadata, error in
-            guard error == nil else {
-                Log.storage.error("Failed to upload video file to firebase")
-                completion(.failure(StorageErrors.failedToUpload))
-                return
-            }
-            self?.storage.child("message_videos/\(fileName)").downloadURL(completion: { url, error in
-                guard let url = url else {
-                    Log.storage.error("Failed to get download URL")
-                    completion(.failure(StorageErrors.failedToGetDownloadURL))
-                    return
-                }
-                
-                let urlString = url.absoluteString
-                print("Download URL returned: \(urlString)")
-                completion(.success(urlString))
-            })
-        })
-    }
-    
     public func downloadImageURL(imageName: String, collection: String, completion: @escaping UploadPictureCompletion) {
-        let group = DispatchGroup()
-        group.enter()
         storage.child("\(collection)/\(imageName).png").downloadURL { url, error in
             guard let url = url else {
-                Log.storage.error("Failed to get download URL: \(error!.localizedDescription, privacy: .public)")
+                Log.storage.error("Failed to get download URL: \(error?.localizedDescription ?? "unknown error", privacy: .public)")
                 completion(.failure(StorageErrors.failedToGetDownloadURL))
-                group.leave()
                 return
             }
-            
-            let urlString = url.absoluteString
-            print("Download URL returned: \(urlString)")
-            group.leave()
-            completion(.success(urlString))
+            completion(.success(url.absoluteString))
         }
     }
 }
@@ -118,27 +67,49 @@ extension StorageManager {
         }
     }
     
-    public func uploadMessagePhoto(with data: Data, fileName: String) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            uploadMessagePhoto(with: data, fileName: fileName) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
-    public func uploadMessageVideo(with fileURL: URL, fileName: String) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            uploadMessageVideo(with: fileURL, fileName: fileName) { result in
-                continuation.resume(with: result)
-            }
-        }
-    }
-    
     public func downloadImageURL(imageName: String, collection: String) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             downloadImageURL(imageName: imageName, collection: collection) { result in
                 continuation.resume(with: result)
             }
         }
+    }
+}
+
+// MARK: - Static Artwork URLs
+
+/// Caches download URLs for artwork that ships with the app rather than
+/// belonging to a user — the activity images, for one.
+///
+/// The send flow needs the activity's URL to stamp onto each bored request, and
+/// it resolved that from Storage on every send even though the file for a given
+/// activity never changes. The first send of a session still pays for the
+/// round-trip; the rest read it from here.
+@MainActor
+final class StaticImageURLCache {
+    static let shared = StaticImageURLCache()
+
+    private var urls: [String: String] = [:]
+    /// In-flight lookups, so several sends started at once don't each fire
+    /// their own request for the same file.
+    private var pending: [String: Task<String, Error>] = [:]
+
+    func url(imageName: String, collection: String) async throws -> String {
+        let key = "\(collection)/\(imageName)"
+        if let cached = urls[key] { return cached }
+
+        if let existing = pending[key] {
+            return try await existing.value
+        }
+
+        let task = Task {
+            try await StorageManager.shared.downloadImageURL(imageName: imageName, collection: collection)
+        }
+        pending[key] = task
+
+        defer { pending[key] = nil }
+        let url = try await task.value
+        urls[key] = url
+        return url
     }
 }

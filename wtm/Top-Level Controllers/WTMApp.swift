@@ -50,8 +50,8 @@ final class SessionModel {
     var launchDidTimeOut = false
 
     /// How long to wait before assuming the network isn't coming back. Long
-    /// enough to cover a slow-but-working connection — every launch does four
-    /// Firestore round-trips — short enough not to feel like a hang.
+    /// enough to cover a slow-but-working connection — launch still makes
+    /// several Firestore round-trips — short enough not to feel like a hang.
     private static let launchTimeout: Duration = .seconds(12)
 
     private var launchTask: Task<Void, Never>?
@@ -97,12 +97,16 @@ final class SessionModel {
             return .onboarding
         }
 
-        async let friends: Void = Self.refreshFriends(uid: uid)
-        async let groups: Void = Self.refreshGroups(uid: uid)
+        // `refreshFromNetwork` is the only friends/groups fetch here now. It
+        // used to run alongside `refreshFriends` and `refreshGroups`, which
+        // called the same two Firestore methods over again purely to mirror
+        // the uid lists into UserDefaults — so every launch downloaded the
+        // friends and groups collections twice. The screens that wanted those
+        // lists read them from the SwiftData cache instead.
         async let cache: Void = LocalCacheManager.shared.refreshFromNetwork(myUID: uid)
         async let blockedSynced = DatabaseManager.shared.updateBlockedUsersList(uid: uid)
 
-        let (_, _, _, synced) = await (friends, groups, cache, blockedSynced)
+        let (_, synced) = await (cache, blockedSynced)
 
         guard synced else {
             // Without the block lists we can't filter content correctly, so
@@ -130,24 +134,6 @@ final class SessionModel {
         UserDefaults.standard.set(true, forKey: "launchedBefore")
         LocalCacheManager.shared.wipe()
         phase = .onboarding
-    }
-
-    private static func refreshFriends(uid: String) async {
-        do {
-            let friends = try await DatabaseManager.shared.downloadAllFriends(uid: uid)
-            UserDefaults.standard.set(friends.map(\.uid), forKey: "friendsUID")
-        } catch {
-            Log.database.error("launch — friends: \(error.localizedDescription, privacy: .public)")
-        }
-    }
-
-    private static func refreshGroups(uid: String) async {
-        do {
-            let groups = try await DatabaseManager.shared.downloadAllGroups(uid: uid)
-            UserDefaults.standard.set(groups.map(\.groupID), forKey: "groupsUID")
-        } catch {
-            Log.database.error("launch — groups: \(error.localizedDescription, privacy: .public)")
-        }
     }
 
 }

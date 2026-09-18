@@ -1,8 +1,197 @@
 rules_version = '2';
+
+// Access rules for wtm?
+//
+// These replace a single blanket `allow read, write: if request.auth != null`
+// over `/{document=**}`, which let any signed-in person read and write every
+// document in the database — every profile and phone number, every block list,
+// every group and every request.
+//
+// Two things to know before reading:
+//
+// 1. Firestore evaluates a `list` rule against each document a query would
+//    return, and fails the whole query if any one of them is denied. So a rule
+//    written in terms of `resource.data` doubles as a constraint on which
+//    *queries* are allowed: a query filtered to documents the person is party
+//    to succeeds, and the same query without the filter doesn't. That's what
+//    secures the block lists and the group list without moving any data, and
+//    what lets `users` stay readable by id while refusing to be enumerated.
+//
+// 2. Most collections here are named with a space — "friend groups", "bored
+//    requests", "blocked users", "reported users", "friend requests" — and a
+//    literal path segment in a match statement can't contain one; the parser
+//    reads the space as a segment break. So those collections are matched with
+//    a wildcard and the captured name compared against a string, which is
+//    where the `col == "friend groups"` conditions come from. The comparison is
+//    always the first term, so `&&` short-circuits before anything touches
+//    fields the document may not have. Several blocks therefore match the same
+//    path; rules are OR'd, so each one grants only for its own collection and
+//    contributes nothing for the others.
+//
+// Renaming those collections would let this be written the obvious way, but
+// that means migrating every document, so it's left alone.
+
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function me() {
+      return request.auth.uid;
+    }
+
+    // MARK: - Users
+
+    match /users/{uid} {
+      // Reads by id stay open to any signed-in person. Group member lists,
+      // the friend detail screen and the request detail screen all resolve
+      // profiles this way, and none of them knows in advance whether the
+      // person is a friend.
+      allow get: if signedIn();
+
+      // Queries are not open. `list` is what allowed the contact importer to
+      // download the entire users collection, and what allowed the add-friend
+      // screen to search by phone number. Both now go through the
+      // `findUsersByPhone` callable, which does the matching server-side and
+      // returns only the accounts that actually matched. It's also why the app
+      // reads group members one id at a time rather than batching them into an
+      // `in` query — the batch would be a `list`.
+      allow list: if false;
+
+      allow create, update: if signedIn() && me() == uid;
+      // Accounts are soft-deleted by overwriting their fields, never removed.
+      allow delete: if false;
+
+      // MARK: Friends
+
+      // A friendship is stored on both sides, and accepting a request writes
+      // both documents; deleting an account renames this person's entry in
+      // everyone else's list. Each of those documents is named after the
+      // person it describes, so allowing the list's owner *or* that person to
+      // write it covers every case without opening anything else.
+      match /friends/{friendUID} {
+        allow read, write: if signedIn() && (me() == uid || me() == friendUID);
+      }
+
+      // MARK: Friend requests
+
+      // Sending one means writing into the *recipient's* subcollection, so a
+      // create can't be limited to the owner. It's limited instead to a
+      // document that is both named after the sender and attributed to them,
+      // which is the most a sender should be able to do. Only the recipient
+      // can read the requests or clear them.
+      match /{sub}/{requesterUID} {
+        allow read, delete: if signedIn()
+          && sub == "friend requests"
+          && me() == uid;
+
+        allow create, update: if signedIn()
+          && sub == "friend requests"
+          && me() == requesterUID
+          && request.resource.data["User Identifier"] == me();
+      }
+    }
+
+    // `softDeleteFriendReferences` has to find every friends list this person
+    // appears in, which is a collection-group query. Every document it returns
+    // is named after them, so the condition enforced here is the same one the
+    // client already filters on.
+    match /{path=**}/friends/{friendUID} {
+      allow read: if signedIn() && me() == friendUID;
+    }
+
+    // MARK: - Friend groups
+
+    match /{col}/{groupID} {
+      // Covers both the single-document read and the `arrayContains` query the
+      // groups list makes: membership is evaluated per document either way.
+      allow read: if signedIn()
+        && col == "friend groups"
+        && me() in resource.data.People;
+
+      // A new group — including the synthesized two-person "direct" group that
+      // backs 1:1 requests — has to list its creator.
+      allow create: if signedIn()
+        && col == "friend groups"
+        && me() in request.resource.data.People;
+
+      // Renaming, adding people and leaving are all merges into an existing
+      // document, and all require already being in it.
+      allow update: if signedIn()
+        && col == "friend groups"
+        && me() in resource.data.People;
+
+      allow delete: if false;
+    }
+
+    // MARK: - Bored requests
+
+    // Top-level rather than nested under a group, so "every open request for
+    // me" is one `arrayContains` query instead of one query per group.
+    match /{col}/{requestID} {
+      allow read: if signedIn()
+        && col == "bored requests"
+        && me() in resource.data.Recipients;
+
+      allow create: if signedIn()
+        && col == "bored requests"
+        && me() in request.resource.data.Recipients
+        && request.resource.data["Initiator Identifier"] == me();
+
+      // Answering a request and extending it are both merges into the same
+      // document, so this stays open to any recipient. Narrowing it to "only
+      // your own response fields" isn't expressible here, because those field
+      // names are built out of uids rather than being fixed.
+      allow update: if signedIn()
+        && col == "bored requests"
+        && me() in resource.data.Recipients;
+
+      // Ending a request moves its expiry rather than deleting it — the
+      // answers already given live on the same document.
+      allow delete: if false;
+    }
+
+    // MARK: - Blocks
+
+    match /{col}/{blockID} {
+      // The app asks two questions here — who I blocked, and who blocked me —
+      // and each is a query filtered to one side of the relationship. Matching
+      // that shape per document lets both through and refuses an unfiltered
+      // read of everyone else's blocks.
+      allow read: if signedIn()
+        && col == "blocked users"
+        && (
+          resource.data["Blocking User's Identifier"] == me()
+          || resource.data["Blocked User's Identifier"] == me()
+        );
+
+      allow create, update: if signedIn()
+        && col == "blocked users"
+        && request.resource.data["Blocking User's Identifier"] == me();
+
+      allow delete: if signedIn()
+        && col == "blocked users"
+        && resource.data["Blocking User's Identifier"] == me();
+    }
+
+    // MARK: - Reports
+
+    // Append-only from the app; reviewed in the console. A report must say who
+    // filed it, so one account can't file reports in another's name.
+    match /{col}/{reportID} {
+      allow create: if signedIn()
+        && col == "reported users"
+        && request.resource.data["Reporting User Identifier"] == me();
+
+      allow read, update, delete: if false;
+    }
+
+    // Anything not granted above is denied. This is the line the old catch-all
+    // rule stood in for; it grants nothing, and exists to say so out loud.
     match /{document=**} {
-      allow read, write: if request.auth != null;
+      allow read, write: if false;
     }
   }
 }

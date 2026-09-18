@@ -37,7 +37,7 @@ struct HomeScreenView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
-        .onAppear { checkForNewRelease() }
+        .task { await checkForNewRelease() }
         .alert("no friends yet", isPresented: $showNoRecipientsAlert) {
             Button("okay", role: .cancel) {}
         } message: {
@@ -60,9 +60,7 @@ struct HomeScreenView: View {
     }
 
     private func handleBoredTap() {
-        let groups = UserDefaults.standard.stringArray(forKey: "groupsUID") ?? []
-        let friends = UserDefaults.standard.stringArray(forKey: "friendsUID") ?? []
-        if groups.isEmpty && friends.isEmpty {
+        guard LocalCacheManager.shared.hasAnyRecipients() else {
             showNoRecipientsAlert = true
             return
         }
@@ -77,10 +75,28 @@ struct HomeScreenView: View {
         onBoredTapped()
     }
 
-    private func checkForNewRelease() {
-        let latestVersion = RemoteConfig.remoteConfig().configValue(forKey: "latestVersion").stringValue
-        print("The app's latest version is \(latestVersion).")
+    /// Offers the App Store when a newer version has been published.
+    ///
+    /// The fetch is the point. This used to read `configValue` straight off
+    /// `RemoteConfig.remoteConfig()` without ever fetching, and nothing else in
+    /// the app fetches either — so it was reading a local store that had never
+    /// been populated and no defaults registered. `latestVersion` came back
+    /// empty every time, the `isEmpty` guard returned, and this alert could
+    /// never appear at all.
+    private func checkForNewRelease() async {
+        let config = RemoteConfig.remoteConfig()
+        do {
+            // Respects the default 12-hour minimum interval, so this is at most
+            // one request per launch and usually zero. Lower
+            // `minimumFetchInterval` on a debug build if you need to see a
+            // change immediately.
+            _ = try await config.fetchAndActivate()
+        } catch {
+            Log.ui.error("couldn't fetch remote config: \(error.localizedDescription, privacy: .public)")
+            return
+        }
 
+        let latestVersion = config.configValue(forKey: "latestVersion").stringValue
         guard !latestVersion.isEmpty,
               UIApplication.appVersion().compare(latestVersion, options: .numeric) == .orderedAscending else { return }
 

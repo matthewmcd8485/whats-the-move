@@ -49,17 +49,29 @@ final class ReportingManager: @unchecked Sendable {
         return false
     }
     
-    // Adds an external user's account to a "Reported Users" collection on Firestore
+    // Files a report against another account.
+    //
+    // Auto-assigned document id, and the reporter is recorded. The id used to
+    // be `{reportedUID}_{date}` with no note of who filed it, which meant a
+    // report couldn't be attributed — there was no way to tell one person
+    // reporting someone from ten people reporting them — and nothing stopped
+    // an account filing reports in someone else's name. The security rules now
+    // require the reporter field to match the caller.
     public func reportUser(uid: String, name: String, date: String) async -> Bool {
+        guard let myUID = SecureStorage.uid else {
+            Log.database.error("Error reporting user: no signed-in uid")
+            return false
+        }
+
         do {
             try await firestore
                 .collection(FirestoreKeys.Collection.reportedUsers)
-                .document("\(uid)_\(date)")
-                .setData([
+                .addDocument(data: [
                     FirestoreKeys.ReportedUser.userIdentifier : uid,
+                    FirestoreKeys.ReportedUser.reportingUserIdentifier : myUID,
                     FirestoreKeys.ReportedUser.reportedDate : date,
                     FirestoreKeys.ReportedUser.userName : name
-                ], merge: false)
+                ])
             return true
         } catch {
             Log.database.error("Error reporting user: \(error.localizedDescription, privacy: .public)")

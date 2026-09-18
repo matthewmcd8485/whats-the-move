@@ -285,7 +285,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         guard let uid = SecureStorage.uid else { return }
         do {
             try await DatabaseManager.shared.updateBoredRequestResponse(
-                groupID: target.groupID,
                 requestID: target.requestID,
                 uid: uid,
                 status: choice.status,
